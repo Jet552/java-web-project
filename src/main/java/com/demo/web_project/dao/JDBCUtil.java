@@ -5,7 +5,7 @@ import java.util.*;
 
 public class JDBCUtil
 {//建立数据库连接
-    private static String DB_URL ="jdbc:mysql://localhost:3306/web_db?useSSL=false";
+    private static String DB_URL ="jdbc:mysql://localhost:3306/web_db?allowPublicKeyRetrieval=true&giuseSSL=false";
     private static String DB_DRIVER = "com.mysql.cj.jdbc.Driver";
     private static Connection connection = null;
     public static Connection getConnection()

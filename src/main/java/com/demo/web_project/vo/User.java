@@ -11,11 +11,9 @@ public class User
     private String email;
     private int status;
     private LocalDateTime createdDate;
-
     public String getRole() {
         return role;
     }
-
     public void setRole(String role) {
         this.role = role;
     }
