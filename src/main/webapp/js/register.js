@@ -279,9 +279,8 @@ function handleRegister() {
     var originalHtml = loginBtn.innerHTML;
     setButtonLoading(loginBtn, true, originalHtml);
     // 构建请求参数
-    var url = contextPath + '/user/login';
-    var bodyData = buildRequestBody(username, password, role);
-
+    var url = contextPath + '/user/register';
+    var bodyData = buildRequestBody(username, password, phone,email);
     // 发送登录请求
     fetch(url, {
         method: 'POST',

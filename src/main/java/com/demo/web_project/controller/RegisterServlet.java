@@ -26,12 +26,29 @@ public class RegisterServlet extends HttpServlet{
         // 接收参数
         String username = request.getParameter("username");
         String password = request.getParameter("password");
-        String role = request.getParameter("role");
+        String phone=request.getParameter("phone");
+        String email=request.getParameter("phone");
+        String role = "0";
         // 调用 Service 验证
-
         User user = userService.login(username, password);
         PrintWriter out = response.getWriter();
-        // 登录成功
+        //不存在该用户，可以创建
+//        if(userService.findByUsername(username)==null){
+//            if (userService.save())
+//            Map<String, Object> data = new HashMap<>();
+//            Map<String, Object> result = new HashMap<>();
+//            result.put("code", 200);
+//            result.put("msg", "登录成功");
+//            result.put("data", data);
+//        }
+        //否则报错，用户已存在
+//        else{
+//            Map<String, Object> data = new HashMap<>();
+//            Map<String, Object> result = new HashMap<>();
+//            result.put("code", 400);
+//            result.put("msg", "登录失败");
+//            result.put("data", data);
+//        }
         if (user != null) {
             HttpSession session = request.getSession();  //获取 Session（不存在则自动创建）
             session.setAttribute("user", user);       //存入用户对象
