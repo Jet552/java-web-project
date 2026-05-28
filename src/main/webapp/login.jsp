@@ -27,7 +27,11 @@
         </div>
         <div class="input-group-custom">
             <i class="bi bi-lock"></i>
-            <input type="password" class="form-control-custom" id="password" name="password" placeholder="密码" required>
+            <input type="password" class="form-control-custom" id="password" name="password"
+                   placeholder="密码" required style="padding-right: 48px;">
+<%--            <i class="fa-solid fa-eye" id="togglePassword"--%>
+<%--               style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); cursor: pointer;">--%>
+<%--            </i>--%>
         </div>
 
         <div class="role-selector">

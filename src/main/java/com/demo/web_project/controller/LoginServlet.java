@@ -31,7 +31,6 @@ public class LoginServlet extends HttpServlet {
         // 接收参数
         String username = request.getParameter("username");
         String password = request.getParameter("password");
-        String role = request.getParameter("role");
         // 调用 Service 验证
 
         User user = userService.login(username, password);
