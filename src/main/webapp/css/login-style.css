@@ -205,3 +205,16 @@ h2 {
         padding: 32px 24px;
     }
 }
+.custom-register-btn {
+     background-color: #6c5ce7;      /* 背景色（紫色） */
+     border-color: #5a4bcf;          /* 边框色 */
+     color: white;                   /* 字体颜色 */
+ }
+.custom-register-btn:hover {
+      background-color: #5a4bcf;      /* 鼠标悬停时的背景色 */
+      border-color: #4a3bb5;
+      color: #f0f0f0;
+}
+.custom-register-btn:focus {
+    box-shadow: 0 0 0 0.2rem rgba(108, 92, 231, 0.5); /* 聚焦时的阴影（可选） */
+}

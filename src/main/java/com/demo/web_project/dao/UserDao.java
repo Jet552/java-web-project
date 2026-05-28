@@ -12,48 +12,41 @@ public interface UserDao
      * @return 用户对象，不存在返回 null
      */
     User findByUsername(String username);
-
 //    /**
 //     * 根据用户ID查询用户
 //     * @param id 用户ID
 //     * @return 用户对象
 //     */
 //    User findById(int id);
-
     /**
      * 保存新用户
      * @param user 用户对象
      * @return 是否保存成功
      */
     boolean save(User user);
-
 //    /**
 //     * 更新用户信息
 //     * @param user 用户对象
 //     * @return 是否更新成功
 //     */
 //    boolean update(User user);
-
 //    /**
 //     * 删除用户
 //     * @param id 用户ID
 //     * @return 是否删除成功
 //     */
 //    boolean delete(int id);
-
     /**
      * 查询所有用户
      * @return 用户列表
      */
     List<User> findAll();
-
 //    /**
 //     * 根据角色查询用户
 //     * @param role 角色（attendee/organizer/admin）
 //     * @return 用户列表
 //     */
 //    List<User> findByRole(String role);
-
     /**
      * 更新用户状态（启用/禁用）
      * @param id 用户ID
