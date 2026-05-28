@@ -11,7 +11,6 @@ public class User
     private String email;
     private int status;
     private LocalDateTime createdDate;
-
     public int getRole() {
         return role;
     }

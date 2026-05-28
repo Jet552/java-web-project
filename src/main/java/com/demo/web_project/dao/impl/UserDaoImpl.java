@@ -51,24 +51,20 @@ public class UserDaoImpl implements UserDao {
     public boolean save(User user) {
         String sql = "INSERT INTO users (username, password, role, phone, email, status) " +
                 "VALUES (?, ?, ?, ?, ?, ?)";
-
         try (Connection conn = JDBCUtil.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
-
             ps.setString(1, user.getUsername());
             ps.setString(2, user.getPassword());
             ps.setInt(3, user.getRole());
             ps.setString(4, user.getPhone());
             ps.setString(5, user.getEmail());
             ps.setInt(6, user.getStatus());
-
             return ps.executeUpdate() > 0;
         } catch (SQLException e) {
             e.printStackTrace();
             return false;
         }
     }
-
     /**
      * 更新用户状态（管理员禁用/启用用户）
      */
