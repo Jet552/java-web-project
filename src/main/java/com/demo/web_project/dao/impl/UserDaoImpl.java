@@ -28,7 +28,7 @@ public class UserDaoImpl implements UserDao {
                 user.setId(rs.getInt("id"));
                 user.setUsername(rs.getString("username"));
                 user.setPassword(rs.getString("password"));
-                user.setRole(rs.getString("role"));
+                user.setRole(rs.getInt("role"));
                 user.setPhone(rs.getString("phone"));
                 user.setEmail(rs.getString("email"));
                 user.setStatus(rs.getInt("status"));
@@ -57,7 +57,7 @@ public class UserDaoImpl implements UserDao {
 
             ps.setString(1, user.getUsername());
             ps.setString(2, user.getPassword());
-            ps.setString(3, user.getRole());
+            ps.setInt(3, user.getRole());
             ps.setString(4, user.getPhone());
             ps.setString(5, user.getEmail());
             ps.setInt(6, user.getStatus());
@@ -105,7 +105,7 @@ public class UserDaoImpl implements UserDao {
                 User user = new User();
                 user.setId(rs.getInt("id"));
                 user.setUsername(rs.getString("username"));
-                user.setRole(rs.getString("role"));
+                user.setRole(rs.getInt("role"));
                 user.setPhone(rs.getString("phone"));
                 user.setEmail(rs.getString("email"));
                 user.setStatus(rs.getInt("status"));

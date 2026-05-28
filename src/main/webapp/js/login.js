@@ -40,7 +40,7 @@ function handleLogin() {
     // 获取表单数据
     var username = document.getElementById('username').value.trim();
     var password = document.getElementById('password').value;
-    var role = 'attendee';
+    var role = 0;
     // 前端表单验证
     if (!validateForm(username, password)) {
         return;
@@ -99,7 +99,7 @@ function validateForm(username, password) {
  * 构建请求体
  * @param {string} username 用户名
  * @param {string} password 密码
- * @param {string} role 角色
+ * @param {int} role 角色
  * @returns {string} URL编码的请求体
  */
 function buildRequestBody(username, password, role) {
@@ -175,6 +175,14 @@ function handleRememberPassword(username, password) {
     }
 }
 
+
+// 简单编码
+function encodePassword(password) {
+    return btoa(password);  // Base64 编码
+}
+function decodePassword(encoded) {
+    return atob(encoded);   // Base64 解码
+}
 /**
  * 保存账号到本地存储
  * @param {string} username 用户名
@@ -182,7 +190,7 @@ function handleRememberPassword(username, password) {
  */
 function saveAccount(username, password) {
     localStorage.setItem('saved_username', username);
-    localStorage.setItem('saved_password', password);
+    localStorage.setItem('saved_password', encodePassword(password));
     localStorage.setItem('remember_me', 'true');
 }
 
@@ -201,7 +209,7 @@ function loadRememberedAccount() {
         }
 
         if (savedPassword) {
-            document.getElementById('password').value = savedPassword;
+            document.getElementById('password').value = decodePassword(savedPassword);
         }
 
         var rememberCheckbox = document.getElementById('rememberMe');
@@ -242,10 +250,10 @@ function showSuccessAndRedirect(data) {
  * @param {Object} data - 服务器响应数据
  */
 function redirectByRole(data) {
-    if (data.data && data.data.role === 'admin') {
-        window.location.href = contextPath + '/admin/dashboard.jsp';
+    if (data.data && data.data.role == 1) {
+        window.location.href = contextPath + '/index1.jsp';
     } else {
-        window.location.href = contextPath + '/index.jsp';
+        window.location.href = contextPath + '/index2.jsp';
     }
 }
 
