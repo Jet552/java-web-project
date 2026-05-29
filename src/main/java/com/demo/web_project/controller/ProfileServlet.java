@@ -14,14 +14,18 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.HashMap;
 import java.util.Map;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
 //URL映射，servlet
 @WebServlet("/user/profile")
 public class ProfileServlet extends HttpServlet {
     private ObjectMapper mapper = new ObjectMapper();  //创建一次，重复使用
+    // 创建 ObjectMapper 时注册 JavaTimeModule
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        mapper.registerModule(new JavaTimeModule());
         // 设置编码
         request.setCharacterEncoding("UTF-8");
         response.setContentType("application/json;charset=UTF-8");
@@ -46,9 +50,11 @@ public class ProfileServlet extends HttpServlet {
 
     private void writeSuccessData(PrintWriter out,int code,String message,User user)throws IOException{
         Map<String, Object> data = new HashMap<>();
-        data.put("id", user.getId());
+        data.put("phone", user.getPhone());
         data.put("username", user.getUsername());
         data.put("role", user.getRole());
+        data.put("email", user.getEmail());
+        data.put("createdDate", user.getCreatedDate().toString());
         Map<String, Object> result = new HashMap<>();
         result.put("code", code);
         result.put("msg", message);
