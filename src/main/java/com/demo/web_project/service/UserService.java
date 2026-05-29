@@ -14,6 +14,12 @@ public class UserService {
     public User findByUsername(String username) {
         return userDao.findByUsername(username);
     }
+    public User findByPhone(String phone) {
+        return userDao.findByPhone(phone);
+    }
+    public User findByEmail(String email) {
+        return userDao.findByEmail(email);
+    }
     //保存新用户（注册）
     public boolean save(User user) {
         return userDao.save(user);

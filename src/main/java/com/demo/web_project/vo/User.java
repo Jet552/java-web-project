@@ -11,7 +11,16 @@ public class User
     private String email;
     private int status;
     private LocalDateTime createdDate;
+    public User(String username,String password,String phone,String email){
+        this.username=username;
+        this.password=password;
+        this.phone=phone;
+        this.email=email;
+        this.createdDate= LocalDateTime.now();
+    }
+    public User(){
 
+    }
     public int getRole() {
         return role;
     }
