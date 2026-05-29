@@ -12,6 +12,8 @@ public interface UserDao
      * @return 用户对象，不存在返回 null
      */
     User findByUsername(String username);
+    User findByPhone(String username);
+    User findByEmail(String username);
 //    /**
 //     * 根据用户ID查询用户
 //     * @param id 用户ID
