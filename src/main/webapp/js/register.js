@@ -1,5 +1,9 @@
 // 注册页面 JavaScript 逻辑
-
+function buildRequestBody(username, password, phone,email) {
+    return 'username=' + encodeURIComponent(username) +
+        '&password=' + encodeURIComponent(password) +
+        '&phone=' + encodeURIComponent(phone)+'&email=' + encodeURIComponent(email);//用于后端request接收,"username=??&password=??&role=??"
+}
 // 处理注册功能
 function handleRegister() {
     const username = document.getElementById('username').value;
@@ -7,12 +11,10 @@ function handleRegister() {
     const confirmPassword = document.getElementById('confirmPassword').value;
     const email = document.getElementById('email').value;
     const phone = document.getElementById('phone').value;
-    const department = document.getElementById('department').value;
-    const realName = document.getElementById('realName').value;
-    const role = document.querySelector('input[name="role"]:checked').value;
-
+    const radioEmail=document.getElementById('radioEmail').value;
+    const radioPhone=document.getElementById('radioPhone').value;
     // 表单验证
-    if (!username || !password || !confirmPassword || !email || !phone || !department || !realName) {
+    if (!username || !password || !confirmPassword || (!email && !phone )) {
         Swal.fire({
             icon: 'error',
             title: '错误',
@@ -21,30 +23,28 @@ function handleRegister() {
         });
         return;
     }
-
     if (password !== confirmPassword) {
-        Swal.fire({
-            icon: 'error',
-            title: '错误',
-            text: '两次输入的密码不一致！',
-            confirmButtonColor: '#667eea'
-        });
-        return;
-    }
+            Swal.fire({
+                icon: 'error',
+                title: '错误',
+                text: '两次输入的密码不一致！',
+                confirmButtonColor: '#667eea'
+            });
+            return;
+        }
 
     if (password.length < 6) {
-        Swal.fire({
-            icon: 'error',
-            title: '错误',
-            text: '密码长度至少需要6位！',
-            confirmButtonColor: '#667eea'
-        });
-        return;
-    }
-
+            Swal.fire({
+                icon: 'error',
+                title: '错误',
+                text: '密码长度至少需要6位！',
+                confirmButtonColor: '#667eea'
+            });
+            return;
+        }
     // 邮箱格式验证
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(email)) {
+    if (radioEmail.checked&&!emailRegex.test(email)) {
         Swal.fire({
             icon: 'error',
             title: '错误',
@@ -53,10 +53,9 @@ function handleRegister() {
         });
         return;
     }
-
     // 手机号格式验证（简单的11位数字验证）
     const phoneRegex = /^1[3-9]\d{9}$/;
-    if (!phoneRegex.test(phone)) {
+    if (radioPhone.checked&&!phoneRegex.test(phone)) {
         Swal.fire({
             icon: 'error',
             title: '错误',
@@ -65,46 +64,86 @@ function handleRegister() {
         });
         return;
     }
-
     // 显示加载状态
     const registerBtn = document.getElementById('registerBtn');
     const originalBtnText = registerBtn.innerHTML;
     registerBtn.disabled = true;
     registerBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span> 注册中...';
-
-    // 模拟注册请求（实际项目中需要替换为真实的API调用）
-    setTimeout(() => {
-        // 这里应该发送 AJAX 请求到服务器
-        // const registerData = {
-        //     username: username,
-        //     password: password,
-        //     email: email,
-        //     phone: phone,
-        //     department: department,
-        //     realName: realName,
-        //     role: role
-        // };
-
-        // 模拟成功注册
-        Swal.fire({
-            icon: 'success',
-            title: '注册成功！',
-            text: '您的账户已成功创建，正在跳转到登录页面...',
-            confirmButtonColor: '#667eea',
-            timer: 2000,
-            timerProgressBar: true,
-            didClose: () => {
-                window.location.href = 'login.jsp';
-            }
+    // 构建请求参数
+    var url = contextPath + '/user/register';
+    var bodyData = buildRequestBody(username, password, phone,email);
+    // 发送登录请求
+    fetch(url,{
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded'
+        },
+        body: bodyData
+    })
+        .then(function(response) {
+            return response.json();
+        })
+        .then(function(data) {
+            handleRegisterResponse(data, username, password, registerBtn, originalBtnText);
+        })
+        .catch(function(error) {
+            handleLoginError(error, registerBtn, originalBtnText);
         });
-
-        // 恢复按钮状态
-        registerBtn.disabled = false;
-        registerBtn.innerHTML = originalBtnText;
-
-    }, 1500);
+    // 恢复按钮状态
+    registerBtn.disabled = false;
+    registerBtn.innerHTML = originalBtnText;
 }
-
+function handleRegisterResponse(data, username, password, loginBtn, originalHtml) {
+    // 恢复按钮状态
+    setButtonLoading(loginBtn, false, originalHtml);
+    if (data.code ==200) {
+        // 显示成功提示并跳转
+        showSuccessAndRedirect(data.msg);
+    } else{
+        // 注册失败处理
+        showError(data.msg);
+        document.getElementById("username").value='';
+        document.getElementById("password").value='';
+        document.getElementById("phone").value='';
+        document.getElementById("email").value='';
+        document.getElementById("confirmPassword").value='';
+    }
+}
+function showSuccessAndRedirect(message) {
+    Swal.fire({
+        icon: 'success',
+        title: '注册成功！',
+        text: message || '正在跳转...',
+        confirmButtonColor: '#667eea',
+        timer: 1500,
+        timerProgressBar: true,
+        didClose: () => {
+            window.location.href = 'login.jsp';
+        }
+    });
+}
+function setButtonLoading(button, isLoading, originalHtml) {
+    if (isLoading) {
+        button.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>注册中...';
+        button.disabled = true;
+    } else {
+        button.innerHTML = originalHtml;
+        button.disabled = false;
+    }
+}
+function handleLoginError(error, registerBtn, originalHtml) {
+    setButtonLoading(registerBtn, false, originalHtml);
+    console.error('注册请求失败:', error);
+    showError('网络错误，请稍后重试');
+}
+function showError(message) {
+    Swal.fire({
+        icon: 'error',
+        title: '注册失败',
+        text: message,
+        confirmButtonColor: '#f56565'
+    });
+}
 // 表单输入验证
 document.addEventListener('DOMContentLoaded', function() {
     const formInputs = document.querySelectorAll('.form-control-custom');
@@ -144,36 +183,35 @@ function validateInput(input) {
     }
     // 验证逻辑
     if (value === '' && input.hasAttribute('required')) {
-        showError(input, '此字段为必填项');
+        showInputError(input, '此字段为必填项');
         return false;
     }
     if (inputId === 'email' && value !== '') {
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         if (!emailRegex.test(value)) {
-            showError(input, '请输入有效的邮箱地址');
+            showInputError(input, '请输入有效的邮箱地址');
             return false;
         }
     }
     if (inputId === 'phone' && value !== '') {
         const phoneRegex = /^1[3-9]\d{9}$/;
         if (!phoneRegex.test(value)) {
-            showError(input, '请输入有效的手机号码');
+            showInputError(input, '请输入有效的手机号码');
             return false;
         }
     }
     if (inputId === 'confirmPassword' && value !== '') {
         const password = document.getElementById('password').value;
         if (value !== password) {
-            showError(input, '两次输入的密码不一致');
+            showInputError(input, '两次输入的密码不一致');
             return false;
         }
     }
 
     return true;
 }
-
 // 显示错误信息
-function showError(input, message) {
+function showInputError(input, message) {
     input.style.borderColor = '#e53e3e';
     input.style.boxShadow = '0 0 0 3px rgba(229, 62, 62, 0.1)';
 
@@ -184,17 +222,14 @@ function showError(input, message) {
 
     input.parentNode.appendChild(errorDiv);
 }
-
 // 计算密码强度
 function calculatePasswordStrength(password) {
     let strength = 0;
-
     if (password.length >= 6) strength++;
     if (password.length >= 8) strength++;
     if (/[a-z]/.test(password) && /[A-Z]/.test(password)) strength++;
     if (/\d/.test(password)) strength++;
     if (/[^a-zA-Z0-9]/.test(password)) strength++;
-
     return strength;
 }
 
@@ -231,7 +266,6 @@ function showPasswordStrength(strength) {
             strengthColor = '#38a169';
             break;
     }
-
     strengthDiv.innerHTML = `<span style="color: ${strengthColor};">${strengthText}</span>`;
     passwordInput.parentNode.appendChild(strengthDiv);
 }
@@ -255,47 +289,4 @@ function toggleContactInput() {
         selectedMethodText.textContent="手机号码";
     }
 }
-// 键盘快捷键支持
-document.addEventListener('keydown', function(e) {
-    if (e.key === 'Enter' && e.target.classList.contains('form-control-custom')) {
-        // 在表单输入框中按 Enter 键时提交表单
-        handleRegister();
-    }
-});
-//处理登录请求
-function handleRegister() {
-    // 获取表单数据
-    var username = document.getElementById('username').value.trim();
-    var password = document.getElementById('password').value;
-    var phone=document.getElementById('phone').value;
-    var email=document.getElementById('email').value;
-    var role = '0';
-    // 前端表单验证
-    if (!validateForm(username, password)) {
-        return;
-    }
-    // 显示加载状态
-    var loginBtn = document.getElementById('loginBtn');
-    var originalHtml = loginBtn.innerHTML;
-    setButtonLoading(loginBtn, true, originalHtml);
-    // 构建请求参数
-    var url = contextPath + '/user/register';
-    var bodyData = buildRequestBody(username, password, phone,email);
-    // 发送登录请求
-    fetch(url, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/x-www-form-urlencoded'
-        },
-        body: bodyData
-    })
-        .then(function(response) {
-            return response.json();
-        })
-        .then(function(data) {
-            handleLoginResponse(data, username, password, loginBtn, originalHtml);
-        })
-        .catch(function(error) {
-            handleLoginError(error, loginBtn, originalHtml);
-        });
-}
+

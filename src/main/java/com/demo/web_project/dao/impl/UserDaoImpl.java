@@ -43,22 +43,76 @@ public class UserDaoImpl implements UserDao {
         }
         return null;
     }
-
+    @Override
+    public User findByPhone(String phone) {
+        String sql = "SELECT id, username, password, role, phone, email, status, created_date " +
+                "FROM users WHERE phone = ?";
+        try (Connection conn = JDBCUtil.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, phone);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                User user = new User();
+                user.setId(rs.getInt("id"));
+                user.setUsername(rs.getString("username"));
+                user.setPassword(rs.getString("password"));
+                user.setRole(rs.getInt("role"));
+                user.setPhone(rs.getString("phone"));
+                user.setEmail(rs.getString("email"));
+                user.setStatus(rs.getInt("status"));
+                Timestamp timestamp = rs.getTimestamp("created_date");
+                if (timestamp != null) {
+                    user.setCreatedAt(timestamp.toLocalDateTime());
+                }
+                return user;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+    @Override
+    public User findByEmail(String email) {
+        String sql = "SELECT id, username, password, role, phone, email, status, created_date " +
+                "FROM users WHERE email = ?";
+        try (Connection conn = JDBCUtil.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, email);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                User user = new User();
+                user.setId(rs.getInt("id"));
+                user.setUsername(rs.getString("username"));
+                user.setPassword(rs.getString("password"));
+                user.setRole(rs.getInt("role"));
+                user.setPhone(rs.getString("phone"));
+                user.setEmail(rs.getString("email"));
+                user.setStatus(rs.getInt("status"));
+                Timestamp timestamp = rs.getTimestamp("created_date");
+                if (timestamp != null) {
+                    user.setCreatedAt(timestamp.toLocalDateTime());
+                }
+                return user;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
     /**
      * 保存新用户（注册）
      */
     @Override
     public boolean save(User user) {
-        String sql = "INSERT INTO users (username, password, role, phone, email, status) " +
-                "VALUES (?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO users (username, password, phone, email,created_date) " +
+                "VALUES (?, ?, ?, ?,?)";
         try (Connection conn = JDBCUtil.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setString(1, user.getUsername());
             ps.setString(2, user.getPassword());
-            ps.setInt(3, user.getRole());
-            ps.setString(4, user.getPhone());
-            ps.setString(5, user.getEmail());
-            ps.setInt(6, user.getStatus());
+            ps.setString(3, user.getPhone());
+            ps.setString(4, user.getEmail());
+            ps.setTimestamp(5,java.sql.Timestamp.valueOf(user.getCreatedDate()));
             return ps.executeUpdate() > 0;
         } catch (SQLException e) {
             e.printStackTrace();
@@ -84,7 +138,6 @@ public class UserDaoImpl implements UserDao {
             return false;
         }
     }
-
     /**
      * 查询所有用户（管理员用）
      */

@@ -12,6 +12,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.HashMap;
 import java.util.Map;
+import java.time.LocalDateTime;
 //URL映射，servlet
 @WebServlet("/user/register")
 public class RegisterServlet extends HttpServlet{
@@ -27,56 +28,45 @@ public class RegisterServlet extends HttpServlet{
         String username = request.getParameter("username");
         String password = request.getParameter("password");
         String phone=request.getParameter("phone");
-        String email=request.getParameter("phone");
-        String role = "0";
+        String email=request.getParameter("email");
         // 调用 Service 验证
-        User user = userService.login(username, password);
         PrintWriter out = response.getWriter();
         //不存在该用户，可以创建
-//        if(userService.findByUsername(username)==null){
-//            if (userService.save())
-//            Map<String, Object> data = new HashMap<>();
-//            Map<String, Object> result = new HashMap<>();
-//            result.put("code", 200);
-//            result.put("msg", "登录成功");
-//            result.put("data", data);
-//        }
-        //否则报错，用户已存在
-//        else{
-//            Map<String, Object> data = new HashMap<>();
-//            Map<String, Object> result = new HashMap<>();
-//            result.put("code", 400);
-//            result.put("msg", "登录失败");
-//            result.put("data", data);
-//        }
-        if (user != null) {
-            HttpSession session = request.getSession();  //获取 Session（不存在则自动创建）
-            session.setAttribute("user", user);       //存入用户对象
-            //设置 Session 过期时间30分钟（单位：秒）
-            session.setMaxInactiveInterval(30 * 60);
-            // 构造成功响应数据
-            Map<String, Object> data = new HashMap<>();
-            data.put("id", user.getId());
-            data.put("username", user.getUsername());
-            data.put("role", user.getRole());
+        if(userService.findByUsername(username)!=null){
             Map<String, Object> result = new HashMap<>();
-            result.put("code", 200);
-            result.put("msg", "登录成功");
-            result.put("data", data);
+            result.put("code", 400);
+            result.put("msg", "用户名已存在");
             // 转成 JSON 字符串并输出
             String jsonStr = mapper.writeValueAsString(result);
             out.print(jsonStr);
         }
-        else {
-            // 登录失败
+        //否则报错，用户已存在
+        else if(userService.findByPhone(phone)!=null||userService.findByEmail(email)!=null){
             Map<String, Object> result = new HashMap<>();
-            result.put("code", 400);
-            result.put("msg", "用户名或密码错误");
-            result.put("data", null);
+            result.put("code", 500);
+            result.put("msg", "注册用的手机或邮箱已存在");
+            // 转成 JSON 字符串并输出
             String jsonStr = mapper.writeValueAsString(result);
             out.print(jsonStr);
         }
-        out.flush();
-        out.close();
+        else{
+            User user = new User(username,password,phone,email);
+            if (userService.save(user)) {
+                Map<String, Object> result = new HashMap<>();
+                result.put("code", 200);
+                result.put("msg", "您的账户已成功创建，正在跳转到登录页面...");
+                // 转成 JSON 字符串并输出
+                String jsonStr = mapper.writeValueAsString(result);
+                out.print(jsonStr);
+            }
+            else{
+                Map<String, Object> result = new HashMap<>();
+                result.put("code", 300);
+                result.put("msg", "注册失败");
+                // 转成 JSON 字符串并输出
+                String jsonStr = mapper.writeValueAsString(result);
+                out.print(jsonStr);
+            }
+        }
     }
 }
