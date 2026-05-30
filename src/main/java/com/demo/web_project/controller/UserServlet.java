@@ -275,16 +275,6 @@ public class UserServlet extends HttpServlet {
         out.flush();
         out.close();
     }
-
-
-
-
-
-
-
-
-
-
     private void writeSuccessData(PrintWriter out,int code,String message,User user)throws IOException{
         Map<String, Object> data = new HashMap<>();
         data.put("phone", user.getPhone());

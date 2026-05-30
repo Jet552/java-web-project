@@ -11,6 +11,7 @@ import jakarta.servlet.http.HttpSession;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.time.LocalDateTime;
 @WebServlet("/conference/search")
@@ -51,7 +52,7 @@ public class SearchServlet extends HttpServlet{
             }
         }
         else{//不是邀请码,关键字搜索,可能会有一大批
-
+            List<Conference> conferenceList=conferenceService.findAll(keyword);
         }
     }
 }
