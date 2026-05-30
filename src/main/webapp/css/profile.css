@@ -1,3 +1,8 @@
+/* ========================================
+   会务管理系统 - 个人中心样式表
+   以 JSP 页面样式为主，整合原有样式
+   ======================================== */
+
 * {
     margin: 0;
     padding: 0;
@@ -17,12 +22,12 @@ body::before {
     position: absolute;
     width: 100%;
     height: 100%;
-    background-image: radial-gradient(rgba(255, 255, 255, 0.1) 1px, transparent 1px);
+    background-image: radial-gradient(rgba(255, 255, 255, 0.08) 1px, transparent 1px);
     background-size: 40px 40px;
     pointer-events: none;
 }
 
-/* 顶部导航栏 */
+/* ========== 顶部导航栏 ========== */
 .navbar-brand {
     font-weight: 600;
     font-size: 1.5rem;
@@ -63,9 +68,10 @@ body::before {
     width: 20px;
 }
 
-/* 主内容区 */
+/* ========== 主内容区 ========== */
 .main-container {
     padding: 4px 100px;
+    margin-top: 70px;  /* 添加这行，给固定导航栏留出空间 */
     min-height: calc(100vh - 60px);
     position: relative;
     z-index: 1;
@@ -75,16 +81,31 @@ body::before {
 .row-flex {
     display: flex;
     gap: 24px;
-    align-items: stretch;  /* 让两侧高度自动拉伸 */
+    align-items: stretch;
 }
 
+/* 左侧：固定不动，宽度占一半 */
 .left-fixed {
-    width: 680px;
+    flex: 1;
     position: sticky;
     top: 90px;
     min-width: 0;
 }
 
+/* 左侧卡片内部内容撑开高度 */
+.left-fixed .card {
+    height: auto;
+    min-height: 550px;
+    display: flex;
+    flex-direction: column;
+}
+
+/* 让卡片内容区域自动填充满 */
+.left-fixed .card .form-section {
+    flex: 1;
+}
+
+/* 右侧：可滑动区域，宽度占一半 */
 .right-scrollable {
     flex: 1;
     max-height: calc(100vh - 100px);
@@ -111,38 +132,7 @@ body::before {
     background: #94a3b8;
 }
 
-/* 左侧卡片内部内容撑开高度 */
-.left-fixed .card {
-    height: auto;
-    min-height: 500px;  /* 调大最小高度 */
-    display: flex;
-    flex-direction: column;
-}
-
-/* 让卡片内容区域自动填充满 */
-.left-fixed .card .form-section {
-    flex: 1;
-}
-
-/* 响应式：小屏幕时改为垂直布局 */
-@media (max-width: 768px) {
-    .row-flex {
-        flex-direction: column;
-    }
-
-    .left-fixed {
-        width: 100%;
-        position: relative;
-        top: 0;
-    }
-
-    .right-scrollable {
-        max-height: none;
-        overflow-y: visible;
-    }
-}
-
-/* 返回按钮 */
+/* ========== 返回按钮 ========== */
 .back-btn {
     display: inline-flex;
     align-items: center;
@@ -164,7 +154,7 @@ body::before {
     transform: translateX(-4px);
 }
 
-/* 卡片样式 */
+/* ========== 卡片样式 ========== */
 .card {
     border: none;
     border-radius: 24px;
@@ -197,10 +187,10 @@ body::before {
     font-size: 22px;
 }
 
-/* 头像区域 */
+/* ========== 头像区域 ========== */
 .avatar-section {
     text-align: center;
-    padding: 25px 0 20px 0;
+    padding: 35px 0 25px 0;
     background: linear-gradient(135deg, #f8f9ff 0%, #f0f2ff 100%);
 }
 
@@ -228,19 +218,19 @@ body::before {
 }
 
 .profile-name {
-    font-size: 20px;
+    font-size: 26px;
     font-weight: 700;
     color: #1a202c;
     margin-bottom: 8px;
 }
 
 .profile-role .badge {
-    font-size: 16px;
+    font-size: 13px;
     padding: 6px 14px;
     border-radius: 30px;
 }
 
-/* 表单样式 */
+/* ========== 表单样式 ========== */
 .form-section {
     padding: 28px 30px;
 }
@@ -249,7 +239,7 @@ body::before {
     font-weight: 600;
     color: #2d3748;
     margin-bottom: 10px;
-    font-size: 20px;
+    font-size: 15px;
 }
 
 .required:after {
@@ -261,7 +251,7 @@ body::before {
     border: 2px solid #e2e8f0;
     border-radius: 14px;
     padding: 12px 18px;
-    font-size: 18px;
+    font-size: 15px;
     transition: all 0.2s;
 }
 
@@ -277,7 +267,7 @@ body::before {
     border-color: #e2e8f0;
 }
 
-/* 信息行样式（更大字体） */
+/* 信息行样式 */
 .info-row {
     display: flex;
     padding: 16px 0;
@@ -285,28 +275,29 @@ body::before {
 }
 
 .info-label {
-    width: 110px;
+    width: 100px;
     font-weight: 600;
     color: #4a5568;
-    font-size: 20px;
+    font-size: 15px;
 }
 
 .info-value {
     flex: 1;
     color: #1a202c;
-    font-size: 20px;
+    font-size: 15px;
     font-weight: 500;
 }
 
-/* 按钮样式 */
+/* ========== 按钮样式 ========== */
 .btn-primary-custom {
     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     border: none;
     padding: 12px 32px;
     border-radius: 30px;
     font-weight: 600;
-    font-size: 18px;
+    font-size: 15px;
     transition: all 0.3s;
+    color: white;
 }
 
 .btn-primary-custom:hover {
@@ -320,7 +311,7 @@ body::before {
     padding: 12px 32px;
     border-radius: 30px;
     font-weight: 600;
-    font-size: 18px;
+    font-size: 15px;
     transition: all 0.2s;
 }
 
@@ -330,7 +321,7 @@ body::before {
     background: #f8f9ff;
 }
 
-/* 密码输入框专用样式 */
+/* ========== 密码输入框 ========== */
 .password-input-group {
     position: relative;
 }
@@ -351,13 +342,13 @@ body::before {
     color: #667eea;
 }
 
-/* 提示文字 */
+/* ========== 提示文字 ========== */
 .form-text {
     font-size: 12px;
     margin-top: 6px;
 }
 
-/* 滑动显示动画 */
+/* ========== 滑动显示动画 ========== */
 .slide-card {
     animation: slideUp 0.5s ease-out;
 }
@@ -373,21 +364,40 @@ body::before {
     }
 }
 
-/* 响应式 */
+/* ========== 响应式 ========== */
 @media (max-width: 768px) {
     .main-container {
         padding: 16px;
     }
+
+    .row-flex {
+        flex-direction: column;
+    }
+
+    .left-fixed {
+        width: 100%;
+        position: relative;
+        top: 0;
+    }
+
+    .right-scrollable {
+        max-height: none;
+        overflow-y: visible;
+    }
+
     .info-row {
         flex-direction: column;
     }
+
     .info-label {
         width: 100%;
         margin-bottom: 8px;
     }
+
     .card-header h4 {
         font-size: 18px;
     }
+
     .profile-name {
         font-size: 22px;
     }

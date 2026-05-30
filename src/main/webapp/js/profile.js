@@ -152,13 +152,23 @@ function updateProfile() {
     var phone = document.getElementById('phone').value.trim();
 
     var bodyData = '';
-    if (email) bodyData += 'email=' + encodeURIComponent(email);
     if (phone) {
-        if (bodyData) bodyData += '&';
         bodyData += 'phone=' + encodeURIComponent(phone);
     }
-
-    if (!bodyData) {
+    else {
+        Swal.fire({
+            icon: 'warning',
+            title: '提示',
+            text: '请填写要修改的信息',
+            confirmButtonColor: '#f56565'
+        });
+        return;
+    }
+    if (email) {
+        if (bodyData) bodyData += '&';
+        bodyData += 'email=' + encodeURIComponent(email);
+    }
+    else{
         Swal.fire({
             icon: 'warning',
             title: '提示',

@@ -65,12 +65,13 @@ h2 {
     margin-bottom: 20px;
 }
 .input-group-custom i {
-    position: relative;
+    position: absolute;
     left: 16px;
     top: 50%;
     transform: translateY(-50%);
     color: #a0aec0;
     font-size: 18px;
+    z-index: 10;
 }
 .form-control-custom {
     width: 100%;
