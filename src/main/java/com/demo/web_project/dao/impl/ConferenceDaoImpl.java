@@ -88,4 +88,39 @@ public class ConferenceDaoImpl implements ConferenceDao {
         }
         return conferenceList;//返回搜索结果
     }
+
+    @Override
+    public List<Conference> findByOrganizerId(int organizerId) {
+        List<Conference> list = new ArrayList<>();
+        String sql = "SELECT id, organizer_id, title, description, venue, dorms, invite_codes, " +
+                     "start_date, end_date, status, created_date, reason " +
+                     "FROM conferences WHERE organizer_id = ? ORDER BY start_date DESC";
+        try (Connection conn = JDBCUtil.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, organizerId);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                Conference c = new Conference();
+                c.setId(rs.getInt("id"));
+                c.setOrganizer_id(rs.getInt("organizer_id"));
+                c.setTitle(rs.getString("title"));
+                c.setDescription(rs.getString("description"));
+                c.setVenue(rs.getString("venue"));
+                c.setDorms(rs.getString("dorms"));
+                c.setInvite_codes(rs.getString("invite_codes"));
+                Timestamp start = rs.getTimestamp("start_date");
+                if (start != null) c.setStart_date(start.toLocalDateTime());
+                Timestamp end = rs.getTimestamp("end_date");
+                if (end != null) c.setEnd_date(end.toLocalDateTime());
+                c.setStatus(rs.getString("status"));
+                Timestamp created = rs.getTimestamp("created_date");
+                if (created != null) c.setCreated_date(created.toLocalDateTime());
+                c.setReason(rs.getString("reason"));
+                list.add(c);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
 }
