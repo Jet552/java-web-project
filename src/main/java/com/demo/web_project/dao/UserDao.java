@@ -56,4 +56,21 @@ public interface UserDao
      * @return 是否更新成功
      */
     boolean updateStatus(int id, int status);
+
+    /**
+     * （个人中心）更新用户信息
+     * @param id 用户ID
+     * @param email 邮箱
+     * @param phone 电话
+     * @return 是否更新成功
+     */
+    boolean updateUserInfo(int id,String phone,String email);
+
+    /**
+     * （个人中心）更新用户密码
+     * @param id 用户ID
+     * @param password 密码
+     * @return 是否更新成功
+     */
+    boolean updateUserPassword(int id,String password);
 }

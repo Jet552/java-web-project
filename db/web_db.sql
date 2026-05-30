@@ -11,7 +11,7 @@
  Target Server Version : 80023 (8.0.23)
  File Encoding         : 65001
 
- Date: 26/05/2026 21:15:18
+ Date: 30/05/2026 13:16:15
 */
 
 SET NAMES utf8mb4;
@@ -121,6 +121,7 @@ CREATE TABLE `conferences`  (
   UNIQUE INDEX `invite_codes`(`invite_codes` ASC) USING BTREE,
   INDEX `idx_organizer`(`organizer_id` ASC) USING BTREE,
   INDEX `idx_status`(`status` ASC) USING BTREE,
+  FULLTEXT INDEX `title`(`title`),
   CONSTRAINT `conferences_ibfk_1` FOREIGN KEY (`organizer_id`) REFERENCES `users` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT
 ) ENGINE = InnoDB AUTO_INCREMENT = 21 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
@@ -182,7 +183,7 @@ CREATE TABLE `users`  (
   CONSTRAINT `chk_phone_email` CHECK ((`phone` is not null) or (`email` is not null)),
   CONSTRAINT `chk_role` CHECK (`role` in (0,1)),
   CONSTRAINT `chk_status` CHECK (`status` in (1,0))
-) ENGINE = InnoDB AUTO_INCREMENT = 104 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 129 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of users
@@ -290,5 +291,6 @@ INSERT INTO `users` VALUES (100, 'zhouxia', 'zhouxia123', '18601011095', NULL, '
 INSERT INTO `users` VALUES (101, 'ops_director', 'Meetings$2025!', '13700137001', 'operations@conference-system.com', '2026-05-26 20:18:24', 1, 1);
 INSERT INTO `users` VALUES (102, 'finance_admin', 'Finance@2025', '13600136001', 'billing@conference-system.com', '2026-05-26 20:18:24', 1, 1);
 INSERT INTO `users` VALUES (103, 'disaster_recovery', 'DRP@ssw0rd!2025', '13500135001', 'drp@conference-system.com', '2026-05-26 20:18:24', 1, 1);
+INSERT INTO `users` VALUES (108, '123', '123123', '15257689387', '', '2026-05-29 21:13:10', 1, 0);
 
 SET FOREIGN_KEY_CHECKS = 1;
