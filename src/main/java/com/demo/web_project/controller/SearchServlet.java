@@ -10,6 +10,7 @@ import com.demo.web_project.service.ConferenceService;
 import jakarta.servlet.http.HttpSession;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -53,6 +54,33 @@ public class SearchServlet extends HttpServlet{
         }
         else{//不是邀请码,关键字搜索,可能会有一大批
             List<Conference> conferenceList=conferenceService.findAll(keyword);
+            if(!conferenceList.isEmpty()){
+                Map<String, Object> result = new HashMap<>();
+                List<Map<String, Object>> dataList = new ArrayList<>();
+                for (Conference conf : conferenceList) {
+                    Map<String, Object> item = new HashMap<>();//将检索的会议全部返回
+                    item.put("title", conf.getTitle());
+                    item.put("start_date", conf.getStart_date());
+                    item.put("end_date", conf.getEnd_date());
+                    item.put("venue", conf.getVenue());
+                    item.put("dorms", conf.getDorms());
+                    dataList.add(item);
+                }
+                result.put("data", dataList);  // 整个列表作为 data
+                result.put("code", 200);
+                result.put("msg", "查找成功");
+                // 转成 JSON 字符串并输出
+                String jsonStr = mapper.writeValueAsString(result);
+                out.print(jsonStr);
+            }
+            else{
+                Map<String, Object> result = new HashMap<>();
+                result.put("code", 300);
+                result.put("msg", "未找到相关会议");
+                // 转成 JSON 字符串并输出
+                String jsonStr = mapper.writeValueAsString(result);
+                out.print(jsonStr);
+            }
         }
     }
 }
