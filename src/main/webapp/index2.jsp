@@ -1,3 +1,5 @@
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ page import="com.demo.web_project.vo.User" %>
 <!DOCTYPE html>
@@ -13,19 +15,31 @@
     <link href="${pageContext.request.contextPath}/css/index2.css" rel="stylesheet"/>
 </head>
 <body>
-<%
-    User user = (User) session.getAttribute("user");
-    if (user == null) {
-        response.sendRedirect(request.getContextPath() + "/login.jsp");
-        return;
-    }
-    // 如果是管理员，重定向到管理员页面
-    if (user.getRole() == 1) {
-        response.sendRedirect(request.getContextPath() + "/index1.jsp");
-        return;
-    }
-    String username = user.getUsername();
-%>
+<%-- 检查是否登录，未登录则重定向 --%>
+<c:if test="${empty sessionScope.user}">
+    <c:redirect url="/login.jsp" />
+</c:if>
+<%-- 检查是否是管理员（role == 1），是则重定向到管理员页面 --%>
+<c:if test="${sessionScope.user.role == 1}">
+    <c:redirect url="/index1.jsp" />
+</c:if>
+<%-- 获取用户名（后面的页面可以直接用） --%>
+<c:set var="username" value="${sessionScope.user.username}" scope="page" />
+
+<%--<%--%>
+<%--    User user = (User) session.getAttribute("user");--%>
+<%--    if (user == null) {--%>
+<%--        response.sendRedirect(request.getContextPath() + "/login.jsp");--%>
+<%--        return;--%>
+<%--    }--%>
+<%--    // 如果是管理员，重定向到管理员页面--%>
+<%--    if (user.getRole() == 1) {--%>
+<%--        response.sendRedirect(request.getContextPath() + "/index1.jsp");--%>
+<%--        return;--%>
+<%--    }--%>
+<%--    String username = user.getUsername();--%>
+<%--%>--%>
+
 
 <!-- 侧边栏 -->
 <div class="sidebar" id="sidebar">
@@ -59,9 +73,9 @@
         <div class="user-dropdown dropdown">
             <div class="dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
                 <div class="user-avatar">
-                    <span><%= username.substring(0, 1) %></span>
+                    <span>${fn:substring(username, 0, 1)}</span>
                 </div>
-                <span class="d-none d-md-inline"><%= username %></span>
+                <span class="d-none d-md-inline">${username}</span>
                 <i class="fas fa-chevron-down small"></i>
             </div>
             <ul class="dropdown-menu dropdown-menu-end">
@@ -83,7 +97,7 @@
     <!-- 欢迎区域 -->
     <div class="welcome-banner">
         <div class="container-fluid">
-            <h2><i class="fas fa-hand-sparkles me-2"></i>欢迎，<%= username %>，发现精彩会议</h2>
+            <h2><i class="fas fa-hand-sparkles me-2"></i>欢迎，${username}，发现精彩会议</h2>
             <p>浏览最新会议活动，一键报名参加，享受便捷的会务服务体验。</p>
         </div>
     </div>
