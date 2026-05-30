@@ -73,6 +73,14 @@ public class SearchServlet extends HttpServlet{
                 String jsonStr = mapper.writeValueAsString(result);
                 out.print(jsonStr);
             }
+            else{
+                Map<String, Object> result = new HashMap<>();
+                result.put("code", 300);
+                result.put("msg", "未找到相关会议");
+                // 转成 JSON 字符串并输出
+                String jsonStr = mapper.writeValueAsString(result);
+                out.print(jsonStr);
+            }
         }
     }
 }
