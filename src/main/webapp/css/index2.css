@@ -87,6 +87,157 @@ body {
     font-size: 1.25rem;
 }
 
+/* 直接点击的菜单项（无下拉箭头） */
+.nav-direct {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    padding: 14px 24px;
+    color: #5a6e7e;
+    text-decoration: none;
+    cursor: pointer;
+    transition: all 0.3s;
+    border-left: 4px solid transparent;
+}
+
+.nav-direct:hover {
+    background-color: #f0f7ff;
+    color: #3498db;
+    border-left-color: #3498db;
+}
+
+.nav-direct.active {
+    background: linear-gradient(90deg, #e8f4ff 0%, #f0f7ff 100%);
+    color: #3498db;
+    border-left-color: #3498db;
+    font-weight: 600;
+}
+
+.nav-direct i:first-child {
+    width: 28px;
+    margin-right: 12px;
+}
+
+/* ========== 下拉菜单样式 ========== */
+
+/* 导航分组 */
+.nav-group {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+/* 主菜单项 */
+.nav-group .nav-link {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 24px;
+    color: #5a6e7e;
+    text-decoration: none;
+    cursor: pointer;
+    transition: all 0.3s;
+    border-left: 4px solid transparent;
+}
+
+.nav-group .nav-link:hover {
+    background-color: #f0f7ff;
+    color: #3498db;
+    border-left-color: #3498db;
+}
+
+.nav-group .nav-link i:first-child {
+    width: 28px;
+    margin-right: 12px;
+}
+
+.nav-group .nav-link span {
+    flex: 1;
+}
+
+/* 下拉箭头图标 */
+.toggle-icon {
+    transition: transform 0.3s ease;
+    font-size: 12px;
+    color: #999;
+}
+
+/* 箭头旋转效果 - 注意是 .nav-link.active */
+.nav-group .nav-link.active .toggle-icon {
+    transform: rotate(180deg);
+}
+
+/* 子菜单容器 - 默认隐藏 */
+.nav-submenu {
+    display: none;
+    background-color: #f8fafc;
+    padding: 8px 0;
+}
+
+/* 子菜单显示 */
+.nav-submenu.show {
+    display: block;
+}
+
+/* 子菜单项 */
+.nav-sub-link {
+    display: flex;
+    align-items: center;
+    padding: 10px 24px 10px 56px;
+    color: #5a6e7e;
+    text-decoration: none;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-size: 14px;
+}
+
+.nav-sub-link:hover {
+    background-color: #e8f0fe;
+    color: #3498db;
+}
+
+.nav-sub-link.active {
+    background: linear-gradient(90deg, #e8f4ff 0%, #f0f7ff 100%);
+    color: #3498db;
+    border-left: 3px solid #3498db;
+}
+
+.nav-sub-link i {
+    width: 24px;
+    margin-right: 12px;
+    font-size: 14px;
+}
+
+/* 加载动画遮罩 */
+.loading-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+}
+
+/* 页面切换动画 */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+#pageContent {
+    animation: fadeIn 0.3s ease;
+}
+
 /* 右侧主内容区 */
 .main-content {
     margin-left: var(--sidebar-width);
@@ -141,23 +292,6 @@ body {
     font-size: 0.9rem;
 }
 
-/* 欢迎区域 */
-.welcome-banner {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    padding: 40px 0;
-    margin-bottom: 30px;
-    color: #fff;
-}
-
-.welcome-banner h2 {
-    font-weight: 600;
-    margin-bottom: 10px;
-}
-
-.welcome-banner p {
-    opacity: 0.9;
-    margin: 0;
-}
 
 /* 快速入口卡片 */
 .quick-card {
