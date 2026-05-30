@@ -12,7 +12,7 @@ public class JDBCUtil
     {
         try {
             Class.forName(DB_DRIVER);
-            connection = DriverManager.getConnection(DB_URL,"root","123456");
+            connection = DriverManager.getConnection(DB_URL,"root","334203");
         } catch (ClassNotFoundException e) {
             System.out.println("ClassNotFoundException");
             e.printStackTrace();
