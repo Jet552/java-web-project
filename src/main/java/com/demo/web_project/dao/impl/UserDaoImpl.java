@@ -170,4 +170,36 @@ public class UserDaoImpl implements UserDao {
         return userList;
     }
 
+    @Override
+    public boolean updateUserInfo(int id,String phone,String email)
+    {
+        String sql = "UPDATE users SET phone = ?,email=? WHERE id = ?";
+
+        try (Connection conn = JDBCUtil.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, phone);
+            ps.setString(2, email);
+            ps.setInt(3,id);
+            return ps.executeUpdate() > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    @Override
+    public boolean updateUserPassword(int id,String password)
+    {
+        String sql = "UPDATE users SET password=? WHERE id = ?";
+
+        try (Connection conn = JDBCUtil.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, password);
+            ps.setInt(2,id);
+            return ps.executeUpdate() > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
 }
