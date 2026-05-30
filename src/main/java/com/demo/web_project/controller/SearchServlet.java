@@ -31,7 +31,7 @@ public class SearchServlet extends HttpServlet{
             Conference conference=conferenceService.findByCodes(keyword);
             if(conference==null){//查找失败
                 Map<String, Object> result = new HashMap<>();
-                result.put("code", 400);
+                result.put("code", 300);
                 result.put("msg", "会议不存在");
                 // 转成 JSON 字符串并输出
                 String jsonStr = mapper.writeValueAsString(result);
@@ -67,15 +67,15 @@ public class SearchServlet extends HttpServlet{
                     dataList.add(item);
                 }
                 result.put("data", dataList);  // 整个列表作为 data
-                result.put("code", 200);
-                result.put("msg", "查找成功");
+                result.put("code", 400);
+                result.put("msg", "查找相关会议成功");
                 // 转成 JSON 字符串并输出
                 String jsonStr = mapper.writeValueAsString(result);
                 out.print(jsonStr);
             }
             else{
                 Map<String, Object> result = new HashMap<>();
-                result.put("code", 300);
+                result.put("code", 500);
                 result.put("msg", "未找到相关会议");
                 // 转成 JSON 字符串并输出
                 String jsonStr = mapper.writeValueAsString(result);
