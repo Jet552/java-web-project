@@ -40,7 +40,7 @@ public class ConferenceServlet extends HttpServlet {
 
         HttpSession session = req.getSession(false);
         if (session == null || session.getAttribute("user") == null) {
-            out.print(mapper.writeValueAsString(Map.of("code", 401, "msg", "请先登录", "data", null)));
+            out.print(mapper.writeValueAsString(buildResult(401, "请先登录", null)));
             out.flush(); out.close(); return;
         }
         User user = (User) session.getAttribute("user");
@@ -58,7 +58,15 @@ public class ConferenceServlet extends HttpServlet {
         resp.setContentType("application/json;charset=UTF-8");
         resp.setStatus(code);
         PrintWriter out = resp.getWriter();
-        out.print(mapper.writeValueAsString(Map.of("code", code, "msg", msg, "data", null)));
+        out.print(mapper.writeValueAsString(buildResult(code, msg, null)));
         out.flush(); out.close();
+    }
+
+    private Map<String, Object> buildResult(int code, String msg, Object data) {
+        Map<String, Object> map = new HashMap<>();
+        map.put("code", code);
+        map.put("msg", msg);
+        map.put("data", data);
+        return map;
     }
 }

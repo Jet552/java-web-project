@@ -4,6 +4,7 @@ import com.demo.web_project.service.CheckinService;
 import com.demo.web_project.service.AccommodationService;
 import com.demo.web_project.vo.User;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -19,7 +20,7 @@ import java.util.Map;
 
 @WebServlet("/checkin/*")
 public class CheckinServlet extends HttpServlet {
-    private ObjectMapper mapper = new ObjectMapper();
+    private ObjectMapper mapper = new ObjectMapper().registerModule(new JavaTimeModule());
     private CheckinService checkinService = new CheckinService();
     private AccommodationService accommodationService = new AccommodationService();
 
@@ -62,7 +63,7 @@ public class CheckinServlet extends HttpServlet {
         // 验证登录 + 角色
         HttpSession session = req.getSession(false);
         if (session == null || session.getAttribute("user") == null) {
-            out.print(mapper.writeValueAsString(Map.of("code", 401, "msg", "请先登录", "data", null)));
+            out.print(mapper.writeValueAsString(buildResult(401, "请先登录", null)));
             out.flush(); out.close(); return;
         }
         User user = (User) session.getAttribute("user");
@@ -71,9 +72,9 @@ public class CheckinServlet extends HttpServlet {
             int attendeeId = Integer.parseInt(req.getParameter("attendeeId"));
             String result = checkinService.doCheckin(attendeeId, user.getId());
             if ("success".equals(result)) {
-                out.print(mapper.writeValueAsString(Map.of("code", 200, "msg", "签到成功", "data", null)));
+                out.print(mapper.writeValueAsString(buildResult(200, "签到成功", null)));
             } else {
-                out.print(mapper.writeValueAsString(Map.of("code", 400, "msg", result, "data", null)));
+                out.print(mapper.writeValueAsString(buildResult(400, result, null)));
             }
         } catch (NumberFormatException e) {
             sendError(resp, 400, "参数错误");
@@ -89,7 +90,7 @@ public class CheckinServlet extends HttpServlet {
 
         HttpSession session = req.getSession(false);
         if (session == null || session.getAttribute("user") == null) {
-            out.print(mapper.writeValueAsString(Map.of("code", 401, "msg", "请先登录", "data", null)));
+            out.print(mapper.writeValueAsString(buildResult(401, "请先登录", null)));
             out.flush(); out.close(); return;
         }
 
@@ -135,7 +136,7 @@ public class CheckinServlet extends HttpServlet {
 
         HttpSession session = req.getSession(false);
         if (session == null || session.getAttribute("user") == null) {
-            out.print(mapper.writeValueAsString(Map.of("code", 401, "msg", "请先登录", "data", null)));
+            out.print(mapper.writeValueAsString(buildResult(401, "请先登录", null)));
             out.flush(); out.close(); return;
         }
 
@@ -152,9 +153,9 @@ public class CheckinServlet extends HttpServlet {
 
             String result = accommodationService.assignRoom(attendeeId, roomNumber, checkinDate, checkoutDate);
             if ("success".equals(result)) {
-                out.print(mapper.writeValueAsString(Map.of("code", 200, "msg", "房间分配成功", "data", null)));
+                out.print(mapper.writeValueAsString(buildResult(200, "房间分配成功", null)));
             } else {
-                out.print(mapper.writeValueAsString(Map.of("code", 400, "msg", result, "data", null)));
+                out.print(mapper.writeValueAsString(buildResult(400, result, null)));
             }
         } catch (NumberFormatException e) {
             sendError(resp, 400, "参数错误");
@@ -184,11 +185,19 @@ public class CheckinServlet extends HttpServlet {
 
     // ---- 工具方法 ----
 
+    private Map<String, Object> buildResult(int code, String msg, Object data) {
+        Map<String, Object> map = new HashMap<>();
+        map.put("code", code);
+        map.put("msg", msg);
+        map.put("data", data);
+        return map;
+    }
+
     private void sendError(HttpServletResponse resp, int code, String msg) throws IOException {
         resp.setContentType("application/json;charset=UTF-8");
         resp.setStatus(code);
         PrintWriter out = resp.getWriter();
-        out.print(mapper.writeValueAsString(Map.of("code", code, "msg", msg, "data", null)));
+        out.print(mapper.writeValueAsString(buildResult(code, msg, null)));
         out.flush();
         out.close();
     }
