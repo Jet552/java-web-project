@@ -101,7 +101,7 @@
         window.addEventListener('DOMContentLoaded', loadConferences);
 
         function loadConferences() {
-            fetch('${pageContext.request.contextPath}/conference/myList')
+            fetch('${pageContext.request.contextPath}/conference/myList?_=' + Date.now(), { cache: 'no-store' })
                 .then(res => res.json())
                 .then(data => {
                     const select = document.getElementById('conferenceSelect');

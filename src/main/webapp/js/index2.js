@@ -176,6 +176,16 @@ function subMenuClickHandler(e) {
  * 异步加载页面
  */
 function loadPage(pageName) {
+    // 签到管理、入住管理是独立页面，直接跳转
+    if (pageName === 'checkin') {
+        window.location.href = contextPath + '/checkin_manage.jsp';
+        return;
+    }
+    if (pageName === 'room') {
+        window.location.href = contextPath + '/room_manage.jsp';
+        return;
+    }
+
     showLoading(true);
 
     let url = getPageUrl(pageName);
