@@ -10,7 +10,7 @@ import java.util.List;
 
 public class ConferenceDaoImpl implements ConferenceDao {
     public Conference findByCodes(String invite_codes ){
-        String sql = "SELECT id,organizer_id,title, start_date,end_date,venue,dorms " +
+        String sql = "SELECT id,organizer_id,title, start_date,end_date,venue,dorms,invite_codes " +
                 "FROM conferences WHERE invite_codes = ? and status='approved'";
         try (Connection conn = JDBCUtil.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {

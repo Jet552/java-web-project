@@ -33,6 +33,24 @@ public class AttendeeDaoImpl implements AttendeeDao {
         List<Attendee> attendeeList=searchDB(sql,username);
         return attendeeList;
     }
+    public int checkAttendeesStatus(int user_id,int conf_id){
+        String sql = "SELECT id,user_id,conference_id,arrival_time,departure_time,accommodation_type,requirements " +
+                "FROM attendees WHERE user_id = ? and conference_id=? and status=1";
+        try (Connection conn = JDBCUtil.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, user_id);
+            ps.setInt(2,conf_id);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {// 已报名
+                return rs.getInt("id");
+            } else {// 未报名
+                return 0;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return 0;
+    }
     public List<Attendee> searchDB(String sql,String keyword){
         List<Attendee> attendeeList = new ArrayList<>();
         try (Connection conn = JDBCUtil.getConnection();

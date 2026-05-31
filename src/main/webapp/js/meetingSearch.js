@@ -190,8 +190,7 @@ function joinMeeting(id) {
             showLoading(false);
             if (data.code === 200) {
                 // 会议仍存在，正常跳转
-                window.location.href = contextPath + '/attendee/join_meeting.jsp?id=' + id+'&title='+ meeting.title+'&start='+ (meeting.start_date || '').replace('T', ' ')
-                    +'&end='+ (meeting.end_date || '').replace('T', ' ')+'&venue='+ meeting.venue+'&dorms='+ meeting.dorms;
+                window.location.href = contextPath + '/attendee/join_meeting.jsp?id=' + id+'&title='+ meeting.title+'&invite_codes='+ meeting.invite_codes;
             } else {
                 // 会议已取消/不存在
                 Swal.fire({
