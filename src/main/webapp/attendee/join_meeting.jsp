@@ -94,6 +94,7 @@
 <script>
 var contextPath = '<%= request.getContextPath() %>';
 var conferenceId = '<%= request.getParameter("id") %>';
+var inviteCodes = '<%= request.getParameter("invite_codes") %>';
 var attendanceId = null;
 </script>
 <script src="${pageContext.request.contextPath}/js/joinMeeting.js"></script>
