@@ -107,11 +107,11 @@
                 <i class="fas fa-chevron-down toggle-icon"></i>
             </a>
             <div class="nav-submenu" data-parent="service">
-                <a href="${pageContext.request.contextPath}/checkin_manage.jsp" class="nav-sub-link" data-page="checkin">
+                <a href="#" class="nav-sub-link" data-page="checkin">
                     <i class="fas fa-check-circle"></i>
                     <span>签到管理</span>
                 </a>
-                <a href="${pageContext.request.contextPath}/room_manage.jsp" class="nav-sub-link" data-page="room">
+                <a href="#" class="nav-sub-link" data-page="room">
                     <i class="fas fa-hotel"></i>
                     <span>入住管理</span>
                 </a>

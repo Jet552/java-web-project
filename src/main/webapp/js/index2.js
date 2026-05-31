@@ -176,16 +176,6 @@ function subMenuClickHandler(e) {
  * 异步加载页面
  */
 function loadPage(pageName) {
-    // 签到管理、入住管理是独立页面，直接跳转
-    if (pageName === 'checkin') {
-        window.location.href = contextPath + '/checkin_manage.jsp';
-        return;
-    }
-    if (pageName === 'room') {
-        window.location.href = contextPath + '/room_manage.jsp';
-        return;
-    }
-
     showLoading(true);
 
     let url = getPageUrl(pageName);
@@ -203,7 +193,15 @@ function loadPage(pageName) {
             return response.text();
         })
         .then(function(html) {
-            document.getElementById('pageContent').innerHTML = html;
+            var container = document.getElementById('pageContent');
+            container.innerHTML = html;
+            // 执行内联 <script> 标签（innerHTML 不会自动执行脚本）
+            var scripts = container.querySelectorAll('script');
+            scripts.forEach(function(oldScript) {
+                var newScript = document.createElement('script');
+                newScript.textContent = oldScript.textContent;
+                oldScript.parentNode.replaceChild(newScript, oldScript);
+            });
             showLoading(false);
             window.scrollTo(0, 0);
         })
@@ -219,15 +217,12 @@ function loadPage(pageName) {
  */
 function getPageUrl(pageName) {
     var urlMap = {
-        'default': contextPath + '/attendee/default.jsp',  // ← 添加首页映射
+        'default': contextPath + '/attendee/default.jsp',
         'conferenceHall': contextPath + '/attendee/conferenceHall.jsp',
         'joinConference': contextPath + '/attendee/joinConference.jsp',
         'myConferences': contextPath + '/attendee/myConferences.jsp',
-        // 'makePayment': contextPath + '/payment/makePayment.jsp',
-        // 'paymentHistory': contextPath + '/payment/paymentHistory.jsp',
-        // 'attendRecord': contextPath + '/attendee/attendRecord.jsp',
-        // 'paymentStatus': contextPath + '/payment/paymentStatus.jsp',
-        // 'checkinStatus': contextPath + '/checkin/checkinStatus.jsp'
+        'checkin': contextPath + '/checkin_manage.jsp',
+        'room': contextPath + '/room_manage.jsp'
     };
 
     return urlMap[pageName] || contextPath + '/index2.jsp';
