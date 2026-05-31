@@ -49,9 +49,6 @@ public class UserService {
         if (user == null) {
             return null;
         }
-        if (user.getStatus() == 0) {
-            return null;  // 账号已被禁用
-        }
         if (!password.equals(user.getPassword())) {
             return null;  // 密码错误
         }

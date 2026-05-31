@@ -62,7 +62,6 @@ function showError() {
 
 // ========== 下拉菜单初始化 ==========
 document.addEventListener('DOMContentLoaded', function() {
-    console.log('页面加载完成，初始化下拉菜单...');
     initDropdownMenu();
     initSubMenuClick();
 });
@@ -72,7 +71,6 @@ document.addEventListener('DOMContentLoaded', function() {
  */
 function initDropdownMenu() {
     const toggles = document.querySelectorAll('.nav-toggle');
-    console.log('找到 toggle 数量:', toggles.length);
 
     toggles.forEach(function(toggle, index) {
         // 移除可能存在的旧事件
@@ -90,11 +88,9 @@ function toggleClickHandler(e) {
     e.stopPropagation();
 
     const groupName = this.getAttribute('data-group');
-    console.log('点击菜单 group:', groupName);
 
     // 找到对应的子菜单
     const submenu = document.querySelector('.nav-submenu[data-parent="' + groupName + '"]');
-    console.log('找到子菜单:', submenu);
 
     if (submenu) {
         // 切换 show 类
@@ -102,9 +98,6 @@ function toggleClickHandler(e) {
         // 切换当前菜单的 active 类（用于旋转箭头）
         this.classList.toggle('active');
 
-        console.log('子菜单 show 类状态:', submenu.classList.contains('show'));
-    } else {
-        console.log('未找到子菜单，data-parent="' + groupName + '"');
     }
 }
 
@@ -129,6 +122,7 @@ function initSubMenuClick() {
         link.addEventListener('click', subMenuClickHandler);
     });
 }
+
 
 /**
  * 直接菜单点击处理（首页等）
@@ -196,6 +190,11 @@ function loadPage(pageName) {
             document.getElementById('pageContent').innerHTML = html;
             showLoading(false);
             window.scrollTo(0, 0);
+
+            // 页面加载完成后，执行对应页面的初始化函数
+            if (pageName === 'conferencePayment' && typeof loadPaymentData === 'function') {
+                loadPaymentData();
+            }
         })
         .catch(function(error) {
             document.getElementById('pageContent').innerHTML =
@@ -211,15 +210,10 @@ function getPageUrl(pageName) {
     var urlMap = {
         'default': contextPath + '/attendee/default.jsp',  // ← 添加首页映射
         'conferenceHall': contextPath + '/attendee/conferenceHall.jsp',
-        'joinConference': contextPath + '/attendee/joinConference.jsp',
+        'conferencePayment': contextPath + '/attendee/conferencePayment.jsp',
         'myConferences': contextPath + '/attendee/myConferences.jsp',
-        // 'makePayment': contextPath + '/payment/makePayment.jsp',
-        // 'paymentHistory': contextPath + '/payment/paymentHistory.jsp',
-        // 'attendRecord': contextPath + '/attendee/attendRecord.jsp',
-        // 'paymentStatus': contextPath + '/payment/paymentStatus.jsp',
-        // 'checkinStatus': contextPath + '/checkin/checkinStatus.jsp'
-    };
 
+    };
     return urlMap[pageName] || contextPath + '/index2.jsp';
 }
 

@@ -71,7 +71,7 @@ public class UserServlet extends HttpServlet {
         User user = userService.login(username, password);
         PrintWriter out = response.getWriter();
         // 登录成功
-        if (user != null) {
+        if (user != null&&user.getStatus()!=0) {
             HttpSession session = request.getSession();  //获取 Session（不存在则自动创建）
             session.setAttribute("user", user);       //存入用户对象
             //设置 Session 过期时间30分钟（单位：秒）
@@ -93,7 +93,10 @@ public class UserServlet extends HttpServlet {
             // 登录失败
             Map<String, Object> result = new HashMap<>();
             result.put("code", 400);
-            result.put("msg", "用户名或密码错误");
+            if(user.getStatus()==1)
+                result.put("msg", "用户名或密码错误");
+            else if(user.getStatus()==0)
+                result.put("msg", "对不起，账号已被禁用");
             result.put("data", null);
             String jsonStr = mapper.writeValueAsString(result);
             out.print(jsonStr);
@@ -155,18 +158,16 @@ public class UserServlet extends HttpServlet {
     }
     private void updateInfo(HttpServletRequest request, HttpServletResponse response)throws ServletException, IOException {
         // 更新逻辑
-        // 1. 设置编码
         request.setCharacterEncoding("UTF-8");
         response.setContentType("application/json;charset=UTF-8");
 
         PrintWriter out = response.getWriter();
         Map<String, Object> result = new HashMap<>();
 
-        // 2. 从 Session 获取当前登录用户
+        //从 Session 获取当前登录用户
         HttpSession session = request.getSession(false);
         User currentUser = (User) session.getAttribute("user");
 
-        // 3. 接收参数
         String phone = request.getParameter("phone");
         String email = request.getParameter("email");
 
