@@ -123,7 +123,6 @@
                 <span class="title-dot"></span>
                 <h5>缴费明细</h5>
             </div>
-            <div class="card-badge" id="recordBadge">0 条记录</div>
         </div>
         <div class="card-body">
             <div class="table-wrap">
@@ -131,7 +130,8 @@
                     <thead>
                     <tr>
                         <th>会议名称</th>
-                        <th>会议时间</th>
+                        <th>会议开始时间</th>
+                        <th>会议结束时间</th>
                         <th>缴费金额</th>
                         <th>缴费时间</th>
                         <th>缴费状态</th>

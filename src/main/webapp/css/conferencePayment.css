@@ -394,19 +394,11 @@
 
 .card-title h5 {
     margin: 0;
-    font-size: 16px;
+    font-size: 20px;
     font-weight: 600;
     color: var(--text-main);
 }
 
-.card-badge {
-    background: #f1f5f9;
-    color: var(--text-secondary);
-    padding: 4px 12px;
-    border-radius: 20px;
-    font-size: 12px;
-    font-weight: 500;
-}
 
 .card-body {
     padding: 0;
@@ -425,7 +417,7 @@
 .data-table thead th {
     background: #f8fafc;
     padding: 14px 24px;
-    font-size: 12px;
+    font-size: 16px;
     font-weight: 600;
     color: var(--text-secondary);
     text-transform: uppercase;
@@ -600,6 +592,12 @@
     color: #fff;
     border-color: transparent;
     box-shadow: 0 4px 10px rgba(99,102,241,0.3);
+}
+.page-numbers .pagination-wrapper {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    justify-content: center;
 }
 
 /* ========== 加载动画 ========== */

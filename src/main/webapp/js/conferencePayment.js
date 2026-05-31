@@ -4,7 +4,6 @@ var currentData = [];
 
 // 页面加载时初始化
 document.addEventListener('DOMContentLoaded', function() {
-    console.log('conferencePayment.js 加载完成');
     // 只有当缴费页面元素存在于当前 DOM 中时才加载数据
     // （避免在 index2.jsp 主框架加载时就发起请求）
     if (document.getElementById('paymentTableBody')) {
@@ -116,11 +115,13 @@ function renderPayments(payments) {
         // 会议名称
         var conferenceName = p.conferenceName || '会议ID:' + (p.conference_id || '--');
         // 会议时间
-        var conferenceDate = p.conferenceDate || '--';
+        var conferenceStartDate = p.conferenceStartDate || '--';
+        var conferenceEndDate = p.conferenceEndDate || '--';
 
         html += '<tr>';
         html += '<td><i class="fas fa-calendar-alt me-2 text-primary"></i>' + escapeHtml(conferenceName) + '</td>';
-        html += '<td>' + conferenceDate + '</td>';
+        html += '<td>' + conferenceStartDate + '</td>';
+        html += '<td>' + conferenceEndDate + '</td>';
         html += '<td><span class="' + amountClass + '">' + amountText + '</span></td>';
         html += '<td>' + paymentTime + '</td>';
         html += '<td><span class="payment-status ' + statusClass + '">' + statusText + '</span></td>';
@@ -143,10 +144,12 @@ function renderPayments(payments) {
     // 更新分页
     document.getElementById('paginationInfo').innerText = '共 ' + filteredData.length + ' 条记录';
 
-    var pageHtml = '';
+    // 修改后：添加一个 flex 容器包裹按钮
+    var pageHtml = '<div class="pagination-wrapper">';
     for (var i = 1; i <= totalPages; i++) {
-        pageHtml += '<button class="page-number' + (i === currentPage ? ' active' : '') + '" onclick="goToPage(' + i + ')">' + i + '</button>';
+        pageHtml += '<button class="page-number' + (i === currentPage ? ' active' : '') + '" onclick="goToPagePayment(' + i + ')">' + i + '</button>';
     }
+    pageHtml += '</div>';
     document.getElementById('pageNumbers').innerHTML = pageHtml;
 }
 
@@ -184,7 +187,12 @@ function refreshData() {
     loadPaymentData();
 }
 
-function goToPage(page) {
+function goToPagePayment(page) {
+    console.log('goToPage 被调用, 目标页码:', page);
+    console.log('当前 currentPage:', currentPage);
+    console.log('currentData 长度:', currentData.length);
+
+
     currentPage = page;
     renderPayments(currentData);
 }

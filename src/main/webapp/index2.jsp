@@ -14,6 +14,9 @@
     <link href="${pageContext.request.contextPath}/css/index2.css" rel="stylesheet"/>
     <link href="${pageContext.request.contextPath}/css/conferencePayment.css" rel="stylesheet"/>
 </head>
+
+
+
 <body>
 <%-- 检查是否登录，未登录则重定向 --%>
 <c:if test="${empty sessionScope.user}">
@@ -174,8 +177,9 @@
 <!-- 引入纯静态 JS 文件 -->
 <script src="${pageContext.request.contextPath}/js/conferencePayment.js"></script>
 <script src="${pageContext.request.contextPath}/js/meetingSearch.js"></script>
+
 <script>
-    // 设置当前激活菜单
+    //设置当前激活菜单(公共script)
     document.querySelectorAll('.sidebar-menu .nav-link').forEach(link => {
         link.addEventListener('click', function(e) {
             if (!this.getAttribute('onclick') || this.getAttribute('onclick') === '') {
