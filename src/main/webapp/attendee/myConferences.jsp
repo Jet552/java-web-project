@@ -290,7 +290,7 @@
         if (conferenceId) formData.append('id', conferenceId);
         formData.append('title', title);
         formData.append('description', description);
-        form.append('venue', venue);
+        formData.append('venue', venue); // ✅ 修正：把 form 改为 formData
         formData.append('dorms', dorms);
         formData.append('start_date', startDate);
         formData.append('end_date', endDate);
@@ -448,14 +448,39 @@
     // 格式化日期时间
     function formatDateTime(dateStr) {
         if (!dateStr) return '-';
-        const date = new Date(dateStr);
-        return date.toLocaleString('zh-CN', {
-            year: 'numeric',
-            month: '2-digit',
-            day: '2-digit',
-            hour: '2-digit',
-            minute: '2-digit'
-        });
+
+        let date;
+        // 处理数组格式
+        if (Array.isArray(dateStr)) {
+            // 数组结构：[year, month, day, hour, minute, second]
+            const [year, month, day, hour, minute, second = 0] = dateStr;
+            // JS的Date月份是0-11，所以month要减1
+            date = new Date(year, month - 1, day, hour, minute, second);
+        }
+        // 处理字符串格式
+        else if (typeof dateStr === 'string') {
+            // 把空格换成T，变成标准ISO格式
+            const isoStr = dateStr.replace(' ', 'T');
+            date = new Date(isoStr);
+        }
+        // 其他格式
+        else {
+            date = new Date(dateStr);
+        }
+
+        // 检查日期是否有效
+        if (isNaN(date.getTime())) {
+            console.error('日期解析失败:', dateStr);
+            return '日期错误';
+        }
+
+        // 格式化输出（yyyy-MM-dd HH:mm）
+        const year = date.getFullYear();
+        const month = String(date.getMonth() + 1).padStart(2, '0');
+        const day = String(date.getDate()).padStart(2, '0');
+        const hours = String(date.getHours()).padStart(2, '0');
+        const minutes = String(date.getMinutes()).padStart(2, '0');
+        return year + "-" + month + "-" + day + " " + hours + ":" + minutes;
     }
 
     // 格式化为datetime-local格式
