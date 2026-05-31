@@ -65,11 +65,13 @@ function checkAttendanceStatus() {
         .then(function (data) {
             console.log('checkStatus 返回:', JSON.stringify(data)); // ← 加这里
             if (data.code === 300 ) {//查到了已参加的记录
+                attendanceStatus = 1;
                 setFormDisabled(true);
                 document.getElementById('btnJoin').disabled = true;
                 document.getElementById('btnPay').disabled = false;
             }
             else if (data.code === 200) {//没有查到记录
+                attendanceStatus = 0;
                 setFormDisabled(false);
                 document.getElementById('btnJoin').disabled = false;
                 document.getElementById('btnPay').disabled = true;
@@ -128,7 +130,6 @@ function doSubmitJoin() {
         .then(function (data) {
             showLoading(false);
             if (data.code === 200) {//创建成功
-                attendanceId = data.attendanceId;
                 attendanceStatus = 1;
                 // 表单禁用，参加按钮禁用，缴费按钮启用
                 setFormDisabled(true);
@@ -172,7 +173,7 @@ function doSubmitJoin() {
  * 跳转缴费页面
  */
 function goToPayment() {
-    if (!attendanceId) {
+    if (!attendanceStatus) {
         Swal.fire({ icon: 'warning', title: '请先报名', text: '请先完成参会登记后再进行缴费', confirmButtonColor: '#1890ff' });
         return;
     }
