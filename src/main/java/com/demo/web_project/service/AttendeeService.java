@@ -13,5 +13,4 @@ public class AttendeeService {
     public List<Attendee> checkAttendees(String username){
         return attendeeDao.checkAttendees(username);
     }
-    public List<Conference> findByUserId(int user_id){return attendeeDao.findByUserId(user_id);}
 }
