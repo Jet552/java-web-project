@@ -12,7 +12,6 @@
     <link href="${pageContext.request.contextPath}/css/login-style.css" rel="stylesheet"/>
 </head>
 <body>
-
 <div class="login-card">
     <div class="logo-icon">
         <i class="bi bi-person-plus"></i>

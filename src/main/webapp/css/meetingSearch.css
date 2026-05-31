@@ -1,0 +1,299 @@
+/* ==================== 会议检索页面样式 ==================== */
+
+.meeting-search-wrapper {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 24px 20px 30px 20px;
+}
+/* ---------- 搜索区域 ---------- */
+/* ---------- 搜索区域 ---------- */
+.search-section {
+    margin-bottom: 24px;
+}
+
+.search-form {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+
+.search-input-group {
+    display: flex !important;
+    flex-wrap: nowrap !important;
+    align-items: stretch;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+    border-radius: 12px;
+    overflow: hidden;
+    transition: box-shadow 0.25s ease;
+    width: 100%;
+}
+
+.search-input-group:focus-within {
+    box-shadow: 0 4px 20px rgba(24, 144, 255, 0.15);
+}
+
+.search-icon {
+    flex: 0 0 auto !important;
+    display: flex;
+    align-items: center;
+    background: #fff;
+    border: 1px solid #e0e4e8;
+    border-right: none;
+    color: #a0aab4;
+    padding: 0 0 0 18px;
+    font-size: 0.95rem;
+}
+
+.search-field {
+    flex: 1 1 0% !important;
+    width: 1% !important;
+    min-width: 0;
+    border: 1px solid #e0e4e8;
+    border-left: none;
+    border-right: none;
+    padding: 12px 16px;
+    font-size: 0.95rem;
+    color: #2c3e50;
+    transition: border-color 0.25s ease;
+}
+
+.search-field:focus {
+    border-color: #1890ff;
+    box-shadow: none;
+    outline: none;
+}
+
+.search-field::placeholder {
+    color: #b0b8c1;
+    font-size: 0.9rem;
+}
+
+.btn-search {
+    flex: 0 0 auto !important;
+    background: #1890ff;
+    border: 1px solid #1890ff;
+    color: #fff;
+    padding: 12px 28px;
+    font-size: 0.95rem;
+    font-weight: 500;
+    letter-spacing: 0.5px;
+    transition: all 0.25s ease;
+    white-space: nowrap;
+}
+
+.btn-search:hover {
+    background: #1476d6;
+    border-color: #1476d6;
+    color: #fff;
+}
+
+.btn-search:active {
+    background: #0f5ca8 !important;
+    border-color: #0f5ca8 !important;
+}
+
+/* ---------- 会议表格 ---------- */
+.table-meeting {
+    border-collapse: separate;
+    border-spacing: 0;
+}
+
+.table-meeting thead th {
+    background: #f7f8fa;
+    border-bottom: 2px solid #e8ecef;
+    color: #4a5568;
+    font-weight: 600;
+    font-size: 0.85rem;
+    text-transform: none;
+    letter-spacing: 0.3px;
+    padding: 14px 16px;
+    white-space: nowrap;
+    position: sticky;
+    top: 0;
+    z-index: 1;
+}
+
+.table-meeting thead th:first-child {
+    padding-left: 20px;
+}
+
+.table-meeting thead th:last-child {
+    padding-right: 20px;
+}
+
+.table-meeting tbody td {
+    padding: 14px 16px;
+    vertical-align: middle;
+    border-bottom: 1px solid #f0f2f5;
+    color: #4a5568;
+    font-size: 0.9rem;
+    transition: background-color 0.15s ease;
+}
+
+.table-meeting tbody td:first-child {
+    padding-left: 20px;
+}
+
+.table-meeting tbody td:last-child {
+    padding-right: 20px;
+}
+
+.table-meeting tbody tr {
+    transition: background-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.table-meeting tbody tr:hover {
+    background-color: #e8f4ff;
+    box-shadow: inset 3px 0 0 #1890ff;
+}
+
+.table-meeting tbody tr:hover .meeting-name {
+    color: #1890ff;
+}
+
+.meeting-name {
+    color: #2c3e50;
+    font-weight: 500;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    transition: color 0.15s ease;
+}
+
+/* ---------- 状态徽章 ---------- */
+.status-badge {
+    display: inline-block;
+    padding: 5px 14px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 500;
+    letter-spacing: 0.3px;
+    line-height: 1.4;
+    white-space: nowrap;
+}
+
+.status-registering {
+    background: #e6f7ff;
+    color: #1890ff;
+    border: 1px solid #91d5ff;
+}
+
+.status-ongoing {
+    background: #f6ffed;
+    color: #52c41a;
+    border: 1px solid #b7eb8f;
+}
+
+.status-ended {
+    background: #fafafa;
+    color: #8c8c8c;
+    border: 1px solid #d9d9d9;
+}
+
+/* ---------- 操作按钮 ---------- */
+.btn-join {
+    background: linear-gradient(135deg, #1890ff 0%, #40a9ff 100%);
+    border: none;
+    color: #fff;
+    font-weight: 500;
+    font-size: 0.82rem;
+    padding: 6px 16px;
+    border-radius: 6px;
+    letter-spacing: 0.3px;
+    transition: all 0.25s ease;
+    white-space: nowrap;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+}
+
+.btn-join:hover {
+    background: linear-gradient(135deg, #1476d6 0%, #3096e6 100%);
+    color: #fff;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(24, 144, 255, 0.35);
+}
+
+.btn-join:active {
+    transform: translateY(0);
+    box-shadow: none;
+}
+
+/* ---------- 分页 ---------- */
+/* ---------- 分页 ---------- */
+.pagination-wrapper {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 24px;
+}
+
+.pagination {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    gap: 6px;
+}
+
+.pagination .page-item {
+    display: inline-flex;
+}
+
+.pagination .page-link {
+    display: flex;
+    align-items: center;
+    color: #4a5568;
+    border: 1px solid #e0e4e8;
+    padding: 8px 16px;
+    font-size: 0.88rem;
+    border-radius: 6px;
+    transition: all 0.2s ease;
+    background: #fff;
+    text-decoration: none;
+    white-space: nowrap;
+}
+
+.pagination .page-link:hover {
+    color: #1890ff;
+    background-color: #e8f4ff;
+    border-color: #91d5ff;
+}
+
+.pagination .page-item.active .page-link {
+    background: #e8f4ff;
+    border-color: #91d5ff;
+    color: #1890ff;
+    font-weight: 500;
+    cursor: default;
+}
+
+.pagination .page-item.disabled .page-link {
+    color: #c0c4cc;
+    background: #fafafa;
+    border-color: #e8ecef;
+    pointer-events: none;
+}
+
+/* ---------- 响应式 ---------- */
+@media (max-width: 992px) {
+    .meeting-search-wrapper {
+        padding: 16px 12px 20px 12px;
+    }
+
+    .table-meeting thead th,
+    .table-meeting tbody td {
+        padding: 10px 12px;
+        font-size: 0.82rem;
+    }
+
+    .btn-search {
+        padding: 12px 18px;
+    }
+
+    .pagination-wrapper {
+        justify-content: center;
+    }
+}
