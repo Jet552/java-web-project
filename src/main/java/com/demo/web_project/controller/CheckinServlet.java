@@ -160,6 +160,9 @@ public class CheckinServlet extends HttpServlet {
         } catch (NumberFormatException e) {
             sendError(resp, 400, "参数错误");
             return;
+        } catch (java.time.format.DateTimeParseException e) {
+            sendError(resp, 400, "日期格式错误，正确格式为 yyyy-MM-dd");
+            return;
         }
         out.flush(); out.close();
     }
