@@ -224,10 +224,9 @@ function loadPage(pageName) {
  */
 function getPageUrl(pageName) {
     var urlMap = {
-        'default': contextPath + '/conference/default.jsp',  // ← 添加首页映射
-        'conferenceHall': contextPath + '/conference/conferenceHall.jsp',
-        'conferencePayment': contextPath + '/conference/conferencePayment.jsp',
-        'myConferences': contextPath + '/conference/myConferences.jsp',
+        'default': contextPath + '/attendee/default.jsp',  // ← 添加首页映射
+        'conferencePayment': contextPath + '/attendee/conferencePayment.jsp',
+        'myConferences': contextPath + '/attendee/myConferences.jsp',
 
     };
     return urlMap[pageName] || contextPath + '/index2.jsp';
