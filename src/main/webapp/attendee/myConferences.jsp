@@ -11,6 +11,6 @@
     <title>Title</title>
 </head>
 <body>
-    <h1>寝室长out</h1>
+
 </body>
 </html>

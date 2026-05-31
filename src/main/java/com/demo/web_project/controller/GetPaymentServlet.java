@@ -78,7 +78,8 @@ public class GetPaymentServlet extends HttpServlet {
                 paymentData.put("attendee_id",payment.getAttendee_id());
                 paymentData.put("conference_id", payment.getConference_id());
                 paymentData.put("conferenceName",payment.getConferenceTitle());
-                paymentData.put("conferenceDate", payment.getConferenceDate());
+                paymentData.put("conferenceStartDate", payment.getConferenceStartDate());
+                paymentData.put("conferenceEndDate", payment.getConferenceEndDate());
                 paymentData.put("amount", payment.getAmount());
                 paymentData.put("status", payment.getStatus());
                 paymentData.put("paidAt", payment.getPaid_at());

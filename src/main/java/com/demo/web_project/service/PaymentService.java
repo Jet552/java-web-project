@@ -35,4 +35,9 @@ public class PaymentService
     {
         return paymentDao.updateStatus(id,status);
     }
+    //根据用户ID和会议ID查找记录
+    public Payment findByUserIdAndConferenceId(int conferenceId, int userId)
+    {
+        return paymentDao.findByUserIdAndConferenceId(conferenceId,userId);
+    }
 }

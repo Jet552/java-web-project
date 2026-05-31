@@ -4,7 +4,6 @@ var currentData = [];
 
 // 页面加载时初始化
 document.addEventListener('DOMContentLoaded', function() {
-    console.log('conferencePayment.js 加载完成');
     // 只有当缴费页面元素存在于当前 DOM 中时才加载数据
     // （避免在 index2.jsp 主框架加载时就发起请求）
     if (document.getElementById('paymentTableBody')) {
@@ -22,17 +21,14 @@ function loadPaymentData() {
         }
     })
         .then(function(response) {
-            console.log('响应状态:', response.status);
             if (!response.ok) {
                 throw new Error('HTTP ' + response.status);
             }
             return response.json();
         })
         .then(function(data) {
-            console.log('返回数据:', data);
             if (data.code === 200) {
                 currentData = data.data || [];
-                console.log('缴费记录数量:', currentData.length);
                 renderPayments(currentData);
                 if (data.statistics) {
                     updateStatistics(data.statistics);
@@ -57,7 +53,6 @@ function loadPaymentData() {
             }
         })
         .catch(function(error) {
-            console.error('请求失败:', error);
             Swal.fire({
                 icon: 'error',
                 title: '网络错误',
@@ -71,7 +66,7 @@ function loadPaymentData() {
 function showEmptyTable() {
     var tbody = document.getElementById('paymentTableBody');
     if (tbody) {
-        tbody.innerHTML = '<tr><td colspan="7" class="text-center py-5">暂无缴费记录</td></tr>';
+        tbody.innerHTML = '<tr><td colspan="6" class="loading-cell"><div class="empty-state"><div class="empty-icon"><i class="fas fa-receipt"></i></div><h5>暂无缴费记录</h5><p>还没有任何缴费记录</p></div></td></tr>';
     }
     var paginationInfo = document.getElementById('paginationInfo');
     if (paginationInfo) paginationInfo.innerText = '共 0 条记录';
@@ -90,13 +85,13 @@ function renderPayments(payments) {
     if (pageData.length === 0) {
         tbody.innerHTML = `
             <tr>
-                <td colspan="7" class="text-center py-5">
+                <td colspan="6">
                     <div class="empty-state">
-                        <i class="fas fa-receipt"></i>
+                        <div class="empty-icon"><i class="fas fa-receipt"></i></div>
                         <h5>暂无缴费记录</h5>
                         <p>还没有任何缴费记录，快去参加感兴趣的会议吧！</p>
-                        <button class="btn btn-primary" onclick="parent.loadPage('conferenceHall')">
-                            <i class="fas fa-calendar-alt me-1"></i>浏览会议
+                        <button class="btn-explore" onclick="parent.loadPage('conferenceHall')">
+                            <i class="fas fa-compass"></i>去发现精彩会议
                         </button>
                     </div>
                 </td>
@@ -120,22 +115,24 @@ function renderPayments(payments) {
         // 会议名称
         var conferenceName = p.conferenceName || '会议ID:' + (p.conference_id || '--');
         // 会议时间
-        var conferenceDate = p.conferenceDate || '--';
+        var conferenceStartDate = p.conferenceStartDate || '--';
+        var conferenceEndDate = p.conferenceEndDate || '--';
 
         html += '<tr>';
         html += '<td><i class="fas fa-calendar-alt me-2 text-primary"></i>' + escapeHtml(conferenceName) + '</td>';
-        html += '<td>' + conferenceDate + '</td>';
+        html += '<td>' + conferenceStartDate + '</td>';
+        html += '<td>' + conferenceEndDate + '</td>';
         html += '<td><span class="' + amountClass + '">' + amountText + '</span></td>';
         html += '<td>' + paymentTime + '</td>';
         html += '<td><span class="payment-status ' + statusClass + '">' + statusText + '</span></td>';
         html += '<td>';
 
         if (p.status === 'unpaid') {
-            html += '<button class="btn btn-primary btn-sm" onclick="payNow(' + p.id + ')">' +
-                '<i class="fas fa-credit-card me-1"></i>立即缴费</button>';
+            html += '<button class="btn-action btn-pay" onclick="payNow(' + p.id + ')">' +
+                '<i class="fas fa-credit-card"></i>立即缴费</button>';
         } else {
-            html += '<button class="btn btn-outline-secondary btn-sm" onclick="viewDetail(' + p.id + ')">' +
-                '<i class="fas fa-eye me-1"></i>查看详情</button>';
+            html += '<button class="btn-action btn-view" onclick="viewDetail(' + p.id + ')">' +
+                '<i class="fas fa-eye"></i>查看详情</button>';
         }
 
         html += '</td>';
@@ -147,10 +144,12 @@ function renderPayments(payments) {
     // 更新分页
     document.getElementById('paginationInfo').innerText = '共 ' + filteredData.length + ' 条记录';
 
-    var pageHtml = '';
+    // 修改后：添加一个 flex 容器包裹按钮
+    var pageHtml = '<div class="pagination-wrapper">';
     for (var i = 1; i <= totalPages; i++) {
-        pageHtml += '<button class="page-number' + (i === currentPage ? ' active' : '') + '" onclick="goToPage(' + i + ')">' + i + '</button>';
+        pageHtml += '<button class="page-number' + (i === currentPage ? ' active' : '') + '" onclick="goToPagePayment(' + i + ')">' + i + '</button>';
     }
+    pageHtml += '</div>';
     document.getElementById('pageNumbers').innerHTML = pageHtml;
 }
 
@@ -188,7 +187,12 @@ function refreshData() {
     loadPaymentData();
 }
 
-function goToPage(page) {
+function goToPagePayment(page) {
+    console.log('goToPage 被调用, 目标页码:', page);
+    console.log('当前 currentPage:', currentPage);
+    console.log('currentData 长度:', currentData.length);
+
+
     currentPage = page;
     renderPayments(currentData);
 }
@@ -236,13 +240,17 @@ function payNow(paymentId) {
         confirmButtonColor: '#667eea'
     }).then(function(result) {
         if (result.isConfirmed) {
+            if (!paymentId && paymentId !== 0) {
+                Swal.fire({ icon: 'error', title: '错误', text: '缴费记录ID无效', confirmButtonColor: '#f56565' });
+                return;
+            }
             var url = contextPath + '/payment/pay';
             fetch(url, {
                 method: 'POST',
                 headers: {
-                    'Content-Type': 'application/json'
+                    'Content-Type': 'application/x-www-form-urlencoded'
                 },
-                body: 'status='+encodeURIComponent("paid")
+                body: 'status=' + encodeURIComponent('paid') + '&paymentId=' + encodeURIComponent(paymentId)
             })
                 .then(function(response) {
                     return response.json();

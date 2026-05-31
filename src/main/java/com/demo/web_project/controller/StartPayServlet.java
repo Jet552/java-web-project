@@ -52,10 +52,10 @@ public class StartPayServlet extends HttpServlet {
             // 获取当前登录用户
             HttpSession session = request.getSession(false);
             User currentUser = (User) session.getAttribute("user");
-
+            int paymentId = Integer.parseInt(request.getParameter("paymentId"));
             String status=request.getParameter("status");
-            paymentService.updateStatus(currentUser.getId(),status);
-            dataj.put("paymentId",currentUser.getId());
+            paymentService.updateStatus(paymentId,status);
+            dataj.put("paymentId",paymentId);
             result.put("code",200);
             result.put("msg","缴费成功");
             result.put("data",dataj);

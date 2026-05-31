@@ -5,6 +5,7 @@ import com.demo.web_project.dao.PaymentDao;
 import com.demo.web_project.vo.Payment;
 
 import java.sql.*;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 public class PaymentDaoImpl implements PaymentDao {
@@ -50,11 +51,12 @@ public class PaymentDaoImpl implements PaymentDao {
 
     @Override
     public List<Payment> findByUserID(int userID) {
+        DateTimeFormatter DATETIME_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         List<Payment> paymentList = new ArrayList<>();
 
         // 关联查询，获取会议信息
         String sql = "SELECT p.id, p.attendee_id, p.amount, p.status, p.paid_at, " +
-                "c.id as conference_id, c.title as conference_title, c.start_date " +
+                "c.id as conference_id, c.title as conference_title, c.start_date, c.end_date " +
                 "FROM payments p " +
                 "JOIN attendees a ON p.attendee_id = a.id " +
                 "JOIN conferences c ON a.conference_id = c.id " +
@@ -75,7 +77,11 @@ public class PaymentDaoImpl implements PaymentDao {
 
                 Timestamp startTimestamp = rs.getTimestamp("start_date");
                 if (startTimestamp != null) {
-                    payment.setConferenceDate(startTimestamp.toLocalDateTime().toLocalDate().toString());
+                    payment.setConferenceStartDate(startTimestamp.toLocalDateTime().format(DATETIME_FORMATTER));
+                }
+                Timestamp endTimestamp = rs.getTimestamp("end_date");
+                if (endTimestamp != null) {
+                    payment.setConferenceEndDate(endTimestamp.toLocalDateTime().format(DATETIME_FORMATTER));
                 }
 
                 paymentList.add(payment);
@@ -116,6 +122,40 @@ public class PaymentDaoImpl implements PaymentDao {
             e.printStackTrace();
         }
         return paymentList;
+    }
+
+    public Payment findByUserIdAndConferenceId(int conferenceId, int userId) {
+        String sql = "SELECT p.id, p.attendee_id, p.amount, p.status, p.paid_at, " +
+                "FROM payments p " +
+                "JOIN attendees a ON p.attendee_id = a.id " +
+                "JOIN conferences c ON a.conference_id = c.id " +
+                "WHERE a.user_id = ? AND a.conference_id = ?";
+
+        try (Connection conn = JDBCUtil.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setInt(1, userId);
+            ps.setInt(2, conferenceId);
+
+            ResultSet rs = ps.executeQuery();
+
+            if (rs.next()) {
+                Payment payment = new Payment();
+                payment.setId(rs.getInt("id"));
+                payment.setAttendee_id(rs.getInt("attendee_id"));
+                payment.setAmount(rs.getDouble("amount"));
+                payment.setStatus(rs.getString("status"));
+                payment.setPaid_at(rs.getTimestamp("paid_at") != null ?
+                        rs.getTimestamp("paid_at").toLocalDateTime() : null);
+                payment.setConference_id(rs.getInt("conference_id"));
+                payment.setConferenceTitle(rs.getString("conference_name"));
+                return payment;
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
 //    @Override

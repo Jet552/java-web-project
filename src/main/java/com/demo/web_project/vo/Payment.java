@@ -14,8 +14,24 @@ public class Payment
     private int conference_id;
     private String conferenceTitle;
     private String username;
-    private String conferenceDate; //会议开始时间（格式化后的字符串）
+    private String conferenceStartDate; //会议开始时间（格式化后的字符串）
+    private String conferenceEndDate; //会议结束时间（格式化后的字符串）
 
+    public String getConferenceStartDate() {
+        return conferenceStartDate;
+    }
+
+    public void setConferenceStartDate(String conferenceStartDate) {
+        this.conferenceStartDate = conferenceStartDate;
+    }
+
+    public String getConferenceEndDate() {
+        return conferenceEndDate;
+    }
+
+    public void setConferenceEndDate(String conferenceEndDate) {
+        this.conferenceEndDate = conferenceEndDate;
+    }
 
     public int getConference_id() {return conference_id;}
 
@@ -37,13 +53,6 @@ public class Payment
         this.username = username;
     }
 
-    public String getConferenceDate() {
-        return conferenceDate;
-    }
-
-    public void setConferenceDate(String conferenceDate) {
-        this.conferenceDate = conferenceDate;
-    }
 
     public int getId() {
         return id;
