@@ -1,5 +1,4 @@
 package com.demo.web_project.controller;
-
 import com.demo.web_project.service.AttendeeService;
 import com.demo.web_project.vo.Attendee;
 import com.demo.web_project.vo.User;
@@ -16,9 +15,8 @@ import java.io.PrintWriter;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
-
-@WebServlet("/attendee/join")
-public class JoinServlet extends HttpServlet {
+@WebServlet("/attendee/checkStatus")
+public class CheckStatusServlet extends HttpServlet {
     private ObjectMapper mapper = new ObjectMapper();  //创建一次，重复使用
     private AttendeeService attendeeService=new AttendeeService();
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
@@ -29,25 +27,24 @@ public class JoinServlet extends HttpServlet {
         User user=(User)session.getAttribute("user");//获取user的各种数据
         int user_id = user.getId();//获取userid
         int conference_id=Integer.parseInt(request.getParameter("conferenceId"));
-        LocalDateTime arrivalTime=LocalDateTime.parse(request.getParameter("arrivalTime"));
-        LocalDateTime departureTime=LocalDateTime.parse(request.getParameter("departureTime"));
-        String accommodationType=request.getParameter("accommodationType");
-        String requirements=request.getParameter("requirements");
-        Attendee attendee=new Attendee(user_id,conference_id,arrivalTime,departureTime,accommodationType,requirements);
         // 调用 Service 验证
         PrintWriter out = response.getWriter();
-        //不存在该用户，可以创建
-        if(attendeeService.createAttend(attendee)){//创建成功
-            Map<String, Object> result = new HashMap<>();
+        Map<String, Object> result = new HashMap<>();
+        if(attendeeService.checkAttendeesStatus(user_id,conference_id)==0){//不存在已参加的记录
             result.put("code", 200);
-            result.put("msg", "参加成功");
+            result.put("msg", "可以参加");;
+            String jsonStr = mapper.writeValueAsString(result);
+            out.print(jsonStr);
         }
-        else {
-            Map<String, Object> result = new HashMap<>();
+        else{
             result.put("code", 300);
-            result.put("msg", "不可重复参加同一场会议!");
+            result.put("msg", "不可重复参加");
+            String jsonStr = mapper.writeValueAsString(result);
+            out.print(jsonStr);
         }
+        //不存在该用户，可以创建
         out.flush();
         out.close();
     }
 }
+

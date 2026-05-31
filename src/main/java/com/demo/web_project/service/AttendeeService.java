@@ -11,4 +11,7 @@ public class AttendeeService {
     public List<Attendee> checkAttendees(String username){
         return attendeeDao.checkAttendees(username);
     }
+    public  int checkAttendeesStatus(int user_id,int confID){
+        return  attendeeDao.checkAttendeesStatus(user_id,confID);
+    }
 }

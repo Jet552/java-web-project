@@ -8,7 +8,17 @@ public class Attendee {
     private String accommodation_type;
     private String requirements;
     private int status;
+    public Attendee(){
 
+    }
+    public Attendee(int userid,int conference_id,LocalDateTime arrival_time,LocalDateTime departure_time,String accommodation_type,String requirements){
+        this.userid=userid;
+        this.conference_id=conference_id;
+        this.arrival_time=arrival_time;
+        this.departure_time=departure_time;
+        this.accommodation_type=accommodation_type;
+        this.requirements=requirements;
+    }
     public int getUserid() {
         return userid;
     }
