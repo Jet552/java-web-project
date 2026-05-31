@@ -10,6 +10,31 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <link href="${pageContext.request.contextPath}/css/login-style.css" rel="stylesheet"/>
+    <style>
+        .form-select-custom {
+            width: 50% !important;
+            margin: 0 0 20px 0 !important;
+            display: block !important;
+            padding: 12px 16px !important;
+            font-size: 15px !important;
+            border: 2px solid #c3b5f0 !important;
+            border-radius: 12px !important;
+            background: #f5f3ff !important;
+            color: #4a3bb5 !important;
+            transition: all 0.2s;
+        }
+        .form-select-custom:focus {
+            outline: none !important;
+            border-color: #6c5ce7 !important;
+            box-shadow: 0 0 0 3px rgba(108,92,231,0.15) !important;
+        }
+        .field-error {
+            font-size: 12px;
+            color: #e53e3e;
+            margin: -14px 0 16px 0;
+            padding-left: 4px;
+        }
+    </style>
 </head>
 <body>
 <div class="login-card">
@@ -24,43 +49,39 @@
             <i class="bi bi-person"></i>
             <input type="text" class="form-control-custom" id="username" name="username" placeholder="用户名" autocomplete="off" required>
         </div>
+        <div class="field-error" id="usernameError" style="display:none;"></div>
+
         <div class="input-group-custom">
             <i class="bi bi-lock"></i>
             <input type="password" class="form-control-custom" id="password" name="password" placeholder="密码" required>
         </div>
+        <div class="field-error" id="passwordError" style="display:none;"></div>
+
         <div class="input-group-custom">
             <i class="bi bi-shield-check"></i>
             <input type="password" class="form-control-custom" id="confirmPassword" name="confirmPassword" placeholder="确认密码" required>
         </div>
-        <div class="dropdown">
-            <button class="btn btn-secondary dropdown-toggle custom-register-btn" type="button" id="registerMethodBtn" data-bs-toggle="dropdown">
-                <span id="selectedMethodText">选择注册方式</span>
-                <i class="bi bi-chevron-down"></i>
-            </button>
-            <div class="dropdown-menu p-3" style="width: 250px;" data-bs-auto-close="true"> <!-- 改了这里  -->
-                <!-- 注意：data-bs-auto-close 必须放在 .dropdown-menu 上 -->
-                <div class="form-check">
-                    <input class="form-check-input" type="radio" name="registerMethod" value="email" id="radioEmail" onclick=toggleContactInput()>
-                    <label class="form-check-label" for="radioEmail">邮箱地址</label>
-                </div>
-                <div class="form-check">
-                    <input class="form-check-input" type="radio" name="registerMethod" value="phone" id="radioPhone" onclick=toggleContactInput()>
-                    <label class="form-check-label" for="radioPhone">手机号码</label>
-                </div>
-            </div>
-        </div>
-        <!-- 动态显示的联系方式输入框容器 -->
+        <div class="field-error" id="confirmPasswordError" style="display:none;"></div>
+
+        <select class="form-select-custom" id="registerMethod" name="registerMethod" onchange="toggleContactInput()">
+            <option value="">请选择联系方式...</option>
+            <option value="email">邮箱地址</option>
+            <option value="phone">手机号码</option>
+        </select>
+        <div class="field-error" id="registerMethodError" style="display:none;"></div>
+
         <div id="contactInputContainer">
-            <!-- 邮箱输入框（初始隐藏） -->
             <div class="input-group-custom" id="emailGroup" style="display: none;">
                 <i class="bi bi-envelope"></i>
                 <input type="email" class="form-control-custom" id="email" name="email" placeholder="邮箱地址">
             </div>
-            <!-- 手机输入框（初始隐藏） -->
-            <div class="input-group-custom" id="phoneGroup" style="display: none;" >
+            <div class="field-error" id="emailError" style="display:none;"></div>
+
+            <div class="input-group-custom" id="phoneGroup" style="display: none;">
                 <i class="bi bi-phone"></i>
                 <input type="tel" class="form-control-custom" id="phone" name="phone" placeholder="手机号码">
             </div>
+            <div class="field-error" id="phoneError" style="display:none;"></div>
         </div>
         <button type="button" class="btn-login" id="registerBtn" onclick="handleRegister()">
             <i class="bi bi-person-plus me-2"></i> 注册账户

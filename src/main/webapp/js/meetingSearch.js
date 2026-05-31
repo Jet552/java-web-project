@@ -46,7 +46,7 @@ function renderSearchResult(data) {
     // code 200: 邀请码查到单个 / code 400: 关键字查到多个
     if (data.code === 200) {
         currentData = [data.data]; // 单条包装为数组
-    } else if (data.code === 400) {
+    } else if (data.code === 400) {//列表
         currentData = data.data || [];
     } else {
         // 未找到
@@ -78,13 +78,14 @@ function renderTablePage() {
         var rowNum = start + i + 1;
         html += '<tr>';
         html += '<td class="text-muted small">' + rowNum + '</td>';
+        html += '<td>' + item.id+ '</td>';
         html += '<td><span class="meeting-name" title="' + esc(item.title) + '">' + esc(item.title) + '</span></td>';
         html += '<td>' + esc((item.start_date || '').replace('T', ' ')) + '</td>';
         html += '<td>' + esc((item.end_date || '').replace('T', ' ')) + '</td>';
         html += '<td><i class="fas fa-map-marker-alt text-secondary me-1 small"></i>' + esc(item.venue) + '</td>';
         html += '<td>' + esc(item.dorms) + '</td>';
         // html += '<td><span class="status-badge ' + statusClass + '">' + status + '</span></td>';
-        html += '<td><a href="' + contextPath + '/join_meeting.jsp?id=' + (item.id || '') + '" class="btn btn-join btn-sm">';
+        html += '<td><a href="javascript:void(0)" onclick="joinMeeting(' + item.id + ')" class="btn btn-join btn-sm">';
         html += '<i class="fas fa-sign-in-alt me-1"></i>点击参加</a></td>';
         html += '</tr>';
     }
@@ -132,4 +133,77 @@ function showLoading(show) {
         overlay = d;
     }
     overlay.style.display = show ? 'flex' : 'none';
+}
+// (function () {
+//     'use strict';
+//     if (document.readyState === 'loading') {
+//         document.addEventListener('DOMContentLoaded', function () {
+//             loadAllApproved();
+//         });
+//     } else {
+//         loadAllApproved();
+//     }
+// })();
+
+function loadAllApproved() {
+    showLoading(true);
+    var url = contextPath + '/conference/search';
+    fetch(url, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: 'keyword='
+    })
+        .then(function (response) { return response.json(); })
+        .then(function (data) {
+            showLoading(false);
+            renderSearchResult(data);
+        })
+        .catch(function (error) {
+            showLoading(false);
+        });
+}
+/**
+ * 根据 ID 从当前数据中查找会议
+ */
+function getMeetingById(id) {
+    for (var i = 0; i < currentData.length; i++) {
+        if (currentData[i].id == id) {
+            return currentData[i];
+        }
+    }
+    return null;
+}
+/**
+ * 点击参加 - 获取该行会议数据并跳转
+ */
+function joinMeeting(id) {
+    var meeting = getMeetingById(id);
+    showLoading(true);
+    // 用邀请码向后端校验会议是否仍有效
+    fetch(contextPath + '/conference/search', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: 'keyword=' + meeting.invite_codes
+    })
+        .then(function (response) { return response.json(); })
+        .then(function (data) {
+            showLoading(false);
+            if (data.code === 200) {
+                // 会议仍存在，正常跳转
+                window.location.href = contextPath + '/attendee/join_meeting.jsp?id=' + id+'&title='+ meeting.title+'&start='+ (meeting.start_date || '').replace('T', ' ')
+                    +'&end='+ (meeting.end_date || '').replace('T', ' ')+'&venue='+ meeting.venue+'&dorms='+ meeting.dorms;
+            } else {
+                // 会议已取消/不存在
+                Swal.fire({
+                    icon: 'warning',
+                    title: '会议状态异常',
+                    text: '该会议已被主办方取消或下架，无法报名参加',
+                    confirmButtonColor: '#1890ff'
+                });
+            }
+        })
+        .catch(function () {
+            showLoading(false);
+            Swal.fire({ icon: 'error', title: '网络错误', text: '校验失败，请稍后重试', confirmButtonColor: '#1890ff' });
+        });
 }

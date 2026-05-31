@@ -47,11 +47,12 @@
                     <thead>
                         <tr>
                             <th style="width: 50px;">#</th>
-                            <th style="min-width: 220px;">会议名称</th>
-                            <th style="width: 140px;">开始时间</th>
-                            <th style="width: 140px;">结束时间</th>
-                            <th style="min-width: 160px;">地点</th>
-                            <th style="min-width: 160px;">住宿地址</th>
+                            <th style="width: 50px;">会议ID</th>
+                            <th style="min-width: 200px;">会议名称</th>
+                            <th style="width: 180px;">开始时间</th>
+                            <th style="width: 180px;">结束时间</th>
+                            <th style="min-width: 180px;">地点</th>
+                            <th style="min-width: 180px;">住宿地址</th>
                             <th style="width: 160px;">操作</th>
                         </tr>
                     </thead>
@@ -74,5 +75,5 @@
     var contextPath = '<%= request.getContextPath() %>';
 </script>
 <!-- 引入注册页面的 JS 文件 -->
-<script src="${pageContext.request.contextPath}/js/meetingSearch.js"></script>
+<%--<script src="${pageContext.request.contextPath}/js/meetingSearch.js"></script>--%>
 </body>

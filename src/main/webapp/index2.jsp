@@ -11,14 +11,10 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-
     <link href="${pageContext.request.contextPath}/css/index2.css" rel="stylesheet"/>
-
     <link href="${pageContext.request.contextPath}/css/conferencePayment.css" rel="stylesheet"/>
 </head>
 <body>
-
-
 <%-- 检查是否登录，未登录则重定向 --%>
 <c:if test="${empty sessionScope.user}">
     <c:redirect url="/login.jsp" />
@@ -67,7 +63,7 @@
                 <i class="fas fa-chevron-down toggle-icon"></i>
             </a>
             <div class="nav-submenu" data-parent="meeting">
-                <a href="#" class="nav-sub-link" data-page="conferenceHall">
+                <a href="#" class="nav-sub-link" data-page="meetingSearch">
                     <i class="fas fa-th-large"></i>
                     <span>会议大厅</span>
                 </a>
@@ -175,10 +171,9 @@
 </script>
 <!-- 引入纯静态 JS 文件 -->
 <script src="${pageContext.request.contextPath}/js/index2.js"></script>
-
 <!-- 引入纯静态 JS 文件 -->
 <script src="${pageContext.request.contextPath}/js/conferencePayment.js"></script>
-
+<script src="${pageContext.request.contextPath}/js/meetingSearch.js"></script>
 <script>
     // 设置当前激活菜单
     document.querySelectorAll('.sidebar-menu .nav-link').forEach(link => {
