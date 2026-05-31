@@ -1,0 +1,195 @@
+/* 统计卡片样式 */
+.stats-card {
+    background: #fff;
+    border-radius: 16px;
+    padding: 20px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    transition: transform 0.2s;
+}
+
+.stats-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+}
+
+.stats-icon {
+    width: 55px;
+    height: 55px;
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+}
+
+.total-card .stats-icon {
+    background: linear-gradient(135deg, #667eea15 0%, #764ba215 100%);
+    color: #667eea;
+}
+
+.paid-card .stats-icon {
+    background: linear-gradient(135deg, #11998e15 0%, #38ef7d15 100%);
+    color: #11998e;
+}
+
+.unpaid-card .stats-icon {
+    background: linear-gradient(135deg, #fa709a15 0%, #fee14015 100%);
+    color: #fa709a;
+}
+
+.amount-card .stats-icon {
+    background: linear-gradient(135deg, #4facfe15 0%, #00f2fe15 100%);
+    color: #4facfe;
+}
+
+.stats-info h3 {
+    font-size: 28px;
+    font-weight: 700;
+    margin: 0;
+    color: #2c3e50;
+}
+
+.stats-info p {
+    margin: 0;
+    color: #7f8c8d;
+    font-size: 13px;
+}
+
+/* 筛选栏 */
+.filter-bar {
+    background: #fff;
+    padding: 20px;
+    border-radius: 16px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
+
+.filter-bar .form-label {
+    font-size: 13px;
+    font-weight: 500;
+    color: #5a6e7e;
+}
+
+/* 缴费表格 */
+.table-payment {
+    margin: 0;
+}
+
+.table-payment thead th {
+    background: #f8f9fa;
+    padding: 15px 20px;
+    font-weight: 600;
+    color: #2c3e50;
+    border-bottom: 1px solid #e8ecef;
+}
+
+.table-payment tbody td {
+    padding: 15px 20px;
+    vertical-align: middle;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.table-payment tbody tr:hover {
+    background: #f8f9fa;
+}
+
+/* 状态徽章 */
+.payment-status {
+    display: inline-block;
+    padding: 5px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 500;
+}
+
+.status-paid {
+    background: #e8f5e9;
+    color: #388e3c;
+}
+
+.status-unpaid {
+    background: #fff3e0;
+    color: #f57c00;
+}
+
+/* 金额样式 */
+.amount-paid {
+    color: #388e3c;
+    font-weight: 600;
+}
+
+.amount-unpaid {
+    color: #f57c00;
+    font-weight: 600;
+}
+
+/* 分页按钮 */
+.page-btn {
+    padding: 6px 12px;
+    border: 1px solid #dee2e6;
+    background: #fff;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.page-btn:hover {
+    background: #f0f7ff;
+    border-color: #667eea;
+    color: #667eea;
+}
+
+.page-numbers {
+    display: inline-flex;
+    gap: 5px;
+}
+
+.page-number {
+    padding: 6px 12px;
+    border: 1px solid #dee2e6;
+    background: #fff;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.page-number.active {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: #fff;
+    border-color: transparent;
+}
+
+/* 按钮样式 */
+.btn-outline-primary {
+    border-color: #667eea;
+    color: #667eea;
+}
+
+.btn-outline-primary:hover {
+    background: #667eea;
+    color: #fff;
+}
+
+/* 空状态 */
+.empty-state {
+    text-align: center;
+    padding: 60px 20px;
+}
+
+.empty-state i {
+    font-size: 64px;
+    color: #cbd5e1;
+    margin-bottom: 20px;
+}
+
+.empty-state h5 {
+    color: #2c3e50;
+    margin-bottom: 10px;
+}
+
+.empty-state p {
+    color: #7f8c8d;
+    margin-bottom: 20px;
+}

@@ -155,7 +155,6 @@ function handleLoginResponse(data, username, password, loginBtn, originalHtml) {
  */
 function handleLoginError(error, loginBtn, originalHtml) {
     setButtonLoading(loginBtn, false, originalHtml);
-    console.error('登录请求失败:', error);
     showError('网络错误，请稍后重试');
 }
 
