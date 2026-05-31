@@ -1,5 +1,7 @@
 package com.demo.web_project.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -22,6 +24,8 @@ public class SearchServlet extends HttpServlet{
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         // 设置编码
+        mapper.registerModule(new JavaTimeModule()); // 关键步骤
+        mapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS); // 禁用时间戳
         request.setCharacterEncoding("UTF-8");
         response.setContentType("application/json;charset=UTF-8");
         String keyword = request.getParameter("keyword");
@@ -45,6 +49,7 @@ public class SearchServlet extends HttpServlet{
                 data.put("end_date", conference.getEnd_date());
                 data.put("venue",conference.getVenue());
                 data.put("dorms",conference.getDorms());
+                result.put("data",data);
                 result.put("code", 200);
                 result.put("msg", "查找成功");
                 // 转成 JSON 字符串并输出
@@ -82,5 +87,7 @@ public class SearchServlet extends HttpServlet{
                 out.print(jsonStr);
             }
         }
+        out.flush();
+        out.close();
     }
 }
