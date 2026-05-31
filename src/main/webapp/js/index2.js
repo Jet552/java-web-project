@@ -206,10 +206,12 @@ function loadPage(pageName) {
             document.getElementById('pageContent').innerHTML = html;
             showLoading(false);
             window.scrollTo(0, 0);
-
             // 页面加载完成后，执行对应页面的初始化函数
             if (pageName === 'conferencePayment' && typeof loadPaymentData === 'function') {
                 loadPaymentData();
+            }
+            if (pageName === 'meetingSearch' && typeof loadAllApproved === 'function') {
+                loadAllApproved();
             }
         })
         .catch(function(error) {
@@ -227,7 +229,7 @@ function getPageUrl(pageName) {
         'default': contextPath + '/attendee/default.jsp',  // ← 添加首页映射
         'conferencePayment': contextPath + '/attendee/conferencePayment.jsp',
         'myConferences': contextPath + '/attendee/myConferences.jsp',
-
+        'meetingSearch' : contextPath + '/attendee/meetingSearch.jsp',
     };
     return urlMap[pageName] || contextPath + '/index2.jsp';
 }

@@ -6,4 +6,5 @@ import java.util.List;
 public interface ConferenceDao {
     Conference findByCodes(String invite_codes);
     List<Conference> findAll(String keyword);
+    public List<Conference> findDefault();
 }

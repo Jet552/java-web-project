@@ -13,4 +13,7 @@ public class ConferenceService {
     public List<Conference> findAll(String keyword){
         return conferenceDao.findAll(keyword);
     }
+    public  List<Conference> findDefault(){
+        return conferenceDao.findDefault();
+    }
 }
