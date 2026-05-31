@@ -43,7 +43,6 @@ function showProfile() {
  * @param {Error} error 错误对象
  */
 function handleError(error) {
-    console.error('请求失败:', error);
     showError('网络错误，请稍后重试');
 }
 
@@ -172,6 +171,23 @@ function subMenuClickHandler(e) {
 function loadPage(pageName) {
     showLoading(true);
 
+    // 同步侧边栏菜单高亮
+    document.querySelectorAll('.nav-direct, .nav-sub-link').forEach(function(l) {
+        l.classList.remove('active');
+    });
+    var targetLink = document.querySelector('[data-page="' + pageName + '"]');
+    if (targetLink) {
+        targetLink.classList.add('active');
+        // 如果是子菜单，展开父菜单
+        var submenu = targetLink.closest('.nav-submenu');
+        if (submenu) {
+            submenu.classList.add('show');
+            var parentGroup = submenu.getAttribute('data-parent');
+            var parentToggle = document.querySelector('.nav-toggle[data-group="' + parentGroup + '"]');
+            if (parentToggle) parentToggle.classList.add('active');
+        }
+    }
+
     let url = getPageUrl(pageName);
 
     fetch(url, {
@@ -208,10 +224,10 @@ function loadPage(pageName) {
  */
 function getPageUrl(pageName) {
     var urlMap = {
-        'default': contextPath + '/attendee/default.jsp',  // ← 添加首页映射
-        'conferenceHall': contextPath + '/attendee/conferenceHall.jsp',
-        'conferencePayment': contextPath + '/attendee/conferencePayment.jsp',
-        'myConferences': contextPath + '/attendee/myConferences.jsp',
+        'default': contextPath + '/conference/default.jsp',  // ← 添加首页映射
+        'conferenceHall': contextPath + '/conference/conferenceHall.jsp',
+        'conferencePayment': contextPath + '/conference/conferencePayment.jsp',
+        'myConferences': contextPath + '/conference/myConferences.jsp',
 
     };
     return urlMap[pageName] || contextPath + '/index2.jsp';

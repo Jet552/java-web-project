@@ -118,6 +118,40 @@ public class PaymentDaoImpl implements PaymentDao {
         return paymentList;
     }
 
+    public Payment findByUserIdAndConferenceId(int conferenceId, int userId) {
+        String sql = "SELECT p.id, p.attendee_id, p.amount, p.status, p.paid_at, " +
+                "FROM payments p " +
+                "JOIN attendees a ON p.attendee_id = a.id " +
+                "JOIN conferences c ON a.conference_id = c.id " +
+                "WHERE a.user_id = ? AND a.conference_id = ?";
+
+        try (Connection conn = JDBCUtil.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setInt(1, userId);
+            ps.setInt(2, conferenceId);
+
+            ResultSet rs = ps.executeQuery();
+
+            if (rs.next()) {
+                Payment payment = new Payment();
+                payment.setId(rs.getInt("id"));
+                payment.setAttendee_id(rs.getInt("attendee_id"));
+                payment.setAmount(rs.getDouble("amount"));
+                payment.setStatus(rs.getString("status"));
+                payment.setPaid_at(rs.getTimestamp("paid_at") != null ?
+                        rs.getTimestamp("paid_at").toLocalDateTime() : null);
+                payment.setConference_id(rs.getInt("conference_id"));
+                payment.setConferenceTitle(rs.getString("conference_name"));
+                return payment;
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
 //    @Override
 //    public int countByConferenceId(int conferenceId) {
 //        String sql = "SELECT COUNT(*) FROM payments p " +

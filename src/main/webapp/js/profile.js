@@ -119,7 +119,6 @@ function loadUserProfile() {
             }
         })
         .catch(function(error) {
-            console.error('请求失败:', error);
             showErrorMessage('网络错误，请稍后重试2');
         });
 }
@@ -207,7 +206,6 @@ function updateProfile() {
             }
         })
         .catch(function(error) {
-            console.error('请求失败:', error);
             showErrorMessage('网络错误，请稍后重试');
         });
 }

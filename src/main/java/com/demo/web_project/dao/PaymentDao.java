@@ -38,4 +38,6 @@ public interface PaymentDao
      * @return
      */
     boolean updateStatus(int id, String status);
+
+    Payment findByUserIdAndConferenceId(int conferenceId, int userId);
 }

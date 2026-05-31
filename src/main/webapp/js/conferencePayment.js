@@ -22,17 +22,14 @@ function loadPaymentData() {
         }
     })
         .then(function(response) {
-            console.log('响应状态:', response.status);
             if (!response.ok) {
                 throw new Error('HTTP ' + response.status);
             }
             return response.json();
         })
         .then(function(data) {
-            console.log('返回数据:', data);
             if (data.code === 200) {
                 currentData = data.data || [];
-                console.log('缴费记录数量:', currentData.length);
                 renderPayments(currentData);
                 if (data.statistics) {
                     updateStatistics(data.statistics);
@@ -57,7 +54,6 @@ function loadPaymentData() {
             }
         })
         .catch(function(error) {
-            console.error('请求失败:', error);
             Swal.fire({
                 icon: 'error',
                 title: '网络错误',
@@ -71,7 +67,7 @@ function loadPaymentData() {
 function showEmptyTable() {
     var tbody = document.getElementById('paymentTableBody');
     if (tbody) {
-        tbody.innerHTML = '<tr><td colspan="7" class="text-center py-5">暂无缴费记录</td></tr>';
+        tbody.innerHTML = '<tr><td colspan="6" class="loading-cell"><div class="empty-state"><div class="empty-icon"><i class="fas fa-receipt"></i></div><h5>暂无缴费记录</h5><p>还没有任何缴费记录</p></div></td></tr>';
     }
     var paginationInfo = document.getElementById('paginationInfo');
     if (paginationInfo) paginationInfo.innerText = '共 0 条记录';
@@ -90,13 +86,13 @@ function renderPayments(payments) {
     if (pageData.length === 0) {
         tbody.innerHTML = `
             <tr>
-                <td colspan="7" class="text-center py-5">
+                <td colspan="6">
                     <div class="empty-state">
-                        <i class="fas fa-receipt"></i>
+                        <div class="empty-icon"><i class="fas fa-receipt"></i></div>
                         <h5>暂无缴费记录</h5>
                         <p>还没有任何缴费记录，快去参加感兴趣的会议吧！</p>
-                        <button class="btn btn-primary" onclick="parent.loadPage('conferenceHall')">
-                            <i class="fas fa-calendar-alt me-1"></i>浏览会议
+                        <button class="btn-explore" onclick="parent.loadPage('conferenceHall')">
+                            <i class="fas fa-compass"></i>去发现精彩会议
                         </button>
                     </div>
                 </td>
@@ -131,11 +127,11 @@ function renderPayments(payments) {
         html += '<td>';
 
         if (p.status === 'unpaid') {
-            html += '<button class="btn btn-primary btn-sm" onclick="payNow(' + p.id + ')">' +
-                '<i class="fas fa-credit-card me-1"></i>立即缴费</button>';
+            html += '<button class="btn-action btn-pay" onclick="payNow(' + p.id + ')">' +
+                '<i class="fas fa-credit-card"></i>立即缴费</button>';
         } else {
-            html += '<button class="btn btn-outline-secondary btn-sm" onclick="viewDetail(' + p.id + ')">' +
-                '<i class="fas fa-eye me-1"></i>查看详情</button>';
+            html += '<button class="btn-action btn-view" onclick="viewDetail(' + p.id + ')">' +
+                '<i class="fas fa-eye"></i>查看详情</button>';
         }
 
         html += '</td>';
@@ -236,13 +232,17 @@ function payNow(paymentId) {
         confirmButtonColor: '#667eea'
     }).then(function(result) {
         if (result.isConfirmed) {
+            if (!paymentId && paymentId !== 0) {
+                Swal.fire({ icon: 'error', title: '错误', text: '缴费记录ID无效', confirmButtonColor: '#f56565' });
+                return;
+            }
             var url = contextPath + '/payment/pay';
             fetch(url, {
                 method: 'POST',
                 headers: {
-                    'Content-Type': 'application/json'
+                    'Content-Type': 'application/x-www-form-urlencoded'
                 },
-                body: 'status='+encodeURIComponent("paid")
+                body: 'status=' + encodeURIComponent('paid') + '&paymentId=' + encodeURIComponent(paymentId)
             })
                 .then(function(response) {
                     return response.json();
