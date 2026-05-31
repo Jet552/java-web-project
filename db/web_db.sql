@@ -13,6 +13,8 @@
 
  Date: 30/05/2026 13:16:15
 */
+CREATE DATABASE IF NOT EXISTS web_db CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+USE web_db;
 
 SET NAMES utf8mb4;
 SET FOREIGN_KEY_CHECKS = 0;
