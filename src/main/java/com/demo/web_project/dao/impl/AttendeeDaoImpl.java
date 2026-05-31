@@ -3,6 +3,7 @@ package com.demo.web_project.dao.impl;
 import com.demo.web_project.dao.AttendeeDao;
 import com.demo.web_project.dao.JDBCUtil;
 import com.demo.web_project.vo.Attendee;
+import com.demo.web_project.vo.Conference;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -58,5 +59,59 @@ public class AttendeeDaoImpl implements AttendeeDao {
             e.printStackTrace();
         }
         return attendeeList;//返回搜索结果
+    }
+
+
+    public List<Conference> findByUserId(int userId) {
+        List<Conference> conferenceList = new ArrayList<>();
+
+        String sql = "SELECT c.id, c.title, c.description, c.venue,c.dorms c.start_date,c.invite_codes, c.end_date, c.status, c.created_date, c.reason," +
+                "a.id AS attendee_id, a.arrival_time, a.departure_time, a.accommodation_type, a.requirements, a.status AS attendee_status" +
+                "FROM attendees a " +
+                "JOIN conferences c ON a.conference_id = c.id " +
+                "WHERE a.user_id = ? " +
+                "ORDER BY c.start_date DESC";
+
+        try (Connection conn = JDBCUtil.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setInt(1, userId);
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                Conference conference = new Conference();
+                conference.setId(rs.getInt("c.id"));
+                conference.setTitle(rs.getString("c.title"));
+                conference.setDescription(rs.getString("c.description"));
+                conference.setVenue(rs.getString("c.venue"));
+                conference.setDorms(rs.getString("c.dorms"));
+                conference.setInvite_codes(rs.getString("c.invite_codes"));
+
+                // 处理日期
+                Timestamp startTimestamp = rs.getTimestamp("c.start_date");
+                if (startTimestamp != null) {
+                    conference.setStart_date(startTimestamp.toLocalDateTime());
+                }
+
+                Timestamp endTimestamp = rs.getTimestamp("c.end_date");
+                if (endTimestamp != null) {
+                    conference.setEnd_date(endTimestamp.toLocalDateTime());
+                }
+                conference.setStatus(rs.getString("c.status"));
+                conference.setReason(rs.getString("c.reason"));
+
+                Timestamp createTimestamp = rs.getTimestamp("c.created_date");
+                if (endTimestamp != null) {
+                    conference.setCreated_date(createTimestamp.toLocalDateTime());
+                }
+
+                conferenceList.add(conference);
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return conferenceList;
     }
 }
