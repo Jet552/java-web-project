@@ -87,7 +87,7 @@ public class ConferenceService {
         }
 
         // 生成9位随机邀请码
-        String chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+        String chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
         StringBuilder sb = new StringBuilder(9);
         Random random = new Random();
         for (int i = 0; i < 9; i++) {

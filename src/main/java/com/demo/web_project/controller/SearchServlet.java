@@ -9,125 +9,100 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import com.demo.web_project.vo.Conference;
 import com.demo.web_project.service.ConferenceService;
-import jakarta.servlet.http.HttpSession;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.time.LocalDateTime;
+
 @WebServlet("/conference/search")
 public class SearchServlet extends HttpServlet{
-    private ObjectMapper mapper = new ObjectMapper();  //创建一次，重复使用
+    private ObjectMapper mapper = new ObjectMapper();
     private ConferenceService conferenceService=new ConferenceService();
+
+    // 把Conference转为Map，消除重复put代码
+    private Map<String, Object> convertConferenceToMap(Conference conf) {
+        Map<String, Object> item = new HashMap<>();
+        item.put("id", conf.getId());
+        item.put("title", conf.getTitle());
+        item.put("start_date", conf.getStart_date());
+        item.put("end_date", conf.getEnd_date());
+        item.put("venue", conf.getVenue());
+        item.put("dorms", conf.getDorms());
+        item.put("invite_codes", conf.getInvite_codes());
+        item.put("amount", conf.getAmount());
+        return item;
+    }
+
+    // 构建返回结果，简化重复创建Result的代码
+    private Map<String, Object> buildResult(int code, String msg, Object data) {
+        Map<String, Object> result = new HashMap<>();
+        result.put("code", code);
+        result.put("msg", msg);
+        result.put("data", data);
+        return result;
+    }
+
+    @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        // 设置编码
+        // 配置JSON时间格式化
         mapper.registerModule(new JavaTimeModule());
         mapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
         request.setCharacterEncoding("UTF-8");
         response.setContentType("application/json;charset=UTF-8");
-        String keyword = request.getParameter("keyword");
-        // ===================== 日志1：打印接收到的关键词 =====================
-        System.out.println("【SearchServlet】收到前端关键词：" + keyword);
-        String regex="[A-Za-z0-9]{9}";//用于匹配是否是邀请码
         PrintWriter out = response.getWriter();
-        if(keyword.matches(regex)){//是邀请码
+
+        // 获取并处理关键词（防空指针）
+        String keyword = request.getParameter("keyword");
+        if (keyword == null) {
+            keyword = "";
+        }
+        // 日志：方便排查邀请码问题（可选，不影响功能）
+        System.out.println("【SearchServlet】收到关键词：===" + keyword + "===");
+
+        String regex="[A-Za-z0-9]{9}";// 9位邀请码正则（严格匹配字母+数字）
+
+        if(keyword.matches(regex)){// 分支1：是邀请码
             Conference conference=conferenceService.findByCodes(keyword);
-            if(conference==null){//查找失败
-                Map<String, Object> result = new HashMap<>();
-                result.put("code", 300);
-                result.put("msg", "会议不存在");
-                // 转成 JSON 字符串并输出
-                String jsonStr = mapper.writeValueAsString(result);
-                out.print(jsonStr);
+            System.out.println("【SearchServlet】邀请码查询结果：" + (conference == null ? "未找到" : "找到会议"));
+
+            if(conference==null){// 查找失败
+                out.print(mapper.writeValueAsString(buildResult(300, "会议不存在", null)));
             }
-            else{
-                Map<String, Object> result = new HashMap<>();
-                Map<String, Object> data = new HashMap<>();
-                data.put("id",conference.getId());
-                data.put("title", conference.getTitle());
-                data.put("invite_codes",conference.getInvite_codes());
-                data.put("start_date", conference.getStart_date());
-                data.put("end_date", conference.getEnd_date());
-                data.put("venue",conference.getVenue());
-                data.put("dorms",conference.getDorms());
-                data.put("amount",conference.getAmount());
-                result.put("data",data);
-                result.put("code", 200);
-                result.put("msg", "查找成功");
-                // 转成 JSON 字符串并输出
-                String jsonStr = mapper.writeValueAsString(result);
-                out.print(jsonStr);
+            else{// 查找成功
+                Map<String, Object> data = convertConferenceToMap(conference);
+                out.print(mapper.writeValueAsString(buildResult(200, "查找成功", data)));
             }
         }
-        else if(keyword.trim().isEmpty()){//检索全部的会议
+        else if(keyword.trim().isEmpty()){// 分支2：检索全部已通过会议
             List<Conference> conferenceList=conferenceService.findDefault();
             if(!conferenceList.isEmpty()){
-                Map<String, Object> result = new HashMap<>();
                 List<Map<String, Object>> dataList = new ArrayList<>();
                 for (Conference conf : conferenceList) {
-                    Map<String, Object> item = new HashMap<>();//将检索的会议全部返回
-                    item.put("id",conf.getId());
-                    item.put("title", conf.getTitle());
-                    item.put("start_date", conf.getStart_date());
-                    item.put("end_date", conf.getEnd_date());
-                    item.put("venue", conf.getVenue());
-                    item.put("dorms", conf.getDorms());
-                    item.put("invite_codes",conf.getInvite_codes());
-                    item.put("amount",conf.getAmount());
-                    dataList.add(item);
+                    dataList.add(convertConferenceToMap(conf));
                 }
-                result.put("data", dataList);  // 整个列表作为 data
-                result.put("code", 400);
-                result.put("msg", "查找相关会议成功");
-                // 转成 JSON 字符串并输出
-                String jsonStr = mapper.writeValueAsString(result);
-                out.print(jsonStr);
+                out.print(mapper.writeValueAsString(buildResult(400, "查找相关会议成功", dataList)));
             }
             else{
-                Map<String, Object> result = new HashMap<>();
-                result.put("code", 500);
-                result.put("msg", "未找到相关会议");
-                // 转成 JSON 字符串并输出
-                String jsonStr = mapper.writeValueAsString(result);
-                out.print(jsonStr);
+                out.print(mapper.writeValueAsString(buildResult(500, "未找到相关会议", null)));
             }
         }
-        else{//不是邀请码,关键字搜索,可能会有一大批
+        else{// 分支3：普通关键词搜索
             List<Conference> conferenceList=conferenceService.findAll(keyword);
             if(!conferenceList.isEmpty()){
-                Map<String, Object> result = new HashMap<>();
                 List<Map<String, Object>> dataList = new ArrayList<>();
                 for (Conference conf : conferenceList) {
-                    Map<String, Object> item = new HashMap<>();//将检索的会议全部返回
-                    item.put("id",conf.getId());
-                    item.put("title", conf.getTitle());
-                    item.put("start_date", conf.getStart_date());
-                    item.put("end_date", conf.getEnd_date());
-                    item.put("venue", conf.getVenue());
-                    item.put("dorms", conf.getDorms());
-                    item.put("invite_codes",conf.getInvite_codes());
-                    item.put("amount",conf.getAmount());
-                    dataList.add(item);
+                    dataList.add(convertConferenceToMap(conf));
                 }
-                result.put("data", dataList);  // 整个列表作为 data
-                result.put("code", 400);
-                result.put("msg", "查找相关会议成功");
-                // 转成 JSON 字符串并输出
-                String jsonStr = mapper.writeValueAsString(result);
-                out.print(jsonStr);
+                out.print(mapper.writeValueAsString(buildResult(400, "查找相关会议成功", dataList)));
             }
             else{
-                Map<String, Object> result = new HashMap<>();
-                result.put("code", 500);
-                result.put("msg", "未找到相关会议");
-                // 转成 JSON 字符串并输出
-                String jsonStr = mapper.writeValueAsString(result);
-                out.print(jsonStr);
+                out.print(mapper.writeValueAsString(buildResult(500, "未找到相关会议", null)));
             }
         }
+
         out.flush();
         out.close();
     }
