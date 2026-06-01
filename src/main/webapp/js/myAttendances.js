@@ -72,7 +72,7 @@ function renderTablePage() {
             html += '<td><a href="' + contextPath + '/attendee/payment.jsp?id=' + item.attendanceId + '" class="btn btn-join btn-sm">';
             html += '<i class="fas fa-credit-card me-1"></i>缴费</a></td>';
         } else {
-            html += '<td><span class="text-muted small">--</span></td>';
+            html += '<td><span class="text-muted small">已取消</span></td>';
         }
         html += '</tr>';
     }
