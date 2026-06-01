@@ -211,7 +211,7 @@ function goToPayment() {
             if(data.code==200) {
                 var allData = data.data; //缴费记录列表
                 var paymentList = allData.filter(function(item) {
-                    return Number(item.conference_id) === Number(conferenceId) && item.status === "unpaid";
+                    return Number(item.conference_id) === Number(conferenceId) && item.status === "unpaid" && item.attendee_status === 1;
                 });
                 var payment = paymentList.length > 0 ? paymentList[0] : null;
                 var amount = payment ? payment.amount : 0;
