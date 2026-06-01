@@ -176,22 +176,24 @@
             return;
         }
 
-        fetch(contextPath + '/attendee/join', {
+        // 用邀请码查询会议
+        fetch(contextPath + '/conference/search', {
             method: 'POST',
             headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-            body: 'inviteCode=' + inviteCode
+            body: 'keyword=' + inviteCode
         })
             .then(res => res.json())
             .then(data => {
-                if (data.code === 200) {
-                    Swal.fire({icon: 'success', title: '加入成功', timer: 1500, showConfirmButton: false})
-                        .then(() => {
-                            bootstrap.Modal.getInstance(document.getElementById('joinConferenceModal')).hide();
-                            loadPage('myConferences');
-                        });
+                if (data.code === 200 && data.data) {
+                    // 查询成功 → 跳转到参会登记页（用户填写信息后，才会提交参会）
+                    window.location.href = contextPath + '/attendee/join_meeting.jsp?id=' + data.data.id;
+                    bootstrap.Modal.getInstance(document.getElementById('joinConferenceModal')).hide();
                 } else {
-                    Swal.fire({icon: 'error', title: '加入失败', text: data.msg});
+                    Swal.fire({icon: 'error', title: '加入失败', text: '无效的邀请码'});
                 }
+            })
+            .catch(err => {
+                Swal.fire({icon: 'error', title: '服务器错误', text: '查询失败'});
             });
     }
 
