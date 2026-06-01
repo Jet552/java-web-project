@@ -1,0 +1,83 @@
+/* 会议大厅 */
+.content-wrapper {
+    padding: 28px 24px !important;
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+/* 卡片美化 */
+.content-card {
+    border-radius: 16px !important;
+    box-shadow: 0 6px 22px rgba(0, 0, 0, 0.06) !important;
+    border: none !important;
+    transition: all 0.3s ease !important;
+    background: #fff !important;
+    overflow: hidden;
+}
+.content-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.09) !important;
+}
+
+/* 按钮美化 */
+.btn-primary-custom {
+    background: linear-gradient(135deg, #1890ff 0%, #40a9ff 100%) !important;
+    border: none !important;
+    border-radius: 8px !important;
+    padding: 10px 20px !important;
+    font-weight: 500 !important;
+    color: #fff !important;
+    transition: 0.3s !important;
+}
+.btn-primary-custom:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(24,144,255,0.25) !important;
+    color: #fff !important;
+}
+
+/* 搜索栏 */
+.input-group {
+    border-radius: 10px !important;
+    overflow: hidden !important;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05) !important;
+}
+.form-control {
+    border-radius: 10px 0 0 10px !important;
+    padding: 12px 16px !important;
+    border: 1px solid #e8ecef !important;
+}
+.input-group .btn {
+    border-radius: 0 10px 10px 0 !important;
+}
+
+/* 空状态 & 加载 */
+#emptyState i {
+    opacity: 0.2 !important;
+    color: #1890ff !important;
+}
+.text-muted {
+    color: #8c98a4 !important;
+}
+
+/* 整体背景 */
+body {
+    background-color: #f5f7fa !important;
+}
+
+/* 模态框 */
+.modal-content {
+    border-radius: 16px !important;
+    border: none !important;
+    box-shadow: 0 15px 40px rgba(0,0,0,0.15) !important;
+}
+.modal-header {
+    border-bottom: 1px solid #f0f0f0 !important;
+    padding: 20px 24px !important;
+}
+.modal-body {
+    padding: 24px !important;
+}
+.modal-footer {
+    border-top: 1px solid #f0f0f0 !important;
+    padding: 16px 24px !important;
+}

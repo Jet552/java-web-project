@@ -1,0 +1,110 @@
+/* 我的会议 */
+.content-wrapper {
+    padding: 28px 24px !important;
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+/* 卡片容器 */
+.content-card {
+    border-radius: 16px !important;
+    box-shadow: 0 6px 22px rgba(0, 0, 0, 0.06) !important;
+    border: none !important;
+    background: #fff !important;
+    overflow: hidden;
+}
+
+/* ---------------------- 表格美化 ---------------------- */
+.table-custom {
+    margin: 0 !important;
+}
+
+/* ✅ 优化后的清爽表头 */
+.table-custom thead th {
+    background-color: #f8fafc !important; /* 极浅灰背景，柔和不刺眼 */
+    border-bottom: 2px solid #e2e8f0 !important; /* 浅灰分隔线，区分表头和内容 */
+    font-weight: 600 !important;
+    color: #475569 !important; /* 深灰文字，对比度高，好读 */
+    padding: 16px 20px !important;
+}
+
+/* 斑马纹隔行变色 */
+.table-custom tbody tr:nth-child(even) {
+    background-color: #fafbfc !important;
+}
+.table-custom tbody tr:nth-child(odd) {
+    background-color: #ffffff !important;
+}
+
+/* 悬浮高亮 */
+.table-custom tbody tr:hover {
+    background-color: #f0f7ff !important;
+    transition: all 0.2s ease;
+}
+
+/* 表格内容样式 */
+.table-custom tbody td {
+    padding: 16px 20px !important;
+    border-bottom: 1px solid #f1f5f9 !important;
+    vertical-align: middle !important;
+    color: #2c3e50 !important;
+}
+
+/* ---------------------- 会议状态行 彩色区分 ---------------------- */
+/* 待审核 = 浅鹅黄色 */
+.table-custom tbody tr:has(.bg-warning) {
+    background-color: #fffbe6 !important;
+}
+/* 已通过 = 浅绿色 */
+.table-custom tbody tr:has(.bg-success) {
+    background-color: #f6ffed !important;
+}
+/* 已拒绝 = 浅红色 */
+.table-custom tbody tr:has(.bg-danger) {
+    background-color: #fff1f0 !important;
+}
+
+/* ---------------------- 状态标签美化 ---------------------- */
+.status-badge {
+    padding: 6px 14px !important;
+    border-radius: 20px !important;
+    font-size: 0.85rem !important;
+    font-weight: 500 !important;
+    border: none !important;
+}
+.bg-success { background: #52c41a !important; color: #fff !important; }
+.bg-warning { background: #faad14 !important; color: #000 !important; }
+.bg-danger { background: #f5222d !important; color: #fff !important; }
+.bg-secondary { background: #6c757d !important; color: #fff !important; }
+
+/* ---------------------- 按钮美化 ---------------------- */
+.btn-primary-custom {
+    background: linear-gradient(135deg, #1890ff 0%, #40a9ff 100%) !important;
+    border: none !important;
+    border-radius: 8px !important;
+    font-weight: 500 !important;
+    transition: 0.3s !important;
+    color: #fff !important;
+}
+.btn-primary-custom:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(24,144,255,0.25) !important;
+}
+
+/* 空状态图标 */
+#emptyState i {
+    opacity: 0.2 !important;
+    color: #1890ff !important;
+}
+
+/* 页面背景 */
+body {
+    background-color: #f5f7fa !important;
+}
+
+/* 模态框美化 */
+.modal-content {
+    border-radius: 16px !important;
+    box-shadow: 0 15px 40px rgba(0,0,0,0.15) !important;
+    border: none !important;
+}

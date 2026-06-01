@@ -1,4 +1,15 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<!-- 动态引入我的会议CSS -->
+<script>
+    // 加载我的会议样式
+    if(!document.querySelector('link[href*="myConferences.css"]')){
+        const link = document.createElement('link');
+        link.rel = 'stylesheet';
+        link.href = contextPath + '/css/myConferences.css';
+        document.head.appendChild(link);
+    }
+</script>
+
 <!-- 我的会议页面 -->
 <div class="content-wrapper">
     <!-- 操作栏 -->

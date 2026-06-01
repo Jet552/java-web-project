@@ -1,4 +1,15 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<!-- 动态引入会议大厅CSS -->
+<script>
+    // 加载会议大厅样式
+    if(!document.querySelector('link[href*="conferenceHall.css"]')){
+        const link = document.createElement('link');
+        link.rel = 'stylesheet';
+        link.href = contextPath + '/css/conferenceHall.css';
+        document.head.appendChild(link);
+    }
+</script>
+
 <!-- 会议大厅页面 -->
 <div class="content-wrapper">
     <!-- 搜索栏 -->
