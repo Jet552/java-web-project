@@ -10,8 +10,8 @@ public class AttendeeService {
     public boolean createAttend(Attendee attendee){
         return attendeeDao.createAttend(attendee);
     }
-    public List<Attendee> checkAttendees(String username){
-        return attendeeDao.checkAttendees(username);
+    public List<Attendee> checkAttendees(int user_id){
+        return attendeeDao.checkAttendees(user_id);
     }
     public  int checkAttendeesStatus(int user_id,int confID){
         return  attendeeDao.checkAttendeesStatus(user_id,confID);
