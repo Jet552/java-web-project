@@ -70,7 +70,7 @@
                     <i class="fas fa-th-large"></i>
                     <span>会议大厅</span>
                 </a>
-                <a href="#" class="nav-sub-link" data-page="myConferences">
+                <a href="#" class="nav-sub-link" data-page="myAttendee">
                     <i class="fas fa-list"></i>
                     <span>我的参会</span>
                 </a>
@@ -93,7 +93,7 @@
                     <i class="fas fa-wallet"></i>
                     <span>在线缴费</span>
                 </a>
-                <a href="#" class="nav-sub-link" data-page="paymentHistory">
+                <a href="#" class="nav-sub-link" data-page="conferencePayment">
                     <i class="fas fa-history"></i>
                     <span>缴费记录</span>
                 </a>
@@ -177,7 +177,7 @@
 <!-- 引入纯静态 JS 文件 -->
 <script src="${pageContext.request.contextPath}/js/conferencePayment.js"></script>
 <script src="${pageContext.request.contextPath}/js/meetingSearch.js"></script>
-
+<script src="${pageContext.request.contextPath}/js/myAttendances.js"></script>
 <script>
     //设置当前激活菜单(公共script)
     document.querySelectorAll('.sidebar-menu .nav-link').forEach(link => {
