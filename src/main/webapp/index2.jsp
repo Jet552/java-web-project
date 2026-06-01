@@ -66,7 +66,7 @@
                 <i class="fas fa-chevron-down toggle-icon"></i>
             </a>
             <div class="nav-submenu" data-parent="meeting">
-                <a href="#" class="nav-sub-link" data-page="meetingSearch">
+                <a href="#" class="nav-sub-link" data-page="conferenceHall">
                     <i class="fas fa-th-large"></i>
                     <span>会议大厅</span>
                 </a>

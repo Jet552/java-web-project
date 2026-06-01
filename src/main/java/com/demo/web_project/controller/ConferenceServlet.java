@@ -131,14 +131,29 @@ public class ConferenceServlet extends HttpServlet {
         String dorms = req.getParameter("dorms");
         String startDateStr = req.getParameter("start_date");
         String endDateStr = req.getParameter("end_date");
+        String amountStr = req.getParameter("amount");
 
         // 参数非空校验
         if (title == null || title.trim().isEmpty() ||
                 venue == null || venue.trim().isEmpty() ||
                 dorms == null || dorms.trim().isEmpty() ||
                 startDateStr == null || startDateStr.trim().isEmpty() ||
-                endDateStr == null || endDateStr.trim().isEmpty()) {
+                endDateStr == null || endDateStr.trim().isEmpty() ||
+                amountStr == null || amountStr.trim().isEmpty()) {
             sendError(resp, 400, "参数不完整");
+            return null;
+        }
+
+        // 解析金额
+        double amount;
+        try {
+            amount = Double.parseDouble(amountStr);
+            if (amount < 0) {
+                sendError(resp, 400, "金额不能为负数");
+                return null;
+            }
+        } catch (NumberFormatException e) {
+            sendError(resp, 400, "金额格式错误");
             return null;
         }
 
@@ -167,6 +182,7 @@ public class ConferenceServlet extends HttpServlet {
         conference.setDorms(dorms);
         conference.setStart_date(startDate);
         conference.setEnd_date(endDate);
+        conference.setAmount(amount);
 
         return conference;
     }

@@ -68,6 +68,11 @@
                                       placeholder="请输入会议描述"></textarea>
                         </div>
                         <div class="col-md-6">
+                            <label class="form-label required">会议金额</label>
+                            <input type="number" step="0.01" class="form-control" id="amount"
+                                   placeholder="请输入会议金额" required>
+                        </div>
+                        <div class="col-md-6">
                             <label class="form-label required">举办地点</label>
                             <input type="text" class="form-control" id="venue"
                                    placeholder="请输入举办地点" required>
@@ -129,10 +134,11 @@
 </div>
 
 <script>
-    // 页面加载时获取我的会议列表
-    document.addEventListener('DOMContentLoaded', function() {
+    // 页面初始化
+    console.log('我的会议页面加载完成，开始初始化');
+    setTimeout(() => {
         loadMyConferences();
-    });
+    }, 50);
 
     // 加载我的会议列表
     function loadMyConferences() {
@@ -142,83 +148,73 @@
         fetch(contextPath + '/conference/myList?_=' + Date.now(), { cache: 'no-store' })
             .then(res => res.json())
             .then(data => {
+                console.log('后端返回数据:', data);
                 if (data.code === 200 && data.data && data.data.length > 0) {
-                    // 有数据，渲染列表
                     emptyState.classList.add('d-none');
                     listContainer.innerHTML = '';
 
                     data.data.forEach(conference => {
-                        // 状态徽章
                         let statusBadge = '';
                         switch(conference.status) {
-                            case 'pending':
-                                statusBadge = '<span class="status-badge bg-warning text-dark">待审核</span>';
-                                break;
-                            case 'approved':
-                                statusBadge = '<span class="status-badge bg-success">已通过</span>';
-                                break;
-                            case 'rejected':
-                                statusBadge = '<span class="status-badge bg-danger">已拒绝</span>';
-                                break;
-                            default:
-                                statusBadge = '<span class="status-badge bg-secondary">未知</span>';
+                            case 'pending': statusBadge = '<span class="status-badge bg-warning text-dark">待审核</span>'; break;
+                            case 'approved': statusBadge = '<span class="status-badge bg-success">已通过</span>'; break;
+                            case 'rejected': statusBadge = '<span class="status-badge bg-danger">已拒绝</span>'; break;
+                            default: statusBadge = '<span class="status-badge bg-secondary">未知</span>';
                         }
 
-                        // 操作按钮
                         let actions = '';
                         if (conference.status === 'pending') {
                             actions = `
-                                <button class="btn btn-sm btn-primary me-1" onclick="editConference(\${conference.id})">
-                                    <i class="fas fa-edit"></i> 编辑
-                                </button>
-                                <button class="btn btn-sm btn-danger" onclick="deleteConference(\${conference.id})">
-                                    <i class="fas fa-trash"></i> 删除
-                                </button>
-                            `;
+                        <button class="btn btn-sm btn-primary me-1" onclick="editConference(\${conference.id})">
+                            <i class="fas fa-edit"></i> 编辑
+                        </button>
+                        <button class="btn btn-sm btn-danger" onclick="deleteConference(\${conference.id})">
+                            <i class="fas fa-trash"></i> 删除
+                        </button>
+                    `;
                         } else if (conference.status === 'approved') {
                             actions = `
-                                <button class="btn btn-sm btn-info me-1" onclick="showInviteCodeModal(\${conference.id}, '\${conference.invite_codes || ''}')">
-                                    <i class="fas fa-qrcode"></i> 邀请码
-                                </button>
-                                <button class="btn btn-sm btn-secondary" disabled>
-                                    <i class="fas fa-lock"></i> 已锁定
-                                </button>
-                            `;
+                        <button class="btn btn-sm btn-info me-1" onclick="showInviteCodeModal(\${conference.id}, '\${conference.invite_codes || ''}')">
+                            <i class="fas fa-qrcode"></i> 邀请码
+                        </button>
+                        <button class="btn btn-sm btn-secondary" disabled>
+                            <i class="fas fa-lock"></i> 已锁定
+                        </button>
+                    `;
                         } else {
                             actions = `
-                                <button class="btn btn-sm btn-danger" onclick="deleteConference(\${conference.id})">
-                                    <i class="fas fa-trash"></i> 删除
-                                </button>
-                            `;
+                        <button class="btn btn-sm btn-danger" onclick="deleteConference(\${conference.id})">
+                            <i class="fas fa-trash"></i> 删除
+                        </button>
+                    `;
                         }
 
                         const tr = document.createElement('tr');
                         tr.innerHTML = `
-                            <td><strong>\${conference.title}</strong></td>
-                            <td>\${conference.venue}</td>
-                            <td>\${formatDateTime(conference.start_date)}</td>
-                            <td>\${formatDateTime(conference.end_date)}</td>
-                            <td>\${statusBadge}</td>
-                            <td>\${actions}</td>
-                        `;
+                    <td><strong>\${conference.title}</strong></td>
+                    <td>\${conference.venue}</td>
+                    <td>\${formatDateTime(conference.start_date)}</td>
+                    <td>\${formatDateTime(conference.end_date)}</td>
+                    <td>\${statusBadge}</td>
+                    <td>\${actions}</td>
+                `;
                         listContainer.appendChild(tr);
                     });
                 } else {
-                    // 无数据，显示空状态
                     listContainer.innerHTML = '';
                     emptyState.classList.remove('d-none');
                 }
             })
             .catch(err => {
-                console.error('加载我的会议失败', err);
+                console.error('加载我的会议失败:', err);
                 listContainer.innerHTML = `
-                <tr>
-                    <td colspan="6" class="text-center py-5 text-danger">
-                        <i class="fas fa-exclamation-triangle fa-3x mb-3"></i>
-                        <p>加载会议列表失败，请稍后重试</p>
-                    </td>
-                </tr>
-            `;
+            <tr>
+                <td colspan="6" class="text-center py-5 text-danger">
+                    <i class="fas fa-exclamation-triangle fa-3x mb-3"></i>
+                    <p>加载会议列表失败，请稍后重试</p>
+                </td>
+            </tr>
+        `;
             });
     }
 
@@ -236,24 +232,19 @@
             .then(res => res.json())
             .then(data => {
                 if (data.code !== 200 || !data.data) {
-                    Swal.fire({
-                        icon: 'error',
-                        title: '获取会议信息失败',
-                        text: data.msg
-                    });
+                    Swal.fire({icon: 'error', title: '获取会议信息失败', text: data.msg});
                     return;
                 }
-
-                const conference = data.data;
+                const conf = data.data;
                 document.getElementById('modalTitle').innerHTML = '<i class="fas fa-edit me-2"></i>编辑会议';
-                document.getElementById('conferenceId').value = conference.id;
-                document.getElementById('title').value = conference.title;
-                document.getElementById('description').value = conference.description || '';
-                document.getElementById('venue').value = conference.venue;
-                document.getElementById('dorms').value = conference.dorms;
-                document.getElementById('start_date').value = formatDateTimeLocal(conference.start_date);
-                document.getElementById('end_date').value = formatDateTimeLocal(conference.end_date);
-
+                document.getElementById('conferenceId').value = conf.id;
+                document.getElementById('title').value = conf.title;
+                document.getElementById('description').value = conf.description || '';
+                document.getElementById('venue').value = conf.venue;
+                document.getElementById('dorms').value = conf.dorms;
+                document.getElementById('amount').value = conf.amount;
+                document.getElementById('start_date').value = formatDateTimeLocal(conf.start_date);
+                document.getElementById('end_date').value = formatDateTimeLocal(conf.end_date);
                 new bootstrap.Modal(document.getElementById('conferenceModal')).show();
             });
     }
@@ -267,23 +258,18 @@
         const dorms = document.getElementById('dorms').value.trim();
         const startDate = document.getElementById('start_date').value;
         const endDate = document.getElementById('end_date').value;
+        const amount = document.getElementById('amount').value.trim();
 
-        // 简单校验
-        if (!title || !venue || !dorms || !startDate || !endDate) {
-            Swal.fire({
-                icon: 'error',
-                title: '参数不完整',
-                text: '请填写所有必填项'
-            });
+        if (!title || !venue || !dorms || !startDate || !endDate || !amount) {
+            Swal.fire({icon: 'error', title: '参数不完整', text: '请填写所有必填项'});
             return;
         }
-
         if (new Date(startDate) > new Date(endDate)) {
-            Swal.fire({
-                icon: 'error',
-                title: '日期错误',
-                text: '开始时间不能晚于结束时间'
-            });
+            Swal.fire({icon: 'error', title: '日期错误', text: '开始时间不能晚于结束时间'});
+            return;
+        }
+        if (parseFloat(amount) < 0) {
+            Swal.fire({icon: 'error', title: '金额错误', text: '金额不能为负数'});
             return;
         }
 
@@ -295,11 +281,9 @@
         formData.append('dorms', dorms);
         formData.append('start_date', startDate);
         formData.append('end_date', endDate);
+        formData.append('amount', amount);
 
-        const url = conferenceId
-            ? contextPath + '/conference/update'
-            : contextPath + '/conference/create';
-
+        const url = conferenceId ? contextPath + '/conference/update' : contextPath + '/conference/create';
         fetch(url, {
             method: 'POST',
             headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
@@ -319,11 +303,7 @@
                         loadMyConferences();
                     });
                 } else {
-                    Swal.fire({
-                        icon: 'error',
-                        title: conferenceId ? '修改失败' : '创建失败',
-                        text: data.msg
-                    });
+                    Swal.fire({icon: 'error', title: conferenceId ? '修改失败' : '创建失败', text: data.msg});
                 }
             });
     }
@@ -349,20 +329,10 @@
                     .then(res => res.json())
                     .then(data => {
                         if (data.code === 200) {
-                            Swal.fire({
-                                icon: 'success',
-                                title: '删除成功',
-                                timer: 1500,
-                                showConfirmButton: false
-                            }).then(() => {
-                                loadMyConferences();
-                            });
+                            Swal.fire({icon: 'success', title: '删除成功', timer: 1500, showConfirmButton: false})
+                                .then(() => loadMyConferences());
                         } else {
-                            Swal.fire({
-                                icon: 'error',
-                                title: '删除失败',
-                                text: data.msg
-                            });
+                            Swal.fire({icon: 'error', title: '删除失败', text: data.msg});
                         }
                     });
             }
@@ -391,14 +361,12 @@
             generateBtn.style.display = 'inline-block';
             copyBtn.style.display = 'none';
         }
-
         new bootstrap.Modal(document.getElementById('inviteCodeModal')).show();
     }
 
     // 生成邀请码
     function generateInviteCode() {
         const conferenceId = document.getElementById('currentConferenceId').value;
-
         fetch(contextPath + '/conference/genCode', {
             method: 'POST',
             headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
@@ -412,22 +380,11 @@
                     codeDisplay.style.fontSize = '2.5rem';
                     codeDisplay.style.fontWeight = 'bold';
                     codeDisplay.style.letterSpacing = '0.5rem';
-
                     document.getElementById('generateCodeBtn').style.display = 'none';
                     document.getElementById('copyCodeBtn').style.display = 'inline-block';
-
-                    Swal.fire({
-                        icon: 'success',
-                        title: '邀请码生成成功',
-                        timer: 1000,
-                        showConfirmButton: false
-                    });
+                    Swal.fire({icon: 'success', title: '邀请码生成成功', timer: 1000, showConfirmButton: false});
                 } else {
-                    Swal.fire({
-                        icon: 'error',
-                        title: '生成失败',
-                        text: data.msg
-                    });
+                    Swal.fire({icon: 'error', title: '生成失败', text: data.msg});
                 }
             });
     }
@@ -436,50 +393,27 @@
     function copyInviteCode() {
         const inviteCode = document.getElementById('inviteCodeDisplay').textContent;
         navigator.clipboard.writeText(inviteCode).then(() => {
-            Swal.fire({
-                icon: 'success',
-                title: '复制成功',
-                text: '邀请码已复制到剪贴板',
-                timer: 1500,
-                showConfirmButton: false
-            });
+            Swal.fire({icon: 'success', title: '复制成功', text: '邀请码已复制到剪贴板', timer: 1500, showConfirmButton: false});
         });
     }
 
-    // 格式化日期时间
+    // 格式化日期
     function formatDateTime(dateStr) {
         if (!dateStr) return '-';
-
         let date;
-        // 处理数组格式
         if (Array.isArray(dateStr)) {
             const [year, month, day, hour, minute, second = 0] = dateStr;
             date = new Date(year, month - 1, day, hour, minute, second);
-        }
-        // 处理字符串格式
-        else if (typeof dateStr === 'string') {
-            const isoStr = dateStr.replace(' ', 'T');
-            date = new Date(isoStr);
-        }
-        // 其他格式
-        else {
+        } else if (typeof dateStr === 'string') {
+            date = new Date(dateStr.replace(' ', 'T'));
+        } else {
             date = new Date(dateStr);
         }
-
-        if (isNaN(date.getTime())) {
-            console.error('日期解析失败:', dateStr);
-            return '日期错误';
-        }
-
-        const year = date.getFullYear();
-        const month = String(date.getMonth() + 1).padStart(2, '0');
-        const day = String(date.getDate()).padStart(2, '0');
-        const hours = String(date.getHours()).padStart(2, '0');
-        const minutes = String(date.getMinutes()).padStart(2, '0');
-        return year + "-" + month + "-" + day + " " + hours + ":" + minutes;
+        if (isNaN(date.getTime())) return '日期错误';
+        return date.getFullYear() + "-" + String(date.getMonth() + 1).padStart(2, '0') + "-" + String(date.getDate()).padStart(2, '0') + " " + String(date.getHours()).padStart(2, '0') + ":" + String(date.getMinutes()).padStart(2, '0');
     }
 
-    // 格式化为datetime-local格式
+    // 格式化为datetime-local
     function formatDateTimeLocal(dateStr) {
         if (!dateStr) return '';
         const date = new Date(dateStr);

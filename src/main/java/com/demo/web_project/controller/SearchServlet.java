@@ -29,6 +29,8 @@ public class SearchServlet extends HttpServlet{
         request.setCharacterEncoding("UTF-8");
         response.setContentType("application/json;charset=UTF-8");
         String keyword = request.getParameter("keyword");
+        // ===================== 日志1：打印接收到的关键词 =====================
+        System.out.println("【SearchServlet】收到前端关键词：" + keyword);
         String regex="[A-Za-z0-9]{9}";//用于匹配是否是邀请码
         PrintWriter out = response.getWriter();
         if(keyword.matches(regex)){//是邀请码
@@ -60,7 +62,7 @@ public class SearchServlet extends HttpServlet{
                 out.print(jsonStr);
             }
         }
-        else if(keyword == null||keyword=="" || keyword.trim().isEmpty()){//检索全部的会议
+        else if(keyword.trim().isEmpty()){//检索全部的会议
             List<Conference> conferenceList=conferenceService.findDefault();
             if(!conferenceList.isEmpty()){
                 Map<String, Object> result = new HashMap<>();
