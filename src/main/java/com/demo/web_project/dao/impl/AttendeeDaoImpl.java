@@ -27,10 +27,10 @@ public class AttendeeDaoImpl implements AttendeeDao {
             return false;
         }
     }
-    public List<Attendee> checkAttendees(String username){
-        String sql = "SELECT user_id,conference_id,arrival_time,departure_time,accommodation_type,requirements " +
+    public List<Attendee> checkAttendees(int user_id){
+        String sql = "SELECT user_id,conference_id,arrival_time,departure_time,accommodation_type,requirements,status " +
                 "FROM attendees WHERE userid = ?";
-        List<Attendee> attendeeList=searchDB(sql,username);
+        List<Attendee> attendeeList=searchDB(sql,user_id);
         return attendeeList;
     }
     public int checkAttendeesStatus(int user_id,int conf_id){
@@ -51,11 +51,43 @@ public class AttendeeDaoImpl implements AttendeeDao {
         }
         return 0;
     }
-    public List<Attendee> searchDB(String sql,String keyword){
+    public List<Attendee> checkMyAttendeesStatus(int user_id) {
+        return null;
+    }
+//    public List<Attendee> checkMyAttendeesStatus(int user_id){//根据用户ID和会议ID来检索自己已参加的会议
+//        String sql = "SELECT conferences.title,start_date,end_date,venue,dorms,amount,arrival_time,departure_time,accommodation_type,requirements,attendees.`status` " +
+//                "FROM attendees,conferences " +
+//                "WHERE attendees.conference_id=conferences.id and attendees.user_id=?";
+//        try (Connection conn = JDBCUtil.getConnection();
+//             PreparedStatement ps = conn.prepareStatement(sql)) {
+//            ps.setInt(1, user_id);
+//            ResultSet rs = ps.executeQuery();
+//            while (rs.next()) {
+//                Attendee attendee = new Attendee();
+//                attendee.setUserid(rs.getInt("user_id"));
+//                attendee.setConference_id(rs.getInt("conference_id"));
+//                Timestamp timestamp1 = rs.getTimestamp("arrival_time");
+//                Timestamp timestamp2 = rs.getTimestamp("departure_time");
+//                attendee.setAccommodation_type(rs.getString("accommodation_type"));
+//                attendee.setRequirements(rs.getString("requirements"));
+//                if (timestamp1 != null) {
+//                    attendee.setArrival_time(timestamp1.toLocalDateTime());
+//                }
+//                if (timestamp2!=null){
+//                    attendee.setDeparture_time(timestamp2.toLocalDateTime());
+//                }
+//                attendeeList.add(attendee);
+//            }
+//        } catch (SQLException e) {
+//            e.printStackTrace();
+//        }
+//        return attendeeList;//返回搜索结果
+//    }
+    public List<Attendee> searchDB(String sql,int keyword){
         List<Attendee> attendeeList = new ArrayList<>();
         try (Connection conn = JDBCUtil.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
-            ps.setString(1, keyword);
+            ps.setInt(1, keyword);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 Attendee attendee = new Attendee();

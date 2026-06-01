@@ -100,6 +100,25 @@
             </div>
         </div>
 
+        <!-- 会务服务 -->
+        <div class="nav-group">
+            <a href="#" class="nav-link nav-toggle" data-group="service">
+                <i class="fas fa-concierge-bell"></i>
+                <span>会务服务</span>
+                <i class="fas fa-chevron-down toggle-icon"></i>
+            </a>
+            <div class="nav-submenu" data-parent="service">
+                <a href="#" class="nav-sub-link" data-page="checkin">
+                    <i class="fas fa-check-circle"></i>
+                    <span>签到管理</span>
+                </a>
+                <a href="#" class="nav-sub-link" data-page="room">
+                    <i class="fas fa-hotel"></i>
+                    <span>入住管理</span>
+                </a>
+            </div>
+        </div>
+
         <!-- 查看统计 - 下拉菜单 -->
         <div class="nav-group">
             <a href="#" class="nav-link nav-toggle" data-group="view">
