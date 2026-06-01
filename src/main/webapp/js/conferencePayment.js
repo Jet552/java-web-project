@@ -162,7 +162,11 @@ function filterData(payments) {
     return payments.filter(function(p) {
         if (status !== 'all' && p.status !== status) return false;
         var conferenceName = (p.conferenceName || '').toLowerCase();
-        if (keyword && conferenceName.indexOf(keyword) === -1) return false;
+        if (keyword) {
+            //正则表达式，将关键词中的每个字用 .* 连接，允许中间有其他字符
+            var regex = new RegExp(keyword.split('').join('.*'), 'i');
+            if (!regex.test(conferenceName)) return false;
+        }
         // 使用 paidAt 进行时间筛选
         var paidAt = p.paidAt || '';
         if (startDate && paidAt && paidAt.substring(0, 10) < startDate) return false;

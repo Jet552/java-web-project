@@ -56,12 +56,7 @@ public class CreatePaymentServlet extends HttpServlet {
         int cId=Integer.parseInt(request.getParameter("conference_id"));
 
         Integer attendeeId = attendeeService.checkAttendeesStatus(currentUser.getId(), cId);
-        if (attendeeId == null) {
-            result.put("code", 400);
-            result.put("msg", "未找到参会记录");
-            out.print(mapper.writeValueAsString(result));
-            return;
-        }
+
         double amount=Double.parseDouble(request.getParameter("amount"));
 
         Payment payment=new Payment();
@@ -72,10 +67,21 @@ public class CreatePaymentServlet extends HttpServlet {
         Timestamp timestamp = new Timestamp(System.currentTimeMillis());
         payment.setPaid_at(timestamp.toLocalDateTime());
 
-        paymentService.save(payment);
+        boolean success=paymentService.save(payment);
 
-        result.put("code",200);
-        result.put("msg", "成功提交");
+        if(success) {
+            result.put("code", 200);
+            result.put("msg", "成功提交");
+            Map<String, Object> dataj= new HashMap<>();
+            dataj.put("paymentId",payment.getId());
+            result.put("data",dataj);
+        }
+        if (attendeeId == null||!success) {
+            result.put("code", 400);
+            result.put("msg", "更新出现错误");
+            out.print(mapper.writeValueAsString(result));
+            return;
+        }
 
         out.print(mapper.writeValueAsString(result));
         out.flush();
