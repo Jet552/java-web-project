@@ -8,5 +8,10 @@ public interface ConferenceDao {
     List<Conference> findAll(String keyword);
     List<Conference> findByOrganizerId(int organizerId);
     public List<Conference> findDefault();
-    public Conference findByConfID(String confID);
+    public Conference findByConfID(int confID);
+    int create(Conference conference); // 创建新会议
+    int update(Conference conference); // 更新会议信息
+    int delete(int id); // 删除会议
+    Conference findById(int id); // 根据ID查询会议详情
+    int updateInviteCode(int conferenceId, String inviteCode); // 更新会议邀请码
 }
