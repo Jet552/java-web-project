@@ -31,9 +31,9 @@ public class PaymentService
         return paymentDao.save(payment);
     }
     //更新缴费记录
-    public boolean updateStatus(int id, String status)
+    public boolean updateStatus(int attendeeId, String status)
     {
-        return paymentDao.updateStatus(id,status);
+        return paymentDao.updateStatus(attendeeId,status);
     }
     //根据用户ID和会议ID查找记录
     public Payment findByUserIdAndConferenceId(int conferenceId, int userId)

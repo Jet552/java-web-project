@@ -72,7 +72,7 @@
                 </a>
                 <a href="#" class="nav-sub-link" data-page="myConferences">
                     <i class="fas fa-list"></i>
-                    <span>我的会议</span>
+                    <span>我的参会</span>
                 </a>
                 <a href="#" class="nav-sub-link" data-page="conferencePayment">
                     <i class="fas fa-sign-in-alt"></i>

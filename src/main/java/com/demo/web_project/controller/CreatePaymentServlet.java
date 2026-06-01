@@ -1,6 +1,9 @@
 package com.demo.web_project.controller;
 
+
+import com.demo.web_project.service.AttendeeService;
 import com.demo.web_project.service.PaymentService;
+import com.demo.web_project.vo.Attendee;
 import com.demo.web_project.vo.Payment;
 import com.demo.web_project.vo.User;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -16,16 +19,17 @@ import com.demo.web_project.service.ConferenceService;
 import jakarta.servlet.http.HttpSession;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.time.LocalDateTime;
 
-@WebServlet("/payment/pay")
-public class StartPayServlet extends HttpServlet {
-
+@WebServlet("/payment/create")
+public class CreatePaymentServlet extends HttpServlet {
     private ObjectMapper mapper;
+    private AttendeeService attendeeService = new AttendeeService();
     private PaymentService paymentService = new PaymentService();
 
     @Override
@@ -44,33 +48,38 @@ public class StartPayServlet extends HttpServlet {
         request.setCharacterEncoding("UTF-8");
         response.setContentType("application/json;charset=UTF-8");
 
+        HttpSession session = request.getSession(false);
+        User currentUser = (User) session.getAttribute("user");
+
         PrintWriter out = response.getWriter();
         Map<String, Object> result = new HashMap<>();
-        Map<String, Object> dataj = new HashMap<>();
+        int cId=Integer.parseInt(request.getParameter("conference_id"));
 
-        try {
-            // 获取当前登录用户
-            HttpSession session = request.getSession(false);
-            User currentUser = (User) session.getAttribute("user");
-            int attendeeId = Integer.parseInt(request.getParameter("attendee_id"));
-            String status="paid";
-            boolean success=paymentService.updateStatus(attendeeId,"paid");
-            if(success) {
-                result.put("code", 200);
-                result.put("msg", "缴费成功");
-                result.put("data", dataj);
-            }
-            else
-            {
-                result.put("code", 400);
-                result.put("msg", "缴费失败");
-                result.put("data", dataj);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-            result.put("code", 500);
-            result.put("msg", "服务器内部错误：" + e.getMessage());
-            result.put("data", null);
+        int attendeeId = attendeeService.checkAttendeesStatus(currentUser.getId(), cId);
+
+
+        double amount=Double.parseDouble(request.getParameter("amount"));
+
+        Payment payment=new Payment();
+        payment.setAttendee_id(attendeeId);
+        payment.setStatus("unpaid");
+        payment.setAmount(amount);
+        // 获取当前时间并转换为 LocalDateTime
+        Timestamp timestamp = new Timestamp(System.currentTimeMillis());
+        payment.setPaid_at(timestamp.toLocalDateTime());
+
+
+        boolean success=paymentService.save(payment);
+
+        if(success) {
+            result.put("code", 200);
+            result.put("msg", "成功提交");
+            Map<String, Object> dataj= new HashMap<>();
+            dataj.put("paymentId",payment.getId());
+            result.put("data",dataj);
+        } else {
+            result.put("code", 400);
+            result.put("msg", "创建缴费记录失败");
         }
 
         out.print(mapper.writeValueAsString(result));
