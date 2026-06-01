@@ -13,6 +13,7 @@ public class Conference {
     private String status;
     private LocalDateTime created_date;
     private String reason;
+    private double amount;
 
     public int getId() {
         return id;
@@ -108,5 +109,13 @@ public class Conference {
 
     public void setReason(String reason) {
         this.reason = reason;
+    }
+
+    public double getAmount() {
+        return amount;
+    }
+
+    public void setAmount(double amount) {
+        this.amount = amount;
     }
 }

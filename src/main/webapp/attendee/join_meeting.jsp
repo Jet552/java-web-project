@@ -41,6 +41,10 @@
                     <label class="info-label">住宿地址</label>
                     <p class="info-value" id="confDorms">--</p>
                 </div>
+                <div class="col-md-6">
+                    <label class="info-label">报名费用</label>
+                    <p class="info-value" id="confAmount">--</p>
+                </div>
             </div>
         </div>
     </div>

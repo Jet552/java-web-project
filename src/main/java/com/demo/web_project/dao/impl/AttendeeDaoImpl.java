@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class AttendeeDaoImpl implements AttendeeDao {
-    public boolean createAttend(Attendee attendee){
+    public boolean createAttend(Attendee attendee){//根据输入信息插入一条新记录
         String sql = "INSERT INTO attendees (user_id,conference_id,arrival_time,departure_time,accommodation_type,requirements)" +
                 " VALUES(?,?,?,?,?,?) ";
         try (Connection conn = JDBCUtil.getConnection();
@@ -25,7 +25,7 @@ public class AttendeeDaoImpl implements AttendeeDao {
             e.printStackTrace();
             return false;
         }
-    }//根据输入信息插入一条新记录
+    }
     public List<Attendee> checkAttendees(String username){
         String sql = "SELECT user_id,conference_id,arrival_time,departure_time,accommodation_type,requirements " +
                 "FROM attendees WHERE userid = ?";
