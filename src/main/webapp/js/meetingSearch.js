@@ -12,7 +12,6 @@ var currentData = []; // 当前搜索结果
  */
 function doSearch() {
     var searchKeyword = document.getElementById('searchKeyword').value.trim();
-    if (searchKeyword === '') return;
     showLoading(true);
     var url = contextPath + '/conference/search';
     var bodyData = 'keyword=' + encodeURIComponent(searchKeyword);
@@ -84,6 +83,7 @@ function renderTablePage() {
         html += '<td>' + esc((item.end_date || '').replace('T', ' ')) + '</td>';
         html += '<td><i class="fas fa-map-marker-alt text-secondary me-1 small"></i>' + esc(item.venue) + '</td>';
         html += '<td>' + esc(item.dorms) + '</td>';
+        html += '<td>' + esc(item.amount) + '</td>';
         // html += '<td><span class="status-badge ' + statusClass + '">' + status + '</span></td>';
         html += '<td><a href="javascript:void(0)" onclick="joinMeeting(' + item.id + ')" class="btn btn-join btn-sm">';
         html += '<i class="fas fa-sign-in-alt me-1"></i>点击参加</a></td>';

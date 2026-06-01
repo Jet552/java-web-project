@@ -7,4 +7,5 @@ public interface ConferenceDao {
     Conference findByCodes(String invite_codes);
     List<Conference> findAll(String keyword);
     public List<Conference> findDefault();
+    public Conference findByConfID(String confID );
 }

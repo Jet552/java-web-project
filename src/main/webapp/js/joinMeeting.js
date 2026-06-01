@@ -41,6 +41,7 @@ function loadConferenceInfo() {
                 document.getElementById('confEndDate').textContent = (conf.end_date || '').replace('T', ' ');
                 document.getElementById('confVenue').textContent = conf.venue || '--';
                 document.getElementById('confDorms').textContent = conf.dorms || '--';
+                document.getElementById('confAmount').textContent = conf.amount || '--';
             } else {
                 Swal.fire({ icon: 'error', title: '会议不存在', text: '该会议可能已被取消', confirmButtonColor: '#1890ff' });
             }

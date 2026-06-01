@@ -51,6 +51,7 @@ public class SearchServlet extends HttpServlet{
                 data.put("end_date", conference.getEnd_date());
                 data.put("venue",conference.getVenue());
                 data.put("dorms",conference.getDorms());
+                data.put("amount",conference.getAmount());
                 result.put("data",data);
                 result.put("code", 200);
                 result.put("msg", "查找成功");
@@ -59,7 +60,7 @@ public class SearchServlet extends HttpServlet{
                 out.print(jsonStr);
             }
         }
-        else if(keyword == null || keyword.trim().isEmpty()){//检索全部的会议
+        else if(keyword == null||keyword=="" || keyword.trim().isEmpty()){//检索全部的会议
             List<Conference> conferenceList=conferenceService.findDefault();
             if(!conferenceList.isEmpty()){
                 Map<String, Object> result = new HashMap<>();
@@ -73,6 +74,7 @@ public class SearchServlet extends HttpServlet{
                     item.put("venue", conf.getVenue());
                     item.put("dorms", conf.getDorms());
                     item.put("invite_codes",conf.getInvite_codes());
+                    item.put("amount",conf.getAmount());
                     dataList.add(item);
                 }
                 result.put("data", dataList);  // 整个列表作为 data
@@ -105,6 +107,7 @@ public class SearchServlet extends HttpServlet{
                     item.put("venue", conf.getVenue());
                     item.put("dorms", conf.getDorms());
                     item.put("invite_codes",conf.getInvite_codes());
+                    item.put("amount",conf.getAmount());
                     dataList.add(item);
                 }
                 result.put("data", dataList);  // 整个列表作为 data
