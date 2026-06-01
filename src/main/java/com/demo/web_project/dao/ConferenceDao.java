@@ -6,8 +6,9 @@ import java.util.List;
 public interface ConferenceDao {
     Conference findByCodes(String invite_codes);
     List<Conference> findAll(String keyword);
-    public List<Conference> findDefault();
-    public Conference findByConfID(String confID );
+    List<Conference> findDefault();
+    Conference findByConfID(String confID );
+    List<Conference> findByOrganizerId(int organizerId);
     int create(Conference conference); // 创建新会议
     int update(Conference conference); // 更新会议信息
     int delete(int id); // 删除会议

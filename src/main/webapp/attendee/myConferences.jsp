@@ -142,71 +142,72 @@
         fetch(contextPath + '/conference/myList?_=' + Date.now(), { cache: 'no-store' })
             .then(res => res.json())
             .then(data => {
-                if (data.code !== 200 || !data.data || data.data.length === 0) {
+                if (data.code === 200 && data.data && data.data.length > 0) {
+                    // 有数据，渲染列表
+                    emptyState.classList.add('d-none');
+                    listContainer.innerHTML = '';
+
+                    data.data.forEach(conference => {
+                        // 状态徽章
+                        let statusBadge = '';
+                        switch(conference.status) {
+                            case 'pending':
+                                statusBadge = '<span class="status-badge bg-warning text-dark">待审核</span>';
+                                break;
+                            case 'approved':
+                                statusBadge = '<span class="status-badge bg-success">已通过</span>';
+                                break;
+                            case 'rejected':
+                                statusBadge = '<span class="status-badge bg-danger">已拒绝</span>';
+                                break;
+                            default:
+                                statusBadge = '<span class="status-badge bg-secondary">未知</span>';
+                        }
+
+                        // 操作按钮
+                        let actions = '';
+                        if (conference.status === 'pending') {
+                            actions = `
+                                <button class="btn btn-sm btn-primary me-1" onclick="editConference(\${conference.id})">
+                                    <i class="fas fa-edit"></i> 编辑
+                                </button>
+                                <button class="btn btn-sm btn-danger" onclick="deleteConference(\${conference.id})">
+                                    <i class="fas fa-trash"></i> 删除
+                                </button>
+                            `;
+                        } else if (conference.status === 'approved') {
+                            actions = `
+                                <button class="btn btn-sm btn-info me-1" onclick="showInviteCodeModal(\${conference.id}, '\${conference.invite_codes || ''}')">
+                                    <i class="fas fa-qrcode"></i> 邀请码
+                                </button>
+                                <button class="btn btn-sm btn-secondary" disabled>
+                                    <i class="fas fa-lock"></i> 已锁定
+                                </button>
+                            `;
+                        } else {
+                            actions = `
+                                <button class="btn btn-sm btn-danger" onclick="deleteConference(\${conference.id})">
+                                    <i class="fas fa-trash"></i> 删除
+                                </button>
+                            `;
+                        }
+
+                        const tr = document.createElement('tr');
+                        tr.innerHTML = `
+                            <td><strong>\${conference.title}</strong></td>
+                            <td>\${conference.venue}</td>
+                            <td>\${formatDateTime(conference.start_date)}</td>
+                            <td>\${formatDateTime(conference.end_date)}</td>
+                            <td>\${statusBadge}</td>
+                            <td>\${actions}</td>
+                        `;
+                        listContainer.appendChild(tr);
+                    });
+                } else {
+                    // 无数据，显示空状态
                     listContainer.innerHTML = '';
                     emptyState.classList.remove('d-none');
-                    return;
                 }
-
-                emptyState.classList.add('d-none');
-                listContainer.innerHTML = '';
-
-                data.data.forEach(conference => {
-                    // 状态徽章
-                    let statusBadge = '';
-                    switch(conference.status) {
-                        case 'pending':
-                            statusBadge = '<span class="status-badge bg-warning text-dark">待审核</span>';
-                            break;
-                        case 'approved':
-                            statusBadge = '<span class="status-badge bg-success">已通过</span>';
-                            break;
-                        case 'rejected':
-                            statusBadge = '<span class="status-badge bg-danger">已拒绝</span>';
-                            break;
-                        default:
-                            statusBadge = '<span class="status-badge bg-secondary">未知</span>';
-                    }
-
-                    // 操作按钮
-                    let actions = '';
-                    if (conference.status === 'pending') {
-                        actions = `
-                        <button class="btn btn-sm btn-primary me-1" onclick="editConference(\${conference.id})">
-                            <i class="fas fa-edit"></i> 编辑
-                        </button>
-                        <button class="btn btn-sm btn-danger" onclick="deleteConference(\${conference.id})">
-                            <i class="fas fa-trash"></i> 删除
-                        </button>
-                    `;
-                    } else if (conference.status === 'approved') {
-                        actions = `
-                        <button class="btn btn-sm btn-info me-1" onclick="showInviteCodeModal(\${conference.id}, '\${conference.invite_codes || ''}')">
-                            <i class="fas fa-qrcode"></i> 邀请码
-                        </button>
-                        <button class="btn btn-sm btn-secondary" disabled>
-                            <i class="fas fa-lock"></i> 已锁定
-                        </button>
-                    `;
-                    } else {
-                        actions = `
-                        <button class="btn btn-sm btn-danger" onclick="deleteConference(\${conference.id})">
-                            <i class="fas fa-trash"></i> 删除
-                        </button>
-                    `;
-                    }
-
-                    const tr = document.createElement('tr');
-                    tr.innerHTML = `
-                    <td><strong>\${conference.title}</strong></td>
-                    <td>\${conference.venue}</td>
-                    <td>\${formatDateTime(conference.start_date)}</td>
-                    <td>\${formatDateTime(conference.end_date)}</td>
-                    <td>\${statusBadge}</td>
-                    <td>\${actions}</td>
-                `;
-                    listContainer.appendChild(tr);
-                });
             })
             .catch(err => {
                 console.error('加载我的会议失败', err);
@@ -290,7 +291,7 @@
         if (conferenceId) formData.append('id', conferenceId);
         formData.append('title', title);
         formData.append('description', description);
-        formData.append('venue', venue); // ✅ 修正：把 form 改为 formData
+        formData.append('venue', venue);
         formData.append('dorms', dorms);
         formData.append('start_date', startDate);
         formData.append('end_date', endDate);
@@ -452,14 +453,11 @@
         let date;
         // 处理数组格式
         if (Array.isArray(dateStr)) {
-            // 数组结构：[year, month, day, hour, minute, second]
             const [year, month, day, hour, minute, second = 0] = dateStr;
-            // JS的Date月份是0-11，所以month要减1
             date = new Date(year, month - 1, day, hour, minute, second);
         }
         // 处理字符串格式
         else if (typeof dateStr === 'string') {
-            // 把空格换成T，变成标准ISO格式
             const isoStr = dateStr.replace(' ', 'T');
             date = new Date(isoStr);
         }
@@ -468,13 +466,11 @@
             date = new Date(dateStr);
         }
 
-        // 检查日期是否有效
         if (isNaN(date.getTime())) {
             console.error('日期解析失败:', dateStr);
             return '日期错误';
         }
 
-        // 格式化输出（yyyy-MM-dd HH:mm）
         const year = date.getFullYear();
         const month = String(date.getMonth() + 1).padStart(2, '0');
         const day = String(date.getDate()).padStart(2, '0');

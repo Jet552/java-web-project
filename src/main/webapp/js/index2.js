@@ -218,6 +218,7 @@ function loadPage(pageName) {
 function getPageUrl(pageName) {
     var urlMap = {
         'default': contextPath + '/attendee/default.jsp',
+        'meetingSearch': contextPath + '/attendee/conferenceHall.jsp',
         'conferenceHall': contextPath + '/attendee/conferenceHall.jsp',
         'joinConference': contextPath + '/attendee/joinConference.jsp',
         'myConferences': contextPath + '/attendee/myConferences.jsp',

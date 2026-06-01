@@ -21,6 +21,10 @@ public class ConferenceService {
         return  conferenceDao.findByConfID(confID);
     }
 
+    public List<Conference> findByOrganizerId(int organizerId) {
+        return conferenceDao.findByOrganizerId(organizerId);
+    }
+
     /**
      * 创建新会议
      * @param conference 会议对象

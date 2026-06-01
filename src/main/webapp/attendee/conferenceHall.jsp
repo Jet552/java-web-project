@@ -70,6 +70,13 @@
         loadConferences('');
     });
 
+    // 搜索框回车事件
+    document.getElementById('searchInput').addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') {
+            searchConferences();
+        }
+    });
+
     // 搜索会议
     function searchConferences() {
         const keyword = document.getElementById('searchInput').value.trim();
@@ -81,6 +88,7 @@
         const listContainer = document.getElementById('conferenceList');
         const emptyState = document.getElementById('emptyState');
 
+        // 显示加载状态
         listContainer.innerHTML = `
         <div class="col-12 text-center py-5">
             <div class="spinner-border text-primary" role="status">
@@ -90,22 +98,24 @@
         </div>
     `;
 
-        fetch(contextPath + '/conference/findAll?keyword=' + encodeURIComponent(keyword))
+        // ✅ 正确：POST请求 /conference/search
+        fetch(contextPath + '/conference/search', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+            body: 'keyword=' + encodeURIComponent(keyword || '')
+        })
             .then(res => res.json())
             .then(data => {
-                if (data.code !== 200 || !data.data || data.data.length === 0) {
-                    listContainer.innerHTML = '';
-                    emptyState.classList.remove('d-none');
-                    return;
-                }
-
+                // 无论成功失败，先关闭加载状态
                 emptyState.classList.add('d-none');
-                listContainer.innerHTML = '';
 
-                data.data.forEach(conference => {
-                    const card = document.createElement('div');
-                    card.className = 'col-md-6 col-lg-4';
-                    card.innerHTML = `
+                if ((data.code === 200 || data.code === 400) && data.data && data.data.length > 0) {
+                    // 有数据，渲染列表
+                    listContainer.innerHTML = '';
+                    data.data.forEach(conference => {
+                        const card = document.createElement('div');
+                        card.className = 'col-md-6 col-lg-4';
+                        card.innerHTML = `
                     <div class="content-card h-100">
                         <div class="card-body p-4">
                             <h5 class="card-title mb-3">\${conference.title}</h5>
@@ -125,17 +135,22 @@
                         </div>
                     </div>
                 `;
-                    listContainer.appendChild(card);
-                });
+                        listContainer.appendChild(card);
+                    });
+                } else {
+                    // 无数据，显示空状态
+                    listContainer.innerHTML = '';
+                    emptyState.classList.remove('d-none');
+                }
             })
             .catch(err => {
                 console.error('加载会议列表失败', err);
                 listContainer.innerHTML = `
-                <div class="col-12 text-center py-5 text-danger">
-                    <i class="fas fa-exclamation-triangle fa-3x mb-3"></i>
-                    <p>加载会议列表失败，请稍后重试</p>
-                </div>
-            `;
+            <div class="col-12 text-center py-5 text-danger">
+                <i class="fas fa-exclamation-triangle fa-3x mb-3"></i>
+                <p>加载会议列表失败，请稍后重试</p>
+            </div>
+        `;
             });
     }
 
@@ -190,13 +205,33 @@
     // 格式化日期时间
     function formatDateTime(dateStr) {
         if (!dateStr) return '-';
-        const date = new Date(dateStr);
-        return date.toLocaleString('zh-CN', {
-            year: 'numeric',
-            month: '2-digit',
-            day: '2-digit',
-            hour: '2-digit',
-            minute: '2-digit'
-        });
+
+        let date;
+        // 处理数组格式
+        if (Array.isArray(dateStr)) {
+            const [year, month, day, hour, minute, second = 0] = dateStr;
+            date = new Date(year, month - 1, day, hour, minute, second);
+        }
+        // 处理字符串格式
+        else if (typeof dateStr === 'string') {
+            const isoStr = dateStr.replace(' ', 'T');
+            date = new Date(isoStr);
+        }
+        // 其他格式
+        else {
+            date = new Date(dateStr);
+        }
+
+        if (isNaN(date.getTime())) {
+            console.error('日期解析失败:', dateStr);
+            return '日期错误';
+        }
+
+        const year = date.getFullYear();
+        const month = String(date.getMonth() + 1).padStart(2, '0');
+        const day = String(date.getDate()).padStart(2, '0');
+        const hours = String(date.getHours()).padStart(2, '0');
+        const minutes = String(date.getMinutes()).padStart(2, '0');
+        return year + "-" + month + "-" + day + " " + hours + ":" + minutes;
     }
 </script>

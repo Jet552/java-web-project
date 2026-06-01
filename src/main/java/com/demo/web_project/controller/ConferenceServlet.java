@@ -4,6 +4,7 @@ import com.demo.web_project.service.ConferenceService;
 import com.demo.web_project.vo.Conference;
 import com.demo.web_project.vo.User;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -22,7 +23,10 @@ import java.util.Map;
 
 @WebServlet("/conference/*")
 public class ConferenceServlet extends HttpServlet {
-    private ObjectMapper mapper = new ObjectMapper().registerModule(new JavaTimeModule());
+    // 关闭时间戳数组输出，统一返回字符串格式
+    private ObjectMapper mapper = new ObjectMapper()
+            .registerModule(new JavaTimeModule())
+            .disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
     private ConferenceService conferenceService = new ConferenceService();
     private DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm");
 
@@ -32,6 +36,8 @@ public class ConferenceServlet extends HttpServlet {
         String path = req.getPathInfo();
         if ("/myList".equals(path)) {
             handleMyList(req, resp);
+        } else if ("/detail".equals(path)) {
+            handleDetail(req, resp);
         } else {
             sendError(resp, 404, "接口不存在");
         }
@@ -48,7 +54,7 @@ public class ConferenceServlet extends HttpServlet {
         }
         User user = (User) session.getAttribute("user");
 
-        List<Conference> list = conferenceService.getMyList(user.getId());
+        List<Conference> list = conferenceService.findByOrganizerId(user.getId());
         Map<String, Object> result = new HashMap<>();
         result.put("code", 200);
         result.put("msg", "success");
