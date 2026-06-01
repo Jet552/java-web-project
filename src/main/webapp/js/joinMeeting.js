@@ -136,6 +136,8 @@ function doSubmitJoin() {
                 setFormDisabled(true);
                 document.getElementById('btnJoin').disabled = true;
                 document.getElementById('btnPay').disabled = false;
+                // 报名成功后创建缴费记录
+                createPaymentRecord();
                 Swal.fire({
                     icon: 'success',
                     title: '报名成功',
@@ -168,21 +170,26 @@ function doSubmitJoin() {
                 confirmButtonColor: '#1890ff'
             });
         });
-    //增加付费记录
-    var bodyData = 'conference_id=' + conferenceId
-                +'&amount='+encodeURIComponent("80");
+}
+
+/**
+ * 创建缴费记录
+ */
+function createPaymentRecord() {
+    var paymentBodyData = 'conference_id=' + conferenceId
+                + '&amount=' + encodeURIComponent(document.getElementById('confAmount').textContent || '80');
     fetch(contextPath + '/payment/create', {
         method: 'POST',
         headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-        body: bodyData
-    }).catch(function () {
-        showLoading(false);
-        Swal.fire({
-            icon: 'error',
-            title: '网络错误',
-            text: 'joinMeeting.js增加付费记录失败',
-            confirmButtonColor: '#1890ff'
-        });
+        body: paymentBodyData
+    }).then(function(r) { return r.json(); })
+    .then(function(data) {
+        if (data.code !== 200) {
+            console.error('创建缴费记录失败:', data.msg);
+        }
+    })
+    .catch(function () {
+        console.error('创建缴费记录请求失败');
     });
 }
 
@@ -194,81 +201,88 @@ function goToPayment() {
         Swal.fire({ icon: 'warning', title: '请先报名', text: '请先完成参会登记后再进行缴费', confirmButtonColor: '#1890ff' });
         return;
     }
-    // fetch(contextPath + '/payment/history', {
-    //     method: 'Get',
-    //     headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-    // }) .then(function(response) {
-    //     return response.json();
-    // })
-    //     .then(function(data) {
-    //         if(data.code==200) {
-    //             var allData = data.data; //缴费记录列表
-    //             var payment = allData.filter(function(item) {
-    //                 return item.conference_id === conferenceId&&item.status === "unpaid";
-    //             });
-    //             var amount = payment ? payment.amount : 0;
-    //             var paymentId = payment.id;
-    //
-    //             Swal.fire({
-    //                 title: '确认缴费',
-    //                 html: '<div class="text-center">' +
-    //                     '<i class="fas fa-credit-card" style="font-size: 48px; color: #667eea;"></i>' +
-    //                     '<p class="mt-3">确认支付 ¥' + amount.toFixed(2) + '</p>' +
-    //                     '</div>',
-    //                 showCancelButton: true,
-    //                 confirmButtonText: '确认支付',
-    //                 cancelButtonText: '取消',
-    //                 confirmButtonColor: '#667eea'
-    //             }).then(function(result) {
-    //                 if (result.isConfirmed) {
-    //                     if (!paymentId && paymentId !== 0) {
-    //                         Swal.fire({ icon: 'error', title: '错误', text: '缴费记录ID无效', confirmButtonColor: '#f56565' });
-    //                         return;
-    //                     }
-    //                     var url = contextPath + '/payment/pay';
-    //                     fetch(url, {
-    //                         method: 'POST',
-    //                         headers: {
-    //                             'Content-Type': 'application/x-www-form-urlencoded'
-    //                         },
-    //                         body: 'status=' + encodeURIComponent('paid') + '&paymentId=' + encodeURIComponent(paymentId)
-    //                     })
-    //                         .then(function(response) {
-    //                             return response.json();
-    //                         })
-    //                         .then(function(data) {
-    //                             if(data.code==200) {
-    //                                 Swal.fire({
-    //                                     icon: 'success',
-    //                                     title: '缴费成功',
-    //                                     text: '您已成功缴纳会议费用',
-    //                                     confirmButtonColor: '#667eea'
-    //                                 }).then(function() {
-    //                                     refreshData();
-    //                                 });
-    //                             }
-    //                         })
-    //                         .catch(function(error) {
-    //                             Swal.fire({
-    //                                 icon: 'failure',
-    //                                 title: '缴费失败',
-    //                                 text: '网络出错',
-    //                                 confirmButtonColor: '#667eea'
-    //                             });
-    //                         });
-    //
-    //                 }
-    //             });
-    //         }
-    //     })
-    //     .catch(function(error) {
-    //         Swal.fire({
-    //             icon: 'failure',
-    //             title: '失败',
-    //             text: '网络出错',
-    //             confirmButtonColor: '#667eea'
-    //         });
-    //     });
+    fetch(contextPath + '/payment/history', {
+        method: 'Get',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+    }) .then(function(response) {
+        return response.json();
+    })
+        .then(function(data) {
+            if(data.code==200) {
+                var allData = data.data; //缴费记录列表
+                var paymentList = allData.filter(function(item) {
+                    return Number(item.conference_id) === Number(conferenceId) && item.status === "unpaid";
+                });
+                var payment = paymentList.length > 0 ? paymentList[0] : null;
+                var amount = payment ? payment.amount : 0;
+                var paymentId = payment ? payment.id : null;
+                var attendeeId = payment ? payment.attendee_id : null;
+
+                if (!payment) {
+                    Swal.fire({ icon: 'error', title: '错误', text: '未找到待缴费记录', confirmButtonColor: '#f56565' });
+                    return;
+                }
+
+                Swal.fire({
+                    title: '确认缴费',
+                    html: '<div class="text-center">' +
+                        '<i class="fas fa-credit-card" style="font-size: 48px; color: #667eea;"></i>' +
+                        '<p class="mt-3">确认支付 ¥' + parseFloat(amount).toFixed(2) + '</p>' +
+                        '</div>',
+                    showCancelButton: true,
+                    confirmButtonText: '确认支付',
+                    cancelButtonText: '取消',
+                    confirmButtonColor: '#667eea'
+                }).then(function(result) {
+                    if (result.isConfirmed) {
+                        if (!paymentId && paymentId !== 0) {
+                            Swal.fire({ icon: 'error', title: '错误', text: '缴费记录ID无效', confirmButtonColor: '#f56565' });
+                            return;
+                        }
+                        var url = contextPath + '/payment/pay';
+                        fetch(url, {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/x-www-form-urlencoded'
+                            },
+                            body: 'amount=' + encodeURIComponent(payment.amount) + '&attendee_id=' + encodeURIComponent(attendeeId)
+                        })
+                            .then(function(response) {
+                                return response.json();
+                            })
+                            .then(function(data) {
+                                if(data.code==200) {
+                                    Swal.fire({
+                                        icon: 'success',
+                                        title: '缴费成功',
+                                        text: '您已成功缴纳会议费用',
+                                        confirmButtonColor: '#667eea'
+                                    }).then(function() {
+                                        refreshData();
+                                    });
+                                }
+                            })
+                            .catch(function(error) {
+                                Swal.fire({
+                                    icon: 'failure',
+                                    title: '缴费失败',
+                                    text: '网络出错',
+                                    confirmButtonColor: '#667eea'
+                                });
+                            });
+
+                    }
+                });
+            }
+        })
+        .catch(function(error) {
+            Swal.fire({
+                icon: 'failure',
+                title: '失败',
+                text: '网络出错',
+                confirmButtonColor: '#667eea'
+            });
+        });
 
     // window.location.href = contextPath + '/attendee/payment.jsp?id=' + attendanceId;
 }

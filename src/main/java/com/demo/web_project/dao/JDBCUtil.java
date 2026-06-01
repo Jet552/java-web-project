@@ -7,15 +7,21 @@ public class JDBCUtil
 {//建立数据库连接
     private static String DB_URL ="jdbc:mysql://localhost:3306/web_db?allowPublicKeyRetrieval=true&giuseSSL=false";
     private static String DB_DRIVER = "com.mysql.cj.jdbc.Driver";
-    private static Connection connection = null;
-    public static Connection getConnection()
-    {
+
+    static {
         try {
             Class.forName(DB_DRIVER);
-            connection = DriverManager.getConnection(DB_URL,"root","123456");
         } catch (ClassNotFoundException e) {
-            System.out.println("ClassNotFoundException");
+            System.out.println("数据库驱动加载失败");
             e.printStackTrace();
+        }
+    }
+
+    public static Connection getConnection()
+    {
+        Connection connection = null;
+        try {
+            connection = DriverManager.getConnection(DB_URL,"root","123456");
         } catch (SQLException e) {
             System.out.println("连接数据库异常");
             e.printStackTrace();

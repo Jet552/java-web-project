@@ -90,7 +90,7 @@ function renderPayments(payments) {
                         <div class="empty-icon"><i class="fas fa-receipt"></i></div>
                         <h5>暂无缴费记录</h5>
                         <p>还没有任何缴费记录，快去参加感兴趣的会议吧！</p>
-                        <button class="btn-explore" onclick="parent.loadPage('conferenceHall')">
+                        <button class="btn-explore" onclick="parent.loadPage('meetingSearch')">
                             <i class="fas fa-compass"></i>去发现精彩会议
                         </button>
                     </div>
@@ -128,7 +128,7 @@ function renderPayments(payments) {
         html += '<td>';
 
         if (p.status === 'unpaid') {
-            html += '<button class="btn-action btn-pay" onclick="payNow(' + p.id + ')">' +
+            html += '<button class="btn-action btn-pay" onclick="payNow(' + p.attendee_id + ')">' +
                 '<i class="fas fa-credit-card"></i>立即缴费</button>';
         } else {
             html += '<button class="btn-action btn-view" onclick="viewDetail(' + p.id + ')">' +
@@ -228,8 +228,8 @@ function formatDateTime(dateTimeStr) {
     }
 }
 
-function payNow(paymentId) {
-    var payment = currentData.find(function(p) { return p.id === paymentId; });
+function payNow(attendeeId) {
+    var payment = currentData.find(function(p) { return p.attendee_id === attendeeId; });
     var amount = payment ? payment.amount : 0;
 
     Swal.fire({
@@ -244,17 +244,13 @@ function payNow(paymentId) {
         confirmButtonColor: '#667eea'
     }).then(function(result) {
         if (result.isConfirmed) {
-            if (!paymentId && paymentId !== 0) {
-                Swal.fire({ icon: 'error', title: '错误', text: '缴费记录ID无效', confirmButtonColor: '#f56565' });
-                return;
-            }
             var url = contextPath + '/payment/pay';
             fetch(url, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/x-www-form-urlencoded'
                 },
-                body: 'status=' + encodeURIComponent('paid') + '&paymentId=' + encodeURIComponent(paymentId)
+                body: 'amount=' + encodeURIComponent(amount) + '&attendee_id=' + encodeURIComponent(attendeeId)
             })
                 .then(function(response) {
                     return response.json();

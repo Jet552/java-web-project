@@ -212,8 +212,8 @@ public class PaymentDaoImpl implements PaymentDao {
     }
 
     @Override
-    public boolean updateStatus(int id, String status) {
-        String sql = "UPDATE payments SET status = ?, paid_at = ? WHERE id = ?";
+    public boolean updateStatus(int attendeeId, String status) {
+        String sql = "UPDATE payments SET status = ?, paid_at = ? WHERE attendee_id = ?";
 
         try (Connection conn = JDBCUtil.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
@@ -225,7 +225,7 @@ public class PaymentDaoImpl implements PaymentDao {
             } else {
                 ps.setTimestamp(2, null);
             }
-            ps.setInt(3, id);
+            ps.setInt(3, attendeeId);
 
             return ps.executeUpdate() > 0;
         } catch (SQLException e) {

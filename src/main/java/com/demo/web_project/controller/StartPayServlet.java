@@ -52,13 +52,20 @@ public class StartPayServlet extends HttpServlet {
             // 获取当前登录用户
             HttpSession session = request.getSession(false);
             User currentUser = (User) session.getAttribute("user");
-            int paymentId = Integer.parseInt(request.getParameter("paymentId"));
-            String status=request.getParameter("status");
-            paymentService.updateStatus(paymentId,status);
-            dataj.put("paymentId",paymentId);
-            result.put("code",200);
-            result.put("msg","缴费成功");
-            result.put("data",dataj);
+            int attendeeId = Integer.parseInt(request.getParameter("attendee_id"));
+            String status="paid";
+            boolean success=paymentService.updateStatus(attendeeId,"paid");
+            if(success) {
+                result.put("code", 200);
+                result.put("msg", "缴费成功");
+                result.put("data", dataj);
+            }
+            else
+            {
+                result.put("code", 400);
+                result.put("msg", "缴费失败");
+                result.put("data", dataj);
+            }
         } catch (Exception e) {
             e.printStackTrace();
             result.put("code", 500);

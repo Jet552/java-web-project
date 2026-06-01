@@ -55,17 +55,19 @@ public class CreatePaymentServlet extends HttpServlet {
         Map<String, Object> result = new HashMap<>();
         int cId=Integer.parseInt(request.getParameter("conference_id"));
 
-        Integer attendeeId = attendeeService.checkAttendeesStatus(currentUser.getId(), cId);
+        int attendeeId = attendeeService.checkAttendeesStatus(currentUser.getId(), cId);
+
 
         double amount=Double.parseDouble(request.getParameter("amount"));
 
         Payment payment=new Payment();
-        payment.setAttendee_id(attendeeService.checkAttendeesStatus(currentUser.getId(),cId));
+        payment.setAttendee_id(attendeeId);
         payment.setStatus("unpaid");
         payment.setAmount(amount);
         // 获取当前时间并转换为 LocalDateTime
         Timestamp timestamp = new Timestamp(System.currentTimeMillis());
         payment.setPaid_at(timestamp.toLocalDateTime());
+
 
         boolean success=paymentService.save(payment);
 
@@ -75,12 +77,9 @@ public class CreatePaymentServlet extends HttpServlet {
             Map<String, Object> dataj= new HashMap<>();
             dataj.put("paymentId",payment.getId());
             result.put("data",dataj);
-        }
-        if (attendeeId == null||!success) {
+        } else {
             result.put("code", 400);
-            result.put("msg", "更新出现错误");
-            out.print(mapper.writeValueAsString(result));
-            return;
+            result.put("msg", "创建缴费记录失败");
         }
 
         out.print(mapper.writeValueAsString(result));
