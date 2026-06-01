@@ -29,7 +29,7 @@ public class AttendeeDaoImpl implements AttendeeDao {
     }
     public List<Attendee> checkAttendees(int user_id){
         String sql = "SELECT user_id,conference_id,arrival_time,departure_time,accommodation_type,requirements,status " +
-                "FROM attendees WHERE userid = ?";
+                "FROM attendees WHERE user_id = ?";
         List<Attendee> attendeeList=searchDB(sql,user_id);
         return attendeeList;
     }
@@ -65,6 +65,7 @@ public class AttendeeDaoImpl implements AttendeeDao {
                 Timestamp timestamp2 = rs.getTimestamp("departure_time");
                 attendee.setAccommodation_type(rs.getString("accommodation_type"));
                 attendee.setRequirements(rs.getString("requirements"));
+                attendee.setStatus(rs.getInt("status"));
                 if (timestamp1 != null) {
                     attendee.setArrival_time(timestamp1.toLocalDateTime());
                 }
@@ -83,8 +84,8 @@ public class AttendeeDaoImpl implements AttendeeDao {
     public List<Conference> findByUserId(int userId) {
         List<Conference> conferenceList = new ArrayList<>();
 
-        String sql = "SELECT c.id, c.title, c.description, c.venue,c.dorms c.start_date,c.invite_codes, c.end_date, c.status, c.created_date, c.reason," +
-                "a.id AS attendee_id, a.arrival_time, a.departure_time, a.accommodation_type, a.requirements, a.status AS attendee_status" +
+        String sql = "SELECT c.id, c.title, c.description, c.venue,c.dorms, c.start_date,c.invite_codes, c.end_date, c.status, c.created_date, c.reason,c.amount," +
+                "a.id AS attendee_id, a.arrival_time, a.departure_time, a.accommodation_type, a.requirements, a.status AS attendee_status " +
                 "FROM attendees a " +
                 "JOIN conferences c ON a.conference_id = c.id " +
                 "WHERE a.user_id = ? " +
@@ -104,7 +105,7 @@ public class AttendeeDaoImpl implements AttendeeDao {
                 conference.setVenue(rs.getString("c.venue"));
                 conference.setDorms(rs.getString("c.dorms"));
                 conference.setInvite_codes(rs.getString("c.invite_codes"));
-
+                conference.setAmount(rs.getDouble("c.amount"));
                 // 处理日期
                 Timestamp startTimestamp = rs.getTimestamp("c.start_date");
                 if (startTimestamp != null) {

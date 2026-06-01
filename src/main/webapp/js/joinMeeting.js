@@ -15,6 +15,7 @@ var attendanceStatus = null; // null=未参加, 1=已参加, 0=已取消
 function initJoinPage() {
     loadConferenceInfo();
     checkAttendanceStatus();
+    restoreFormData();  // ← 加这行
 }
 
 /**
@@ -132,6 +133,7 @@ function doSubmitJoin() {
             showLoading(false);
             if (data.code === 200) {//创建成功
                 attendanceStatus = 1;
+                clearFormData();
                 // 表单禁用，参加按钮禁用，缴费按钮启用
                 setFormDisabled(true);
                 document.getElementById('btnJoin').disabled = true;
@@ -337,4 +339,38 @@ function showLoading(show) {
         overlay = d;
     }
     overlay.style.display = show ? 'flex' : 'none';
+}
+/**
+ * 保存表单数据到 localStorage
+ */
+function saveFormData() {
+    var data = {
+        arrivalTime: document.getElementById('arrivalTime').value,
+        departureTime: document.getElementById('departureTime').value,
+        accommodationType: document.getElementById('accommodationType').value,
+        requirements: document.getElementById('requirements').value
+    };
+    localStorage.setItem('joinFormData_' + conferenceId, JSON.stringify(data));
+}
+
+/**
+ * 从 localStorage 恢复表单数据
+ */
+function restoreFormData() {
+    var saved = localStorage.getItem('joinFormData_' + conferenceId);
+    if (!saved) return;
+    try {
+        var data = JSON.parse(saved);
+        if (data.arrivalTime) document.getElementById('arrivalTime').value = data.arrivalTime;
+        if (data.departureTime) document.getElementById('departureTime').value = data.departureTime;
+        if (data.accommodationType) document.getElementById('accommodationType').value = data.accommodationType;
+        if (data.requirements) document.getElementById('requirements').value = data.requirements;
+    } catch (e) {}
+}
+
+/**
+ * 清除表单缓存
+ */
+function clearFormData() {
+    localStorage.removeItem('joinFormData_' + conferenceId);
 }

@@ -60,15 +60,15 @@
                 <div class="row g-3">
                     <div class="col-md-6">
                         <label for="arrivalTime" class="form-label required">预计到达时间</label>
-                        <input type="datetime-local" class="form-control form-input" id="arrivalTime" name="arrivalTime" required>
+                        <input type="datetime-local" class="form-control form-input" id="arrivalTime" name="arrivalTime" onchange="saveFormData()"required >
                     </div>
                     <div class="col-md-6">
                         <label for="departureTime" class="form-label required">预计离开时间</label>
-                        <input type="datetime-local" class="form-control form-input" id="departureTime" name="departureTime" required>
+                        <input type="datetime-local" class="form-control form-input" id="departureTime" name="departureTime" onchange="saveFormData()" required>
                     </div>
                     <div class="col-md-6">
                         <label for="accommodationType" class="form-label">住宿要求</label>
-                        <select class="form-select form-input" id="accommodationType" name="accommodationType">
+                        <select class="form-select form-input" id="accommodationType" name="accommodationType" onchange="saveFormData()">
                             <option value="">请选择...</option>
                             <option value="单人间">单人间</option>
                             <option value="双人间">双人间</option>
@@ -78,7 +78,7 @@
                     </div>
                     <div class="col-md-6">
                         <label for="requirements" class="form-label">其他要求</label>
-                        <input type="text" class="form-control form-input" id="requirements" name="requirements" maxlength="50" placeholder="如有特殊饮食、接站等需求请备注">
+                        <input type="text" class="form-control form-input" id="requirements" name="requirements" maxlength="50" placeholder="如有特殊饮食、接站等需求请备注" onchange="saveFormData()">
                     </div>
                 </div>
             </form>

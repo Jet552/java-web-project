@@ -202,6 +202,15 @@ function loadPage(pageName) {
                 newScript.textContent = oldScript.textContent;
                 oldScript.parentNode.replaceChild(newScript, oldScript);
             });
+            if (pageName === 'conferencePayment' && typeof loadPaymentData === 'function') {
+                loadPaymentData();
+            }
+            if (pageName === 'meetingSearch' && typeof loadAllApproved === 'function') {
+                loadAllApproved();
+            }
+            if (pageName === 'myAttendee' && typeof loadMyAttendances === 'function') {
+                loadMyAttendances();
+            }
             showLoading(false);
             window.scrollTo(0, 0);
         })
@@ -221,7 +230,9 @@ function getPageUrl(pageName) {
         'meetingSearch': contextPath + '/attendee/meetingSearch.jsp',
         'conferenceHall': contextPath + '/attendee/conferenceHall.jsp',
         'joinConference': contextPath + '/attendee/joinConference.jsp',
+        'conferencePayment': contextPath + '/attendee/conferencePayment.jsp',
         'myConferences': contextPath + '/attendee/myConferences.jsp',
+        "myAttendee": contextPath + '/attendee/myAttendances.jsp',
         'checkin': contextPath + '/checkin_manage.jsp',
         'room': contextPath + '/room_manage.jsp'
     };
