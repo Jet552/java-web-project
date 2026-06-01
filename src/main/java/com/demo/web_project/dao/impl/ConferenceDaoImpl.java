@@ -14,33 +14,13 @@ public class ConferenceDaoImpl implements ConferenceDao {
     public Conference findByCodes(String invite_codes ){
         String sql = "SELECT id,organizer_id,title, start_date,end_date,venue,dorms,invite_codes,amount " +
                 "FROM conferences WHERE invite_codes = ? and status='approved'";
-        try (Connection conn = JDBCUtil.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
-            ps.setString(1, invite_codes);
-            ResultSet rs = ps.executeQuery();
-            if (rs.next()) {
-                Conference conference = new Conference();
-                conference.setId(rs.getInt("id"));
-                conference.setOrganizer_id(rs.getInt("organizer_id"));
-                conference.setTitle(rs.getString("title"));
-                conference.setVenue(rs.getString("venue"));
-                conference.setDorms(rs.getString("dorms"));
-                Timestamp timestamp1 = rs.getTimestamp("start_date");
-                Timestamp timestamp2 = rs.getTimestamp("end_date");
-                conference.setInvite_codes(rs.getString("invite_codes"));
-                conference.setAmount(rs.getDouble("amount"));
-                if (timestamp1 != null) {
-                    conference.setStart_date(timestamp1.toLocalDateTime());
-                }
-                if (timestamp2!=null){
-                    conference.setEnd_date(timestamp2.toLocalDateTime());
-                }
-                return conference;
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return null;
+        return searchOneConf(sql,invite_codes);
+    }
+    public Conference findByConfID(String confID ){
+        String sql = "SELECT id,organizer_id,title, start_date,end_date,venue,dorms,invite_codes,amount " +
+                "FROM conferences WHERE id = ? and status='approved'";
+        return searchOneConf(sql,confID);
+
     }
     public List<Conference> findAll(String keyword){
         //三级搜索，第一次like用于匹配子串，第二级匹配非连续子串，第三次返回包含其中任意一个关键字即可
@@ -102,6 +82,35 @@ public class ConferenceDaoImpl implements ConferenceDao {
             e.printStackTrace();
         }
         return conferenceList;//返回搜索结果
+    }
+    public Conference searchOneConf(String sql,String keyword){
+        try (Connection conn = JDBCUtil.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, keyword);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                Conference conference = new Conference();
+                conference.setId(rs.getInt("id"));
+                conference.setOrganizer_id(rs.getInt("organizer_id"));
+                conference.setTitle(rs.getString("title"));
+                conference.setVenue(rs.getString("venue"));
+                conference.setDorms(rs.getString("dorms"));
+                Timestamp timestamp1 = rs.getTimestamp("start_date");
+                Timestamp timestamp2 = rs.getTimestamp("end_date");
+                conference.setInvite_codes(rs.getString("invite_codes"));
+                conference.setAmount(rs.getDouble("amount"));
+                if (timestamp1 != null) {
+                    conference.setStart_date(timestamp1.toLocalDateTime());
+                }
+                if (timestamp2!=null){
+                    conference.setEnd_date(timestamp2.toLocalDateTime());
+                }
+                return conference;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
     public List<Conference> searchDB(String sql,String keyword){
         List<Conference> conferenceList = new ArrayList<>();
