@@ -66,9 +66,8 @@
 
 <script>
     // 页面加载时获取会议列表
-    document.addEventListener('DOMContentLoaded', function() {
-        loadConferences('');
-    });
+    // SPA 片段中 DOMContentLoaded 已触发，直接执行
+    loadConferences('');
 
     // 搜索框回车事件
     document.getElementById('searchInput').addEventListener('keypress', function(e) {
@@ -160,9 +159,9 @@
         new bootstrap.Modal(document.getElementById('joinConferenceModal')).show();
     }
 
-    // 加入会议
+    // 加入会议：先用邀请码查会议，确认存在后跳转登记页
     function joinConference() {
-        const inviteCode = document.getElementById('inviteCodeInput').value.trim().toUpperCase();
+        const inviteCode = document.getElementById('inviteCodeInput').value.trim();
 
         if (!inviteCode || inviteCode.length !== 9) {
             Swal.fire({
@@ -173,32 +172,35 @@
             return;
         }
 
-        fetch(contextPath + '/attendee/join', {
+        // 第一步：搜索邀请码确认会议存在
+        fetch(contextPath + '/conference/search', {
             method: 'POST',
             headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-            body: 'inviteCode=' + inviteCode
+            body: 'keyword=' + encodeURIComponent(inviteCode)
         })
             .then(res => res.json())
             .then(data => {
-                if (data.code === 200) {
-                    Swal.fire({
-                        icon: 'success',
-                        title: '加入成功',
-                        text: '您已成功加入该会议',
-                        timer: 1500,
-                        showConfirmButton: false
-                    }).then(() => {
-                        bootstrap.Modal.getInstance(document.getElementById('joinConferenceModal')).hide();
-                        // 跳转到我的会议页面
-                        loadPage('myConferences');
-                    });
+                if (data.code === 200 && data.data) {
+                    // 会议存在，隐藏模态框，跳转到参会登记页
+                    var modal = bootstrap.Modal.getInstance(document.getElementById('joinConferenceModal'));
+                    if (modal) modal.hide();
+                    window.location.href = contextPath + '/attendee/join_meeting.jsp?id='
+                        + data.data.id + '&invite_codes=' + encodeURIComponent(inviteCode);
                 } else {
                     Swal.fire({
                         icon: 'error',
                         title: '加入失败',
-                        text: data.msg
+                        text: data.msg || '邀请码无效或会议已失效'
                     });
                 }
+            })
+            .catch(err => {
+                console.error('请求失败:', err);
+                Swal.fire({
+                    icon: 'error',
+                    title: '网络错误',
+                    text: '请求失败，请稍后重试'
+                });
             });
     }
 
