@@ -43,7 +43,6 @@ function showProfile() {
  * @param {Error} error 错误对象
  */
 function handleError(error) {
-    console.error('请求失败:', error);
     showError('网络错误，请稍后重试');
 }
 
@@ -62,7 +61,6 @@ function showError() {
 
 // ========== 下拉菜单初始化 ==========
 document.addEventListener('DOMContentLoaded', function() {
-    console.log('页面加载完成，初始化下拉菜单...');
     initDropdownMenu();
     initSubMenuClick();
 });
@@ -72,7 +70,6 @@ document.addEventListener('DOMContentLoaded', function() {
  */
 function initDropdownMenu() {
     const toggles = document.querySelectorAll('.nav-toggle');
-    console.log('找到 toggle 数量:', toggles.length);
 
     toggles.forEach(function(toggle, index) {
         // 移除可能存在的旧事件
@@ -90,11 +87,9 @@ function toggleClickHandler(e) {
     e.stopPropagation();
 
     const groupName = this.getAttribute('data-group');
-    console.log('点击菜单 group:', groupName);
 
     // 找到对应的子菜单
     const submenu = document.querySelector('.nav-submenu[data-parent="' + groupName + '"]');
-    console.log('找到子菜单:', submenu);
 
     if (submenu) {
         // 切换 show 类
@@ -102,9 +97,6 @@ function toggleClickHandler(e) {
         // 切换当前菜单的 active 类（用于旋转箭头）
         this.classList.toggle('active');
 
-        console.log('子菜单 show 类状态:', submenu.classList.contains('show'));
-    } else {
-        console.log('未找到子菜单，data-parent="' + groupName + '"');
     }
 }
 
@@ -129,6 +121,7 @@ function initSubMenuClick() {
         link.addEventListener('click', subMenuClickHandler);
     });
 }
+
 
 /**
  * 直接菜单点击处理（首页等）
@@ -178,6 +171,23 @@ function subMenuClickHandler(e) {
 function loadPage(pageName) {
     showLoading(true);
 
+    // 同步侧边栏菜单高亮
+    document.querySelectorAll('.nav-direct, .nav-sub-link').forEach(function(l) {
+        l.classList.remove('active');
+    });
+    var targetLink = document.querySelector('[data-page="' + pageName + '"]');
+    if (targetLink) {
+        targetLink.classList.add('active');
+        // 如果是子菜单，展开父菜单
+        var submenu = targetLink.closest('.nav-submenu');
+        if (submenu) {
+            submenu.classList.add('show');
+            var parentGroup = submenu.getAttribute('data-parent');
+            var parentToggle = document.querySelector('.nav-toggle[data-group="' + parentGroup + '"]');
+            if (parentToggle) parentToggle.classList.add('active');
+        }
+    }
+
     let url = getPageUrl(pageName);
 
     fetch(url, {
@@ -204,6 +214,13 @@ function loadPage(pageName) {
             });
             showLoading(false);
             window.scrollTo(0, 0);
+            // 页面加载完成后，执行对应页面的初始化函数
+            if (pageName === 'conferencePayment' && typeof loadPaymentData === 'function') {
+                loadPaymentData();
+            }
+            if (pageName === 'meetingSearch' && typeof loadAllApproved === 'function') {
+                loadAllApproved();
+            }
         })
         .catch(function(error) {
             document.getElementById('pageContent').innerHTML =
@@ -222,9 +239,10 @@ function getPageUrl(pageName) {
         'joinConference': contextPath + '/attendee/joinConference.jsp',
         'myConferences': contextPath + '/attendee/myConferences.jsp',
         'checkin': contextPath + '/checkin_manage.jsp',
-        'room': contextPath + '/room_manage.jsp'
+        'room': contextPath + '/room_manage.jsp',
+        'conferencePayment': contextPath + '/attendee/conferencePayment.jsp',
+        'meetingSearch': contextPath + '/attendee/meetingSearch.jsp',
     };
-
     return urlMap[pageName] || contextPath + '/index2.jsp';
 }
 

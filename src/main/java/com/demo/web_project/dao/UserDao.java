@@ -27,12 +27,6 @@ public interface UserDao
      */
     boolean save(User user);
 //    /**
-//     * 更新用户信息
-//     * @param user 用户对象
-//     * @return 是否更新成功
-//     */
-//    boolean update(User user);
-//    /**
 //     * 删除用户
 //     * @param id 用户ID
 //     * @return 是否删除成功
@@ -43,12 +37,6 @@ public interface UserDao
      * @return 用户列表
      */
     List<User> findAll();
-//    /**
-//     * 根据角色查询用户
-//     * @param role 角色（attendee/organizer/admin）
-//     * @return 用户列表
-//     */
-//    List<User> findByRole(String role);
     /**
      * 更新用户状态（启用/禁用）
      * @param id 用户ID

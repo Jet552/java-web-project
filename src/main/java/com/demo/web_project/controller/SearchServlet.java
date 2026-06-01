@@ -1,5 +1,7 @@
 package com.demo.web_project.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -22,6 +24,8 @@ public class SearchServlet extends HttpServlet{
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         // 设置编码
+        mapper.registerModule(new JavaTimeModule());
+        mapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
         request.setCharacterEncoding("UTF-8");
         response.setContentType("application/json;charset=UTF-8");
         String keyword = request.getParameter("keyword");
@@ -31,7 +35,7 @@ public class SearchServlet extends HttpServlet{
             Conference conference=conferenceService.findByCodes(keyword);
             if(conference==null){//查找失败
                 Map<String, Object> result = new HashMap<>();
-                result.put("code", 400);
+                result.put("code", 300);
                 result.put("msg", "会议不存在");
                 // 转成 JSON 字符串并输出
                 String jsonStr = mapper.writeValueAsString(result);
@@ -40,13 +44,50 @@ public class SearchServlet extends HttpServlet{
             else{
                 Map<String, Object> result = new HashMap<>();
                 Map<String, Object> data = new HashMap<>();
+                data.put("id",conference.getId());
                 data.put("title", conference.getTitle());
+                data.put("invite_codes",conference.getInvite_codes());
                 data.put("start_date", conference.getStart_date());
                 data.put("end_date", conference.getEnd_date());
                 data.put("venue",conference.getVenue());
                 data.put("dorms",conference.getDorms());
+                data.put("amount",conference.getAmount());
+                result.put("data",data);
                 result.put("code", 200);
                 result.put("msg", "查找成功");
+                // 转成 JSON 字符串并输出
+                String jsonStr = mapper.writeValueAsString(result);
+                out.print(jsonStr);
+            }
+        }
+        else if(keyword == null||keyword=="" || keyword.trim().isEmpty()){//检索全部的会议
+            List<Conference> conferenceList=conferenceService.findDefault();
+            if(!conferenceList.isEmpty()){
+                Map<String, Object> result = new HashMap<>();
+                List<Map<String, Object>> dataList = new ArrayList<>();
+                for (Conference conf : conferenceList) {
+                    Map<String, Object> item = new HashMap<>();//将检索的会议全部返回
+                    item.put("id",conf.getId());
+                    item.put("title", conf.getTitle());
+                    item.put("start_date", conf.getStart_date());
+                    item.put("end_date", conf.getEnd_date());
+                    item.put("venue", conf.getVenue());
+                    item.put("dorms", conf.getDorms());
+                    item.put("invite_codes",conf.getInvite_codes());
+                    item.put("amount",conf.getAmount());
+                    dataList.add(item);
+                }
+                result.put("data", dataList);  // 整个列表作为 data
+                result.put("code", 400);
+                result.put("msg", "查找相关会议成功");
+                // 转成 JSON 字符串并输出
+                String jsonStr = mapper.writeValueAsString(result);
+                out.print(jsonStr);
+            }
+            else{
+                Map<String, Object> result = new HashMap<>();
+                result.put("code", 500);
+                result.put("msg", "未找到相关会议");
                 // 转成 JSON 字符串并输出
                 String jsonStr = mapper.writeValueAsString(result);
                 out.print(jsonStr);
@@ -59,28 +100,33 @@ public class SearchServlet extends HttpServlet{
                 List<Map<String, Object>> dataList = new ArrayList<>();
                 for (Conference conf : conferenceList) {
                     Map<String, Object> item = new HashMap<>();//将检索的会议全部返回
+                    item.put("id",conf.getId());
                     item.put("title", conf.getTitle());
                     item.put("start_date", conf.getStart_date());
                     item.put("end_date", conf.getEnd_date());
                     item.put("venue", conf.getVenue());
                     item.put("dorms", conf.getDorms());
+                    item.put("invite_codes",conf.getInvite_codes());
+                    item.put("amount",conf.getAmount());
                     dataList.add(item);
                 }
                 result.put("data", dataList);  // 整个列表作为 data
-                result.put("code", 200);
-                result.put("msg", "查找成功");
+                result.put("code", 400);
+                result.put("msg", "查找相关会议成功");
                 // 转成 JSON 字符串并输出
                 String jsonStr = mapper.writeValueAsString(result);
                 out.print(jsonStr);
             }
             else{
                 Map<String, Object> result = new HashMap<>();
-                result.put("code", 300);
+                result.put("code", 500);
                 result.put("msg", "未找到相关会议");
                 // 转成 JSON 字符串并输出
                 String jsonStr = mapper.writeValueAsString(result);
                 out.print(jsonStr);
             }
         }
+        out.flush();
+        out.close();
     }
 }

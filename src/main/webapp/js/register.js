@@ -146,85 +146,91 @@ function showError(message) {
 }
 // 表单输入验证
 document.addEventListener('DOMContentLoaded', function() {
-    const formInputs = document.querySelectorAll('.form-control-custom');
+    var formInputs = document.querySelectorAll('.form-control-custom');
 
-    // 为每个输入框添加实时验证
-    formInputs.forEach(input => {
+    formInputs.forEach(function(input) {
         input.addEventListener('blur', function() {
             validateInput(this);
         });
 
         input.addEventListener('input', function() {
-            // 清除错误状态
-            this.style.borderColor = '#e2e8f0';
-            this.style.boxShadow = 'none';
+            clearInputError(this);
         });
     });
 
-    // 密码强度提示
-    const passwordInput = document.getElementById('password');
-    passwordInput.addEventListener('input', function() {
-        const password = this.value;
-        if (password.length > 0) {
-            const strength = calculatePasswordStrength(password);
-            showPasswordStrength(strength);
-        }
-    });
+    var passwordInput = document.getElementById('password');
+    if (passwordInput) {
+        passwordInput.addEventListener('input', function() {
+            var password = this.value;
+            if (password.length > 0) {
+                showPasswordStrength(calculatePasswordStrength(password));
+            } else {
+                clearPasswordStrength();
+            }
+        });
+    }
 });
 
 // 验证单个输入框
 function validateInput(input) {
-    const value = input.value.trim();
-    const inputId = input.id;
+    var value = input.value.trim();
+    var inputId = input.id;
     // 清除之前的错误提示
-    const existingError = input.parentNode.querySelector('.error-message');
-    if (existingError) {
-        existingError.remove();
-    }
+    clearInputError(input);
     // 验证逻辑
     if (value === '' && input.hasAttribute('required')) {
         showInputError(input, '此字段为必填项');
         return false;
     }
     if (inputId === 'email' && value !== '') {
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        var emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         if (!emailRegex.test(value)) {
             showInputError(input, '请输入有效的邮箱地址');
             return false;
         }
     }
     if (inputId === 'phone' && value !== '') {
-        const phoneRegex = /^1[3-9]\d{9}$/;
+        var phoneRegex = /^1[3-9]\d{9}$/;
         if (!phoneRegex.test(value)) {
             showInputError(input, '请输入有效的手机号码');
             return false;
         }
     }
     if (inputId === 'confirmPassword' && value !== '') {
-        const password = document.getElementById('password').value;
+        var password = document.getElementById('password').value;
         if (value !== password) {
             showInputError(input, '两次输入的密码不一致');
             return false;
         }
     }
-
     return true;
 }
-// 显示错误信息
+
+// 清除输入框的错误状态
+function clearInputError(input) {
+    input.style.borderColor = '#e2e8f0';
+    input.style.boxShadow = 'none';
+    var errorEl = document.getElementById(input.id + 'Error');
+    if (errorEl) {
+        errorEl.style.display = 'none';
+        errorEl.textContent = '';
+    }
+}
+
+// 显示错误信息（写入外部 .field-error 容器）
 function showInputError(input, message) {
     input.style.borderColor = '#e53e3e';
     input.style.boxShadow = '0 0 0 3px rgba(229, 62, 62, 0.1)';
-
-    const errorDiv = document.createElement('div');
-    errorDiv.className = 'error-message';
-    errorDiv.style.cssText = 'color: #e53e3e; font-size: 12px; margin-top: 5px;';
-    errorDiv.textContent = message;
-
-    input.parentNode.appendChild(errorDiv);
+    var errorEl = document.getElementById(input.id + 'Error');
+    if (errorEl) {
+        errorEl.textContent = message;
+        errorEl.style.display = 'block';
+    }
 }
+
 // 计算密码强度
 function calculatePasswordStrength(password) {
-    let strength = 0;
+    var strength = 0;
     if (password.length >= 6) strength++;
     if (password.length >= 8) strength++;
     if (/[a-z]/.test(password) && /[A-Z]/.test(password)) strength++;
@@ -233,23 +239,14 @@ function calculatePasswordStrength(password) {
     return strength;
 }
 
-// 显示密码强度提示
+// 显示密码强度提示（写入外部 #passwordError 容器）
 function showPasswordStrength(strength) {
-    const passwordInput = document.getElementById('password');
-    const existingStrength = passwordInput.parentNode.querySelector('.strength-indicator');
+    var errorEl = document.getElementById('passwordError');
+    if (!errorEl) return;
 
-    if (existingStrength) {
-        existingStrength.remove();
-    }
-
-    const strengthDiv = document.createElement('div');
-    strengthDiv.className = 'strength-indicator';
-    strengthDiv.style.cssText = 'margin-top: 5px; font-size: 12px;';
-
-    let strengthText = '';
-    let strengthColor = '';
-
-    switch(strength) {
+    var strengthText = '';
+    var strengthColor = '';
+    switch (strength) {
         case 0:
         case 1:
             strengthText = '密码强度：弱';
@@ -266,27 +263,40 @@ function showPasswordStrength(strength) {
             strengthColor = '#38a169';
             break;
     }
-    strengthDiv.innerHTML = `<span style="color: ${strengthColor};">${strengthText}</span>`;
-    passwordInput.parentNode.appendChild(strengthDiv);
+    errorEl.innerHTML = '<span style="color:' + strengthColor + ';">' + strengthText + '</span>';
+    errorEl.style.display = 'block';
+}
+
+// 清空密码框时隐藏强度提示
+function clearPasswordStrength() {
+    var errorEl = document.getElementById('passwordError');
+    if (errorEl && errorEl.textContent.indexOf('密码强度') !== -1) {
+        errorEl.style.display = 'none';
+        errorEl.textContent = '';
+    }
+    var pwd = document.getElementById('password');
+    pwd.style.borderColor = '#e2e8f0';
+    pwd.style.boxShadow = 'none';
 }
 function toggleContactInput() {
-    const selectedMethodText=document.getElementById('selectedMethodText');
-    const radioEmail = document.getElementById('radioEmail');
-    const radioPhone = document.getElementById('radioPhone');
-    const emailGroup = document.getElementById('emailGroup');
-    const phoneGroup = document.getElementById('phoneGroup');
+    var selected = document.getElementById('registerMethod').value;
+    var emailGroup = document.getElementById('emailGroup');
+    var phoneGroup = document.getElementById('phoneGroup');
+    var selectedMethodText = document.getElementById('selectedMethodText');
+
     emailGroup.style.display = 'none';
     phoneGroup.style.display = 'none';
-    if (radioEmail.checked) {
-        emailGroup.style.display = 'flex';
+
+    if (selected === 'email') {
+        emailGroup.style.display = 'block';
         document.getElementById('email').required = true;
         document.getElementById('phone').required = false;
-        selectedMethodText.textContent="邮箱地址";
-    } else if (radioPhone.checked) {
-        phoneGroup.style.display = 'flex';
+        selectedMethodText.textContent = '邮箱地址';
+    } else if (selected === 'phone') {
+        phoneGroup.style.display = 'block';
         document.getElementById('phone').required = true;
         document.getElementById('email').required = false;
-        selectedMethodText.textContent="手机号码";
+        selectedMethodText.textContent = '手机号码';
     }
 }
 
