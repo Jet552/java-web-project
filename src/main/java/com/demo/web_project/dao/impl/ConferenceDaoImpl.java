@@ -16,10 +16,36 @@ public class ConferenceDaoImpl implements ConferenceDao {
                 "FROM conferences WHERE invite_codes = ? and status='approved'";
         return searchOneConf(sql,invite_codes);
     }
-    public Conference findByConfID(String confID ){
+    public Conference findByConfID(int confID ){
         String sql = "SELECT id,organizer_id,title, start_date,end_date,venue,dorms,invite_codes,amount " +
                 "FROM conferences WHERE id = ? and status='approved'";
-        return searchOneConf(sql,confID);
+        try (Connection conn = JDBCUtil.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, confID);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                Conference conference = new Conference();
+                conference.setId(rs.getInt("id"));
+                conference.setOrganizer_id(rs.getInt("organizer_id"));
+                conference.setTitle(rs.getString("title"));
+                conference.setVenue(rs.getString("venue"));
+                conference.setDorms(rs.getString("dorms"));
+                Timestamp timestamp1 = rs.getTimestamp("start_date");
+                Timestamp timestamp2 = rs.getTimestamp("end_date");
+                conference.setInvite_codes(rs.getString("invite_codes"));
+                conference.setAmount(rs.getDouble("amount"));
+                if (timestamp1 != null) {
+                    conference.setStart_date(timestamp1.toLocalDateTime());
+                }
+                if (timestamp2!=null){
+                    conference.setEnd_date(timestamp2.toLocalDateTime());
+                }
+                return conference;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
 
     }
     public List<Conference> findAll(String keyword){

@@ -14,10 +14,13 @@ public class ConferenceService {
     public List<Conference> findAll(String keyword){
         return conferenceDao.findAll(keyword);
     }
+    public List<Conference> getMyList(int organizerId){
+        return conferenceDao.findByOrganizerId(organizerId);
+    }
     public  List<Conference> findDefault(){
         return conferenceDao.findDefault();
     }
-    public Conference findByConfID(String confID ){
+    public Conference findByConfID(int confID ){
         return  conferenceDao.findByConfID(confID);
     }
 

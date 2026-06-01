@@ -222,7 +222,9 @@ function getPageUrl(pageName) {
         'joinConference': contextPath + '/attendee/joinConference.jsp',
         'myConferences': contextPath + '/attendee/myConferences.jsp',
         'checkin': contextPath + '/checkin_manage.jsp',
-        'room': contextPath + '/room_manage.jsp'
+        'room': contextPath + '/room_manage.jsp',
+        'conferencePayment': contextPath + '/attendee/conferencePayment.jsp',
+        'meetingSearch': contextPath + '/attendee/meetingSearch.jsp',
     };
 
     return urlMap[pageName] || contextPath + '/index2.jsp';

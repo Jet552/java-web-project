@@ -81,3 +81,10 @@ Java Web 期末大作业，会务管理系统（6 人小组）。技术栈：Jak
 - 分支：`feature/checkin`
 - 依赖：M1（Session 登录态）+ M2（/conference/myList）+ M3（attendees 表）
 - 详见 memory 中的 [M5 Checkin Module]
+
+## 开发问题与调试记录
+
+所有开发过程中遇到的问题、调试过程和解决方案统一记录在：
+**[docs/开发问题与调试记录.md](docs/开发问题与调试记录.md)**
+
+涵盖：JDBC 连接配置、JSTL 依赖冲突、Map.of() NPE、Jackson JavaTimeModule、DateTimeParseException、SPA 框架集成、Git 合并冲突等。遇到问题时先查这份文档。
