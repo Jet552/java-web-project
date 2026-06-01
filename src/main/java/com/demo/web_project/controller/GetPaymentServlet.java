@@ -83,7 +83,7 @@ public class GetPaymentServlet extends HttpServlet {
                 paymentData.put("amount", payment.getAmount());
                 paymentData.put("status", payment.getStatus());
                 paymentData.put("paidAt", payment.getPaid_at());
-                paymentData.put("attendee_status", payment.getAttendeeStatus());
+                paymentData.put("attendee_status", payment.getAttendee_status());
 
                 paymentDataList.add(paymentData);
 

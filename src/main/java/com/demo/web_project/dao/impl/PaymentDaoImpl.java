@@ -83,8 +83,7 @@ public class PaymentDaoImpl implements PaymentDao {
                 if (endTimestamp != null) {
                     payment.setConferenceEndDate(endTimestamp.toLocalDateTime().format(DATETIME_FORMATTER));
                 }
-                payment.setAttendeeStatus(rs.getInt("a.attendee_status"));
-
+                payment.setAttendee_status(rs.getInt("a.attendee_status"));
                 paymentList.add(payment);
             }
         } catch (SQLException e) {
@@ -126,7 +125,7 @@ public class PaymentDaoImpl implements PaymentDao {
     }
 
     public Payment findByUserIdAndConferenceId(int conferenceId, int userId) {
-        String sql = "SELECT p.id, p.attendee_id, p.amount, p.status, p.paid_at " +
+        String sql = "SELECT p.id, p.attendee_id, p.amount, p.status, p.paid_at, " +
                 "FROM payments p " +
                 "JOIN attendees a ON p.attendee_id = a.id " +
                 "JOIN conferences c ON a.conference_id = c.id " +
