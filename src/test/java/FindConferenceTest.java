@@ -19,7 +19,7 @@ public class FindConferenceTest {
         List<Conference> conferenceList=conferenceDao.findAll(keyword);
         for (int i = 0; i < conferenceList.size(); i++) {
             Conference conference = conferenceList.get(i);
-            System.out.println(conference.getTitle());
+            System.out.println(conference.getStart_date());
         }
     }
 }

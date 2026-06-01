@@ -62,8 +62,9 @@ h2 {
 }
 .input-group-custom {
     position: relative;
-    margin-bottom: 20px;
+    margin-bottom: 6px;
 }
+
 .input-group-custom i {
     position: absolute;
     left: 16px;
@@ -72,6 +73,18 @@ h2 {
     color: #a0aec0;
     font-size: 18px;
     z-index: 10;
+    pointer-events: none;
+}
+
+.input-group-custom .error-msg,
+.input-group-custom .invalid-feedback {
+    position: absolute;
+    left: 0;
+    bottom: -20px;
+    font-size: 12px;
+    color: #e53e3e;
+    margin: 0;
+    width: 100%;
 }
 .form-control-custom {
     width: 100%;
@@ -208,6 +221,37 @@ h2 {
         padding: 32px 24px;
     }
 }
+.form-select-custom {
+    width: 50%;
+    margin: 0 0 20px 0;
+    display: block;
+    padding: 12px 16px;
+    font-size: 15px;
+    border: 2px solid #c3b5f0;
+    border-radius: 12px;
+    background: #f5f3ff;
+    color: #4a3bb5;
+    transition: all 0.2s;
+    appearance: auto;
+}
+
+.form-select-custom:focus {
+    outline: none;
+    border-color: #6c5ce7;
+    box-shadow: 0 0 0 3px rgba(108,92,231,0.15);
+}
+
+.field-error {
+    font-size: 12px;
+    color: #e53e3e;
+    margin: -14px 0 16px 0;
+    padding-left: 4px;
+}
+
+#contactInputContainer {
+    margin-top: 0;
+}
+
 .custom-register-btn {
      background-color: #6c5ce7;      /* 背景色（紫色） */
      border-color: #5a4bcf;          /* 边框色 */

@@ -11,12 +11,13 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-
     <link href="${pageContext.request.contextPath}/css/index2.css" rel="stylesheet"/>
+    <link href="${pageContext.request.contextPath}/css/conferencePayment.css" rel="stylesheet"/>
 </head>
+
+
+
 <body>
-
-
 <%-- 检查是否登录，未登录则重定向 --%>
 <c:if test="${empty sessionScope.user}">
     <c:redirect url="/login.jsp" />
@@ -65,26 +66,26 @@
                 <i class="fas fa-chevron-down toggle-icon"></i>
             </a>
             <div class="nav-submenu" data-parent="meeting">
-                <a href="#" class="nav-sub-link" data-page="conferenceHall">
+                <a href="#" class="nav-sub-link" data-page="meetingSearch">
                     <i class="fas fa-th-large"></i>
                     <span>会议大厅</span>
-                </a>
-                <a href="#" class="nav-sub-link" data-page="joinConference">
-                    <i class="fas fa-sign-in-alt"></i>
-                    <span>加入会议</span>
                 </a>
                 <a href="#" class="nav-sub-link" data-page="myConferences">
                     <i class="fas fa-list"></i>
                     <span>我的会议</span>
                 </a>
+                <a href="#" class="nav-sub-link" data-page="conferencePayment">
+                    <i class="fas fa-sign-in-alt"></i>
+                    <span>会议缴费记录</span>
+                </a>
             </div>
         </div>
 
-        <!-- 财务中心 - 下拉菜单 -->
+        <!-- 中心 -下拉菜单 -->
         <div class="nav-group">
             <a href="#" class="nav-link nav-toggle" data-group="payment">
                 <i class="fas fa-credit-card"></i>
-                <span>财务中心</span>
+                <span>中心</span>
                 <i class="fas fa-chevron-down toggle-icon"></i>
             </a>
             <div class="nav-submenu" data-parent="payment">
@@ -192,9 +193,12 @@
 </script>
 <!-- 引入纯静态 JS 文件 -->
 <script src="${pageContext.request.contextPath}/js/index2.js"></script>
+<!-- 引入纯静态 JS 文件 -->
+<script src="${pageContext.request.contextPath}/js/conferencePayment.js"></script>
+<script src="${pageContext.request.contextPath}/js/meetingSearch.js"></script>
 
 <script>
-    // 设置当前激活菜单
+    //设置当前激活菜单(公共script)
     document.querySelectorAll('.sidebar-menu .nav-link').forEach(link => {
         link.addEventListener('click', function(e) {
             if (!this.getAttribute('onclick') || this.getAttribute('onclick') === '') {
