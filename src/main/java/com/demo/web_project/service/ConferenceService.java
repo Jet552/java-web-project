@@ -16,4 +16,7 @@ public class ConferenceService {
     public  List<Conference> findDefault(){
         return conferenceDao.findDefault();
     }
+    public Conference findByConfID(String confID ){
+        return  conferenceDao.findByConfID(confID);
+    }
 }
