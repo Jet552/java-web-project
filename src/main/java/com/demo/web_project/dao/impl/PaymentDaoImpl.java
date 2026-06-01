@@ -213,7 +213,7 @@ public class PaymentDaoImpl implements PaymentDao {
 
     @Override
     public boolean updateStatus(int id, String status) {
-        String sql = "UPDATE payments SET status = ?, paid_at = ? WHERE id = ?";//有问题！！！！！！
+        String sql = "UPDATE payments SET status = ?, paid_at = ? WHERE id = ?";
 
         try (Connection conn = JDBCUtil.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {

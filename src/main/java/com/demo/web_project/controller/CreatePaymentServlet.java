@@ -1,7 +1,9 @@
 package com.demo.web_project.controller;
 
 
+import com.demo.web_project.service.AttendeeService;
 import com.demo.web_project.service.PaymentService;
+import com.demo.web_project.vo.Attendee;
 import com.demo.web_project.vo.Payment;
 import com.demo.web_project.vo.User;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -27,6 +29,7 @@ import java.time.LocalDateTime;
 @WebServlet("/payment/create")
 public class CreatePaymentServlet extends HttpServlet {
     private ObjectMapper mapper;
+    private AttendeeService attendeeService = new AttendeeService();
     private PaymentService paymentService = new PaymentService();
 
     @Override
@@ -45,10 +48,34 @@ public class CreatePaymentServlet extends HttpServlet {
         request.setCharacterEncoding("UTF-8");
         response.setContentType("application/json;charset=UTF-8");
 
+        HttpSession session = request.getSession(false);
+        User currentUser = (User) session.getAttribute("user");
+
         PrintWriter out = response.getWriter();
         Map<String, Object> result = new HashMap<>();
+        int cId=Integer.parseInt(request.getParameter("conference_id"));
 
+        Integer attendeeId = attendeeService.checkAttendeesStatus(currentUser.getId(), cId);
+        if (attendeeId == null) {
+            result.put("code", 400);
+            result.put("msg", "未找到参会记录");
+            out.print(mapper.writeValueAsString(result));
+            return;
+        }
+        double amount=Double.parseDouble(request.getParameter("amount"));
 
+        Payment payment=new Payment();
+        payment.setAttendee_id(attendeeService.checkAttendeesStatus(currentUser.getId(),cId));
+        payment.setStatus("unpaid");
+        payment.setAmount(amount);
+        // 获取当前时间并转换为 LocalDateTime
+        Timestamp timestamp = new Timestamp(System.currentTimeMillis());
+        payment.setPaid_at(timestamp.toLocalDateTime());
+
+        paymentService.save(payment);
+
+        result.put("code",200);
+        result.put("msg", "成功提交");
 
         out.print(mapper.writeValueAsString(result));
         out.flush();
