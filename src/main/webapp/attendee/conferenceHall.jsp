@@ -65,11 +65,9 @@
 </div>
 
 <script>
-    // 页面初始化
-    console.log('会议大厅页面加载完成，开始初始化');
-    setTimeout(() => {
-        loadConferences('');
-    }, 50);
+    // 页面加载时获取会议列表
+    // SPA 片段中 DOMContentLoaded 已触发，直接执行
+    loadConferences('');
 
     // 搜索框回车事件
     document.getElementById('searchInput').addEventListener('keypress', function(e) {
@@ -99,24 +97,19 @@
         </div>
     `;
 
+        // ✅ 正确：POST请求 /conference/search
         fetch(contextPath + '/conference/search', {
             method: 'POST',
             headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
             body: 'keyword=' + encodeURIComponent(keyword || '')
         })
-            .then(res => {
-                // 这里我加了容错：不认识的状态一律不抛错
-                if (!res.ok) {
-                    console.warn('接口返回异常，但继续执行', res.status);
-                    return { code: 200, data: [] };
-                }
-                return res.json();
-            })
+            .then(res => res.json())
             .then(data => {
-                console.log('会议大厅返回数据：', data);
+                // 无论成功失败，先关闭加载状态
                 emptyState.classList.add('d-none');
 
                 if ((data.code === 200 || data.code === 400) && data.data && data.data.length > 0) {
+                    // 有数据，渲染列表
                     listContainer.innerHTML = '';
                     data.data.forEach(conference => {
                         const card = document.createElement('div');
@@ -135,8 +128,8 @@
                                 <i class="fas fa-calendar-alt me-2"></i>
                                 \${formatDateTime(conference.start_date)} - \${formatDateTime(conference.end_date)}
                             </div>
-                            <button class="btn btn-primary-custom w-100" onclick="joinConferenceById(\${conference.id}, '\${conference.invite_codes || ''}')">
-                                <i class="fas fa-sign-in-alt"></i> 立即报名
+                            <button class="btn btn-primary-custom w-100" onclick="showJoinConferenceModal()">
+                                <i class="fas fa-sign-in-alt"></i> 加入会议
                             </button>
                         </div>
                     </div>
@@ -144,72 +137,103 @@
                         listContainer.appendChild(card);
                     });
                 } else {
+                    // 无数据，显示空状态
                     listContainer.innerHTML = '';
                     emptyState.classList.remove('d-none');
                 }
             })
             .catch(err => {
-                // 接口报错也不红屏，只显示空页面
-                console.error('加载会议失败，但不崩页面：', err);
-                listContainer.innerHTML = '';
-                emptyState.classList.remove('d-none');
+                console.error('加载会议列表失败', err);
+                listContainer.innerHTML = `
+            <div class="col-12 text-center py-5 text-danger">
+                <i class="fas fa-exclamation-triangle fa-3x mb-3"></i>
+                <p>加载会议列表失败，请稍后重试</p>
+            </div>
+        `;
             });
     }
 
-    // 跳转到参会登记页
-    function joinConferenceById(conferenceId, inviteCodes) {
-        const encodedInviteCodes = encodeURIComponent(inviteCodes || '');
-        window.location.href = contextPath + '/attendee/join_meeting.jsp?id=' + conferenceId + '&invite_codes=' + encodedInviteCodes;
-    }
-
-    // 显示邀请码模态框
+    // 显示加入会议模态框
     function showJoinConferenceModal() {
         document.getElementById('inviteCodeInput').value = '';
         new bootstrap.Modal(document.getElementById('joinConferenceModal')).show();
     }
 
-    // 通过邀请码加入
+    // 加入会议：先用邀请码查会议，确认存在后跳转登记页
     function joinConference() {
         const inviteCode = document.getElementById('inviteCodeInput').value.trim();
+
         if (!inviteCode || inviteCode.length !== 9) {
-            Swal.fire({icon: 'error', title: '邀请码格式错误', text: '请输入9位有效的邀请码'});
+            Swal.fire({
+                icon: 'error',
+                title: '邀请码格式错误',
+                text: '请输入9位有效的邀请码'
+            });
             return;
         }
 
-        // 用邀请码查询会议
+        // 第一步：搜索邀请码确认会议存在
         fetch(contextPath + '/conference/search', {
             method: 'POST',
             headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-            body: 'keyword=' + inviteCode
+            body: 'keyword=' + encodeURIComponent(inviteCode)
         })
             .then(res => res.json())
             .then(data => {
                 if (data.code === 200 && data.data) {
-                    // 查询成功 → 跳转到参会登记页（用户填写信息后，才会提交参会）
-                    window.location.href = contextPath + '/attendee/join_meeting.jsp?id=' + data.data.id;
-                    bootstrap.Modal.getInstance(document.getElementById('joinConferenceModal')).hide();
+                    // 会议存在，隐藏模态框，跳转到参会登记页
+                    var modal = bootstrap.Modal.getInstance(document.getElementById('joinConferenceModal'));
+                    if (modal) modal.hide();
+                    window.location.href = contextPath + '/attendee/join_meeting.jsp?id='
+                        + data.data.id + '&invite_codes=' + encodeURIComponent(inviteCode);
                 } else {
-                    Swal.fire({icon: 'error', title: '加入失败', text: '无效的邀请码'});
+                    Swal.fire({
+                        icon: 'error',
+                        title: '加入失败',
+                        text: data.msg || '邀请码无效或会议已失效'
+                    });
                 }
             })
             .catch(err => {
-                Swal.fire({icon: 'error', title: '服务器错误', text: '查询失败'});
+                console.error('请求失败:', err);
+                Swal.fire({
+                    icon: 'error',
+                    title: '网络错误',
+                    text: '请求失败，请稍后重试'
+                });
             });
     }
 
-    // 格式化日期
+    // 格式化日期时间
     function formatDateTime(dateStr) {
         if (!dateStr) return '-';
+
         let date;
+        // 处理数组格式
         if (Array.isArray(dateStr)) {
             const [year, month, day, hour, minute, second = 0] = dateStr;
             date = new Date(year, month - 1, day, hour, minute, second);
-        } else if (typeof dateStr === 'string') {
-            date = new Date(dateStr.replace(' ', 'T'));
-        } else {
+        }
+        // 处理字符串格式
+        else if (typeof dateStr === 'string') {
+            const isoStr = dateStr.replace(' ', 'T');
+            date = new Date(isoStr);
+        }
+        // 其他格式
+        else {
             date = new Date(dateStr);
         }
-        if (isNaN(date.getTime())) return '日期错误';
-        return date.getFullYear() + "-" + String(date.getMonth() + 1).padStart(2, '0') + "-" + String(date.getDate()).padStart(2, '0') + " " + String(date.getHours()).padStart(2, '0') + ":" + String(date.getMinutes()).padStart(2, '0');
+
+        if (isNaN(date.getTime())) {
+            console.error('日期解析失败:', dateStr);
+            return '日期错误';
+        }
+
+        const year = date.getFullYear();
+        const month = String(date.getMonth() + 1).padStart(2, '0');
+        const day = String(date.getDate()).padStart(2, '0');
+        const hours = String(date.getHours()).padStart(2, '0');
+        const minutes = String(date.getMinutes()).padStart(2, '0');
+        return year + "-" + month + "-" + day + " " + hours + ":" + minutes;
     }
 </script>
