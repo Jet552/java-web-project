@@ -53,6 +53,7 @@
                             <th style="width: 180px;">结束时间</th>
                             <th style="min-width: 180px;">地点</th>
                             <th style="min-width: 180px;">住宿地址</th>
+                            <th style="width: 50px;">报名费用</th>
                             <th style="width: 160px;">操作</th>
                         </tr>
                     </thead>
