@@ -37,7 +37,7 @@ public interface PaymentDao
      * @param status 缴费状态
      * @return
      */
-    boolean updateStatus(int id, String status);
+    boolean updateStatus(int attendeeId, String status);
 
     Payment findByUserIdAndConferenceId(int conferenceId, int userId);
 }

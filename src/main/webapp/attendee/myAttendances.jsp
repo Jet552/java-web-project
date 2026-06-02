@@ -1,8 +1,8 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 
-<link rel="stylesheet" href="${pageContext.request.contextPath}/css/meetingSearch.css">
+<link rel="stylesheet" href="${pageContext.request.contextPath}/css/myAttendances.css">
 
-<div class="meeting-search-wrapper">
+<div class="my-attendances-wrapper">
     <div class="content-card">
         <div class="card-header d-flex justify-content-between align-items-center">
             <h5 class="mb-0">
@@ -14,19 +14,19 @@
         </div>
         <div class="card-body p-0">
             <div class="table-responsive">
-                <table class="table table-meeting mb-0">
+                <table class="table table-attendance mb-0">
                     <thead>
-                        <tr>
-                            <th style="width: 50px;">#</th>
-                            <th style="min-width: 200px;">会议名称</th>
-                            <th style="width: 150px;">开始时间</th>
-                            <th style="width: 150px;">结束时间</th>
-                            <th style="min-width: 150px;">地点</th>
-                            <th style="min-width: 130px;">住宿地址</th>
-                            <th style="width: 90px;">费用</th>
-                            <th style="width: 80px;">状态</th>
-                            <th style="width: 100px;">操作</th>
-                        </tr>
+                    <tr>
+                        <th style="width: 40px;">#</th>
+                        <th style="width: 200px;">会议名称</th>
+                        <th style="width: 140px;">开始时间</th>
+                        <th style="width: 140px;">结束时间</th>
+                        <th style="width: 160px;">地点</th>
+                        <th style="width: 140px;">住宿地址</th>
+                        <th style="width: 80px;">费用</th>
+                        <th style="width: 70px;">状态</th>
+                        <th style="width: 90px;">操作</th>
+                    </tr>
                     </thead>
                     <tbody id="meetingTableBody">
                         <tr>

@@ -1,0 +1,229 @@
+/* ==================== 我的参会记录页面样式 ==================== */
+
+.my-attendances-wrapper {
+    max-width: 1600px;
+    margin: 0 auto;
+    padding: 24px 20px 30px 20px;
+}
+
+/* 通用卡片 */
+.content-card {
+    background: #fff;
+    border-radius: 15px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+    overflow: hidden;
+}
+
+.content-card .card-header {
+    background: transparent;
+    border-bottom: 1px solid #f0f0f0;
+    padding: 20px 25px;
+}
+
+.content-card .card-header h5 {
+    font-weight: 600;
+    color: #2c3e50;
+}
+
+.content-card .card-body {
+    padding: 0;
+}
+
+/* 会议表格 */
+.table-attendance {
+    table-layout: fixed;
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+}
+
+.table-attendance thead th {
+    background: #f7f8fa;
+    border-bottom: 2px solid #e8ecef;
+    color: #4a5568;
+    font-weight: 600;
+    font-size: 0.85rem;
+    letter-spacing: 0.3px;
+    padding: 14px 16px;
+    white-space: nowrap;
+    position: sticky;
+    top: 0;
+    z-index: 1;
+}
+
+.table-attendance thead th:first-child {
+    padding-left: 20px;
+}
+
+.table-attendance thead th:last-child {
+    padding-right: 20px;
+}
+
+.table-attendance tbody td {
+    padding: 14px 16px;
+    vertical-align: middle;
+    border-bottom: 1px solid #f0f2f5;
+    color: #4a5568;
+    font-size: 0.9rem;
+    transition: background-color 0.15s ease;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.table-attendance tbody td:first-child {
+    padding-left: 20px;
+}
+
+.table-attendance tbody td:last-child {
+    padding-right: 20px;
+}
+
+.table-attendance tbody tr {
+    transition: background-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.table-attendance tbody tr:hover {
+    background-color: #e8f4ff;
+    box-shadow: inset 3px 0 0 #1890ff;
+}
+
+/* 状态徽章 */
+.status-badge {
+    display: inline-block;
+    padding: 5px 14px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 500;
+    letter-spacing: 0.3px;
+    line-height: 1.4;
+    white-space: nowrap;
+}
+
+.status-ongoing {
+    background: #f6ffed;
+    color: #52c41a;
+    border: 1px solid #b7eb8f;
+}
+
+.status-ended {
+    background: #fafafa;
+    color: #8c8c8c;
+    border: 1px solid #d9d9d9;
+}
+
+/* 操作按钮 */
+.btn-my-action {
+    background: linear-gradient(135deg, #1890ff 0%, #40a9ff 100%);
+    border: none;
+    color: #fff;
+    font-weight: 500;
+    font-size: 0.82rem;
+    padding: 6px 16px;
+    border-radius: 6px;
+    letter-spacing: 0.3px;
+    transition: all 0.25s ease;
+    white-space: nowrap;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+}
+
+.btn-my-action:hover {
+    background: linear-gradient(135deg, #1476d6 0%, #3096e6 100%);
+    color: #fff;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(24, 144, 255, 0.35);
+}
+
+.btn-my-action:active {
+    transform: translateY(0);
+    box-shadow: none;
+}
+
+/* 分页 */
+.pagination-wrapper {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 24px;
+}
+
+.pagination {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    gap: 6px;
+}
+
+.pagination .page-item {
+    display: inline-flex;
+}
+
+.pagination .page-link {
+    display: flex;
+    align-items: center;
+    color: #4a5568;
+    border: 1px solid #e0e4e8;
+    padding: 8px 16px;
+    font-size: 0.88rem;
+    border-radius: 6px;
+    transition: all 0.2s ease;
+    background: #fff;
+    text-decoration: none;
+    white-space: nowrap;
+}
+
+.pagination .page-link:hover {
+    color: #1890ff;
+    background-color: #e8f4ff;
+    border-color: #91d5ff;
+}
+
+.pagination .page-item.active .page-link {
+    background: #e8f4ff;
+    border-color: #91d5ff;
+    color: #1890ff;
+    font-weight: 500;
+    cursor: default;
+}
+
+.pagination .page-item.disabled .page-link {
+    color: #c0c4cc;
+    background: #fafafa;
+    border-color: #e8ecef;
+    pointer-events: none;
+}
+
+/* 加载动画 */
+.loading-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+}
+
+/* 响应式 */
+@media (max-width: 992px) {
+    .my-attendances-wrapper {
+        padding: 16px 12px 20px 12px;
+    }
+
+    .table-attendance thead th,
+    .table-attendance tbody td {
+        padding: 10px 12px;
+        font-size: 0.82rem;
+    }
+
+    .pagination-wrapper {
+        justify-content: center;
+    }
+}
