@@ -97,6 +97,62 @@
                     <i class="fas fa-history"></i>
                     <span>缴费记录</span>
                 </a>
+                <a href="#" class="nav-sub-link" data-page="conferencePayment">
+                    <i class="fas fa-history"></i>
+                    <span>缴费记录</span>
+                </a>
+                <a href="#" class="nav-sub-link" data-page="conferencePayment">
+                    <i class="fas fa-history"></i>
+                    <span>缴费记录</span>
+                </a>
+                <a href="#" class="nav-sub-link" data-page="conferencePayment">
+                    <i class="fas fa-history"></i>
+                    <span>缴费记录</span>
+                </a>
+                <a href="#" class="nav-sub-link" data-page="conferencePayment">
+                    <i class="fas fa-history"></i>
+                    <span>缴费记录</span>
+                </a>
+                <a href="#" class="nav-sub-link" data-page="conferencePayment">
+                    <i class="fas fa-history"></i>
+                    <span>缴费记录</span>
+                </a>
+                <a href="#" class="nav-sub-link" data-page="conferencePayment">
+                    <i class="fas fa-history"></i>
+                    <span>缴费记录</span>
+                </a>
+                <a href="#" class="nav-sub-link" data-page="conferencePayment">
+                    <i class="fas fa-history"></i>
+                    <span>缴费记录</span>
+                </a>
+                <a href="#" class="nav-sub-link" data-page="conferencePayment">
+                    <i class="fas fa-history"></i>
+                    <span>缴费记录</span>
+                </a>
+                <a href="#" class="nav-sub-link" data-page="conferencePayment">
+                    <i class="fas fa-history"></i>
+                    <span>缴费记录</span>
+                </a>
+                <a href="#" class="nav-sub-link" data-page="conferencePayment">
+                    <i class="fas fa-history"></i>
+                    <span>缴费记录</span>
+                </a>
+                <a href="#" class="nav-sub-link" data-page="conferencePayment">
+                    <i class="fas fa-history"></i>
+                    <span>缴费记录</span>
+                </a>
+                <a href="#" class="nav-sub-link" data-page="conferencePayment">
+                    <i class="fas fa-history"></i>
+                    <span>缴费记录</span>
+                </a>
+                <a href="#" class="nav-sub-link" data-page="conferencePayment">
+                    <i class="fas fa-history"></i>
+                    <span>缴费记录</span>
+                </a>
+                <a href="#" class="nav-sub-link" data-page="conferencePayment">
+                    <i class="fas fa-history"></i>
+                    <span>缴费记录</span>
+                </a>
             </div>
         </div>
 
