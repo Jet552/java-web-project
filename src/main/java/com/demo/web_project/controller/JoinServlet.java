@@ -39,7 +39,11 @@ public class JoinServlet extends HttpServlet {
             String accommodationType = request.getParameter("accommodationType");
             String requirements = request.getParameter("requirements");
             Attendee attendee = new Attendee(user_id, conference_id, arrivalTime, departureTime, accommodationType, requirements);
-            if (attendeeService.createAttend(attendee)) {
+            int id=attendeeService.createAttend(attendee);
+            if (id!=0) {
+                Map<String,Object> data= new HashMap<>();
+                data.put("attendee_id",id);
+                result.put("data",data);
                 result.put("code", 200);
                 result.put("msg", "参加成功");
             } else {

@@ -10,22 +10,30 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class AttendeeDaoImpl implements AttendeeDao {
-    public boolean createAttend(Attendee attendee){//根据输入信息插入一条新记录
+    public int createAttend(Attendee attendee){//根据输入信息插入一条新记录
         String sql = "INSERT INTO attendees (user_id,conference_id,arrival_time,departure_time,accommodation_type,requirements)" +
                 " VALUES(?,?,?,?,?,?) ";
         try (Connection conn = JDBCUtil.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
+             PreparedStatement ps = conn.prepareStatement(sql,Statement.RETURN_GENERATED_KEYS)) {
             ps.setInt(1, attendee.getUserid());
             ps.setInt(2,attendee.getConference_id());
             ps.setTimestamp(3,java.sql.Timestamp.valueOf(attendee.getArrival_time()));
             ps.setTimestamp(4,java.sql.Timestamp.valueOf(attendee.getDeparture_time()));
             ps.setString(5,attendee.getAccommodation_type());
             ps.setString(6,attendee.getRequirements());
-            return ps.executeUpdate() > 0;
-        } catch (SQLException e) {
+            if (ps.executeUpdate() > 0){
+                ResultSet rs = ps.getGeneratedKeys();
+                int generatedId=0;
+                if (rs.next()) {
+                    generatedId = rs.getInt(1);  // 拿到自增ID
+                }
+                return generatedId;
+            }
+            } catch (SQLException e) {
             e.printStackTrace();
-            return false;
+            return 0;
         }
+        return 0;
     }
     public List<Attendee> checkAttendees(int user_id){
         String sql = "SELECT id,user_id,conference_id,arrival_time,departure_time,accommodation_type,requirements,status " +
