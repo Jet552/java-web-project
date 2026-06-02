@@ -101,6 +101,62 @@
                     <i class="fas fa-history"></i>
                     <span>缴费记录</span>
                 </a>
+                <a href="#" class="nav-sub-link" data-page="conferencePayment">
+                    <i class="fas fa-history"></i>
+                    <span>缴费记录</span>
+                </a>
+                <a href="#" class="nav-sub-link" data-page="conferencePayment">
+                    <i class="fas fa-history"></i>
+                    <span>缴费记录</span>
+                </a>
+                <a href="#" class="nav-sub-link" data-page="conferencePayment">
+                    <i class="fas fa-history"></i>
+                    <span>缴费记录</span>
+                </a>
+                <a href="#" class="nav-sub-link" data-page="conferencePayment">
+                    <i class="fas fa-history"></i>
+                    <span>缴费记录</span>
+                </a>
+                <a href="#" class="nav-sub-link" data-page="conferencePayment">
+                    <i class="fas fa-history"></i>
+                    <span>缴费记录</span>
+                </a>
+                <a href="#" class="nav-sub-link" data-page="conferencePayment">
+                    <i class="fas fa-history"></i>
+                    <span>缴费记录</span>
+                </a>
+                <a href="#" class="nav-sub-link" data-page="conferencePayment">
+                    <i class="fas fa-history"></i>
+                    <span>缴费记录</span>
+                </a>
+                <a href="#" class="nav-sub-link" data-page="conferencePayment">
+                    <i class="fas fa-history"></i>
+                    <span>缴费记录</span>
+                </a>
+                <a href="#" class="nav-sub-link" data-page="conferencePayment">
+                    <i class="fas fa-history"></i>
+                    <span>缴费记录</span>
+                </a>
+                <a href="#" class="nav-sub-link" data-page="conferencePayment">
+                    <i class="fas fa-history"></i>
+                    <span>缴费记录</span>
+                </a>
+                <a href="#" class="nav-sub-link" data-page="conferencePayment">
+                    <i class="fas fa-history"></i>
+                    <span>缴费记录</span>
+                </a>
+                <a href="#" class="nav-sub-link" data-page="conferencePayment">
+                    <i class="fas fa-history"></i>
+                    <span>缴费记录</span>
+                </a>
+                <a href="#" class="nav-sub-link" data-page="conferencePayment">
+                    <i class="fas fa-history"></i>
+                    <span>缴费记录</span>
+                </a>
+                <a href="#" class="nav-sub-link" data-page="conferencePayment">
+                    <i class="fas fa-history"></i>
+                    <span>缴费记录</span>
+                </a>
             </div>
         </div>
 
@@ -194,6 +250,18 @@
 <script>
     // 动态获取 contextPath（必须留在 JSP 中）
     var contextPath = '<%= request.getContextPath() %>';
+    // 检测 URL 参数，用于从外部页面跳回时自动加载指定页面
+    var pageParam = new URLSearchParams(window.location.search).get('page');
+    if (pageParam) {
+        // 延迟执行，等 index2.js 加载完成后再调用 loadPage
+        document.addEventListener('DOMContentLoaded', function() {
+            setTimeout(function() {
+                if (typeof loadPage === 'function') {
+                    loadPage(pageParam);
+                }
+            }, 100);
+        });
+    }
 </script>
 <!-- 引入纯静态 JS 文件 -->
 <script src="${pageContext.request.contextPath}/js/index2.js"></script>

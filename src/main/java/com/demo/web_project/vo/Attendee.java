@@ -1,6 +1,7 @@
 package com.demo.web_project.vo;
 import java.time.LocalDateTime;
 public class Attendee {
+    private  int id;
     private int userid;
     private int conference_id;
     private LocalDateTime arrival_time;
@@ -19,6 +20,15 @@ public class Attendee {
         this.accommodation_type=accommodation_type;
         this.requirements=requirements;
     }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
     public int getUserid() {
         return userid;
     }

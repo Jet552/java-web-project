@@ -16,6 +16,15 @@ public class Payment
     private String username;
     private String conferenceStartDate; //会议开始时间（格式化后的字符串）
     private String conferenceEndDate; //会议结束时间（格式化后的字符串）
+    private int attendee_status;
+
+    public int getAttendee_status() {
+        return attendee_status;
+    }
+
+    public void setAttendee_status(int attendee_status) {
+        this.attendee_status = attendee_status;
+    }
 
     public String getConferenceStartDate() {
         return conferenceStartDate;

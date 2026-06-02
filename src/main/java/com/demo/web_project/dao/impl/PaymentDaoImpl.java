@@ -30,8 +30,8 @@ public class PaymentDaoImpl implements PaymentDao {
 //    }
 
     @Override
-    public List<Payment> findByAttendeeId(int attendeeId) {
-        List<Payment> paymentList = new ArrayList<>();
+    public Payment findByAttendeeId(int attendeeId) {
+        Payment payment = new Payment();
         String sql = "SELECT id, attendee_id, amount, status, paid_at FROM payments WHERE attendee_id = ? ORDER BY paid_at DESC";
 
         try (Connection conn = JDBCUtil.getConnection();
@@ -41,12 +41,12 @@ public class PaymentDaoImpl implements PaymentDao {
             ResultSet rs = ps.executeQuery();
 
             while (rs.next()) {
-                paymentList.add(extractPayment(rs));
+                payment=extractPayment(rs);
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return paymentList;
+        return payment;
     }
 
     @Override
@@ -56,7 +56,7 @@ public class PaymentDaoImpl implements PaymentDao {
 
         // 关联查询，获取会议信息
         String sql = "SELECT p.id, p.attendee_id, p.amount, p.status, p.paid_at, " +
-                "c.id as conference_id, c.title as conference_title, c.start_date, c.end_date " +
+                "c.id as conference_id, c.title as conference_title, c.start_date, c.end_date,a.status " +
                 "FROM payments p " +
                 "JOIN attendees a ON p.attendee_id = a.id " +
                 "JOIN conferences c ON a.conference_id = c.id " +
@@ -83,7 +83,7 @@ public class PaymentDaoImpl implements PaymentDao {
                 if (endTimestamp != null) {
                     payment.setConferenceEndDate(endTimestamp.toLocalDateTime().format(DATETIME_FORMATTER));
                 }
-
+                payment.setAttendee_status(rs.getInt("a.status"));
                 paymentList.add(payment);
             }
         } catch (SQLException e) {
@@ -205,6 +205,22 @@ public class PaymentDaoImpl implements PaymentDao {
                 }
                 return true;
             }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    @Override
+    public boolean deleteByAttendeeId(int attendeeId) {
+        String sql = "DELETE FROM payments WHERE attendee_id = ?";
+
+        try (Connection conn = JDBCUtil.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setInt(1, attendeeId);
+            return ps.executeUpdate() > 0;
+
         } catch (SQLException e) {
             e.printStackTrace();
         }

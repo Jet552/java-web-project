@@ -16,7 +16,7 @@ public class PaymentService
         return paymentDao.findByUserID(userID);
     }
     //根据会议记录ID查找缴费记录
-    public List<Payment> findByAttendeeId(int attendeeId)
+    public Payment findByAttendeeId(int attendeeId)
     {
         return paymentDao.findByAttendeeId(attendeeId);
     }
@@ -30,6 +30,8 @@ public class PaymentService
     {
         return paymentDao.save(payment);
     }
+    //删除缴费记录
+    public boolean deleteByAttendeeId(int attendeeId){return paymentDao.deleteByAttendeeId(attendeeId);}
     //更新缴费记录
     public boolean updateStatus(int attendeeId, String status)
     {

@@ -165,13 +165,12 @@ function doSubmitJoin() {
             showLoading(false);
             if (data.code === 200) {//创建成功
                 attendanceStatus = 1;
-                clearFormData();
                 // 表单禁用，参加按钮禁用，缴费按钮启用
                 setFormDisabled(true);
                 document.getElementById('btnJoin').disabled = true;
                 document.getElementById('btnPay').disabled = false;
                 // 报名成功后创建缴费记录
-                createPaymentRecord();
+                createPaymentRecord(data.data.attendee_id);
                 Swal.fire({
                     icon: 'success',
                     title: '报名成功',
@@ -184,6 +183,8 @@ function doSubmitJoin() {
                 }).then(function (result) {
                     if (result.isConfirmed) {
                         goToPayment();
+                    } else {
+                        navigateBackToHall();
                     }
                 });
             } else {
@@ -209,9 +210,9 @@ function doSubmitJoin() {
 /**
  * 创建缴费记录
  */
-function createPaymentRecord() {
-    var paymentBodyData = 'conference_id=' + conferenceId
-                + '&amount=' + encodeURIComponent(document.getElementById('confAmount').textContent || '80');
+function createPaymentRecord(attendee_id) {
+    var paymentBodyData = 'attendee_id=' + attendee_id
+                + '&amount=' + encodeURIComponent(document.getElementById('confAmount').textContent );
     fetch(contextPath + '/payment/create', {
         method: 'POST',
         headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
@@ -245,7 +246,7 @@ function goToPayment() {
             if(data.code==200) {
                 var allData = data.data; //缴费记录列表
                 var paymentList = allData.filter(function(item) {
-                    return Number(item.conference_id) === Number(conferenceId) && item.status === "unpaid";
+                    return Number(item.conference_id) === Number(conferenceId) && item.status === "unpaid" && Number(item.attendee_status) === 1;
                 });
                 var payment = paymentList.length > 0 ? paymentList[0] : null;
                 var amount = payment ? payment.amount : 0;
@@ -292,7 +293,7 @@ function goToPayment() {
                                         text: '您已成功缴纳会议费用',
                                         confirmButtonColor: '#667eea'
                                     }).then(function() {
-                                        refreshData();
+                                        navigateBackToHall();
                                     });
                                 }
                             })
@@ -405,4 +406,18 @@ function restoreFormData() {
  */
 function clearFormData() {
     localStorage.removeItem('joinFormData_' + conferenceId);
+}
+
+/**
+ * 返回会议大厅（支持 index2 框架内加载和独立加载两种场景）
+ */
+function navigateBackToHall() {
+    // 清除表单缓存
+    clearFormData();
+    // 如果在 index2.jsp 框架内，调用 loadPage；否则跳转回 index2.jsp 并自动加载会议大厅
+    if (typeof loadPage === 'function') {
+        loadPage('meetingSearch');
+    } else {
+        window.location.href = contextPath + '/index2.jsp?page=meetingSearch';
+    }
 }

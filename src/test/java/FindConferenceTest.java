@@ -1,6 +1,7 @@
 import com.demo.web_project.dao.ConferenceDao;
 import com.demo.web_project.dao.impl.ConferenceDaoImpl;
 import com.demo.web_project.vo.Conference;
+import com.demo.web_project.vo.Payment;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
@@ -21,5 +22,10 @@ public class FindConferenceTest {
             Conference conference = conferenceList.get(i);
             System.out.println(conference.getStart_date());
         }
+    }
+    @Test
+    public void test(){
+        Payment payment=new Payment();
+        System.out.println(payment.getStatus());
     }
 }
