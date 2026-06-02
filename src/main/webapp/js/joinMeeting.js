@@ -151,6 +151,8 @@ function doSubmitJoin() {
                 }).then(function (result) {
                     if (result.isConfirmed) {
                         goToPayment();
+                    } else {
+                        navigateBackToHall();
                     }
                 });
             } else {
@@ -259,7 +261,7 @@ function goToPayment() {
                                         text: '您已成功缴纳会议费用',
                                         confirmButtonColor: '#667eea'
                                     }).then(function() {
-                                        refreshData();
+                                        navigateBackToHall();
                                     });
                                 }
                             })
@@ -372,4 +374,18 @@ function restoreFormData() {
  */
 function clearFormData() {
     localStorage.removeItem('joinFormData_' + conferenceId);
+}
+
+/**
+ * 返回会议大厅（支持 index2 框架内加载和独立加载两种场景）
+ */
+function navigateBackToHall() {
+    // 清除表单缓存
+    clearFormData();
+    // 如果在 index2.jsp 框架内，调用 loadPage；否则跳转回 index2.jsp 并自动加载会议大厅
+    if (typeof loadPage === 'function') {
+        loadPage('meetingSearch');
+    } else {
+        window.location.href = contextPath + '/index2.jsp?page=meetingSearch';
+    }
 }
