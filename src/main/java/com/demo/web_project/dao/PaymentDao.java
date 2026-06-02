@@ -17,7 +17,7 @@ public interface PaymentDao
      * @param attendeeId 参会记录ID
      * @return 缴费记录对象，不存在返回 null
      */
-    List<Payment> findByAttendeeId(int attendeeId);
+    Payment findByAttendeeId(int attendeeId);
     /**
      * 根据会议ID查询缴费记录
      * @param conferenceId 会议ID
@@ -32,6 +32,12 @@ public interface PaymentDao
      * @return
      */
     boolean save(Payment payment);
+    /**
+     * 删除缴费记录
+     * @param attendeeId 缴费记录
+     * @return
+     */
+     boolean deleteByAttendeeId(int attendeeId);
     /**
      * 更新缴费状态
      * @param status 缴费状态
