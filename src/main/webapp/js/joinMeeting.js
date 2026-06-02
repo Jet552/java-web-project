@@ -133,7 +133,6 @@ function doSubmitJoin() {
             showLoading(false);
             if (data.code === 200) {//创建成功
                 attendanceStatus = 1;
-                clearFormData();
                 // 表单禁用，参加按钮禁用，缴费按钮启用
                 setFormDisabled(true);
                 document.getElementById('btnJoin').disabled = true;

@@ -2,6 +2,7 @@ package com.demo.web_project.controller;
 
 import com.demo.web_project.service.AttendeeService;
 import com.demo.web_project.service.ConferenceService;
+import com.demo.web_project.service.PaymentService;
 import com.demo.web_project.vo.Attendee;
 import com.demo.web_project.vo.Conference;
 import com.demo.web_project.vo.Payment;
@@ -28,6 +29,7 @@ public class ConferenceListServlet extends HttpServlet {
     private ObjectMapper mapper = new ObjectMapper();  //创建一次，重复使用
     private AttendeeService attendeeService=new AttendeeService();
     private ConferenceService conferenceService=new ConferenceService();
+    private PaymentService paymentService=new PaymentService();
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException{
         mapper.registerModule(new JavaTimeModule());
@@ -60,6 +62,7 @@ public class ConferenceListServlet extends HttpServlet {
                 dataj.put("created_date",conference.getCreated_date());
                 dataj.put("reason",conference.getReason());
                 dataj.put("amount",conference.getAmount());
+                dataj.put("pay_status",paymentService.findByAttendeeId(attendee.getId()).getStatus());//如果有的
                 conferenceDataList.add(dataj);
             }
             result.put("code", 200);

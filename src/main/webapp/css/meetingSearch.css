@@ -1,8 +1,7 @@
 /* ==================== 会议检索页面样式 ==================== */
 
 .meeting-search-wrapper {
-    max-width: 1000px;
-    margin: 0 auto;
+    width: 100%;
     padding: 24px 20px 30px 20px;
 }
 /* ---------- 搜索区域 ---------- */
@@ -94,6 +93,7 @@
 
 /* ---------- 会议表格 ---------- */
 .table-meeting {
+    width: 100%;
     border-collapse: separate;
     border-spacing: 0;
 }
@@ -216,6 +216,34 @@
 }
 
 .btn-join:active {
+    transform: translateY(0);
+    box-shadow: none;
+}
+
+.btn-my-action {
+    background: linear-gradient(135deg, #1890ff 0%, #40a9ff 100%);
+    border: none;
+    color: #fff;
+    font-weight: 500;
+    font-size: 0.82rem;
+    padding: 6px 16px;
+    border-radius: 6px;
+    letter-spacing: 0.3px;
+    transition: all 0.25s ease;
+    white-space: nowrap;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+}
+
+.btn-my-action:hover {
+    background: linear-gradient(135deg, #1476d6 0%, #3096e6 100%);
+    color: #fff;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(24, 144, 255, 0.35);
+}
+
+.btn-my-action:active {
     transform: translateY(0);
     box-shadow: none;
 }

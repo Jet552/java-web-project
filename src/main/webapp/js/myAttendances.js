@@ -128,12 +128,16 @@ function attRenderPage() {
         html += '<td>' + attEsc(item.amount) + ' 元</td>';
         html += '<td><span class="status-badge ' + statusClass + '">' + statusText + '</span></td>';
         if (item.atten_status == 1) {
-            html += '<td class="text-nowrap">';
-            html += '<a href="' + contextPath + '/attendee/join_meeting.jsp?id=' + item.id + '&title=' + item.title + '&invite_codes=' + item.invite_codes + '" class="btn btn-my-action btn-sm me-1">';
-            html += '<i class="fas fa-credit-card me-1"></i>完善报名</a>';
-            html += '<a href="javascript:void(0)" onclick="cancelAttendance(' + (item.atten_id) + ')" class="btn btn-sm" style="background:#e53e3e;color:#fff;font-size:0.82rem;padding:6px 12px;border-radius:6px;">';
-            html += '<i class="fas fa-times me-1"></i>取消</a>';
-            html += '</td>';
+            if (item.pay_status == "paid") {
+                html += '<td><span class="text-success small fw-bold"><i class="fas fa-check-circle me-1"></i>已完成缴费</span></td>';
+            } else {
+                html += '<td class="text-nowrap">';
+                html += '<a href="' + contextPath + '/attendee/join_meeting.jsp?id=' + item.id + '&title=' + item.title + '&invite_codes=' + item.invite_codes + '" class="btn btn-my-action btn-sm me-1">';
+                html += '<i class="fas fa-credit-card me-1"></i>完善报名</a>';
+                html += '<a href="javascript:void(0)" onclick="cancelAttendance(' + (item.atten_id) + ')" class="btn btn-sm" style="background:#e53e3e;color:#fff;font-size:0.82rem;padding:6px 12px;border-radius:6px;">';
+                html += '<i class="fas fa-times me-1"></i>取消</a>';
+                html += '</td>';
+            }
         } else {
             html += '<td><span class="text-muted small">无法操作</span></td>';
         }
@@ -197,6 +201,7 @@ function cancelAttendance(attendanceId) {
                     attShowLoading(false);
                     if (data.code === 200) {
                         Swal.fire({ icon: 'success', title: '已取消', text: '参会记录已取消', confirmButtonColor: '#52c41a' });
+                        cancelPaymentRecord(attendanceId);
                         loadMyAttendances(); // 刷新列表
                     } else {
                         Swal.fire({ icon: 'error', title: '操作失败', text: data.msg, confirmButtonColor: '#e53e3e' });
@@ -209,7 +214,25 @@ function cancelAttendance(attendanceId) {
         }
     });
 }
-
+function cancelPaymentRecord(attendanceId) {
+    var paymentBodyData = 'attendee_id=' + attendanceId;
+    fetch(contextPath + '/payment/delete', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: paymentBodyData
+    }).then(function(r) { return r.json(); })
+        .then(function(data) {
+            if (data.code == 200) {
+                console.error('删除缴费记录成功:', data.msg);
+            }
+            else{
+                console.error('删除缴费记录失败:', data.msg);
+            }
+        })
+        .catch(function () {
+            console.error('网络异常');
+        });
+}
 function attShowLoading(show) {
     var overlay = document.getElementById('loadingOverlay');
     if (!overlay) {
