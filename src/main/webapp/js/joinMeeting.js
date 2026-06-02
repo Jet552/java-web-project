@@ -133,7 +133,6 @@ function doSubmitJoin() {
             showLoading(false);
             if (data.code === 200) {//创建成功
                 attendanceStatus = 1;
-                clearFormData();
                 // 表单禁用，参加按钮禁用，缴费按钮启用
                 setFormDisabled(true);
                 document.getElementById('btnJoin').disabled = true;
@@ -213,7 +212,7 @@ function goToPayment() {
             if(data.code==200) {
                 var allData = data.data; //缴费记录列表
                 var paymentList = allData.filter(function(item) {
-                    return Number(item.conference_id) === Number(conferenceId) && item.status === "unpaid";
+                    return Number(item.conference_id) === Number(conferenceId) && item.status === "unpaid" && Number(item.attendee_status) === 1;
                 });
                 var payment = paymentList.length > 0 ? paymentList[0] : null;
                 var amount = payment ? payment.amount : 0;

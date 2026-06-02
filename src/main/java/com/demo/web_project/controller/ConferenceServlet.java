@@ -29,7 +29,6 @@ public class ConferenceServlet extends HttpServlet {
             .disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
     private ConferenceService conferenceService = new ConferenceService();
     private DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm");
-
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {

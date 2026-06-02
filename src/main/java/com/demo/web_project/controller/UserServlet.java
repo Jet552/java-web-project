@@ -174,7 +174,7 @@ public class UserServlet extends HttpServlet {
         if ((phone == currentUser.getPhone() || phone.trim().isEmpty()) &&
                 (email == currentUser.getEmail() || email.trim().isEmpty())) {
             result.put("code", 400);
-            result.put("msg", "请填写正确的信息");
+            result.put("msg", "更新失败（请填写正确的信息）");
             result.put("data", null);
             out.print(mapper.writeValueAsString(result));
             out.flush();
@@ -193,7 +193,7 @@ public class UserServlet extends HttpServlet {
             result.put("msg", "修改成功");
             result.put("data", null);
         } else {
-            result.put("code", 500);
+            result.put("code", 400);
             result.put("msg", "更新失败，存在错误");
             result.put("data", null);
         }
@@ -234,8 +234,6 @@ public class UserServlet extends HttpServlet {
         if (session != null) {
             //方式1：只移除 user 属性
             session.removeAttribute("user");
-            //方式2：销毁整个 Session
-            //session.invalidate();
         }
         // 重定向到登录页
         response.sendRedirect(request.getContextPath() + "/login.jsp");
@@ -266,7 +264,7 @@ public class UserServlet extends HttpServlet {
             result.put("msg", "修改密码成功");
             result.put("data", null);
         } else {
-            result.put("code", 500);
+            result.put("code", 400);
             result.put("msg", "修改失败，存在错误");
             result.put("data", null);
         }

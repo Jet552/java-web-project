@@ -85,11 +85,62 @@ function renderTablePage() {
         html += '<td>' + esc(item.dorms) + '</td>';
         html += '<td>' + esc(item.amount) + '</td>';
         // html += '<td><span class="status-badge ' + statusClass + '">' + status + '</span></td>';
-        html += '<td><a href="javascript:void(0)" onclick="joinMeeting(' + item.id + ')" class="btn btn-join btn-sm">';
-        html += '<i class="fas fa-sign-in-alt me-1"></i>点击参加</a></td>';
+        if (item.attendee_id != 0) {
+            if(item.paid_status=="paid"){
+                html += '<td><span class="text-success small fw-bold"><i class="fas fa-check-circle me-1"></i>已完成缴费</span></td>';
+            }
+            else {
+                html += '<td class="text-nowrap">';
+                html += '<a href="' + contextPath + '/attendee/join_meeting.jsp?id=' + item.id + '&title=' + item.title + '&invite_codes=' + item.invite_codes + '" class="btn btn-join btn-sm me-1">';
+                html += '<i class="fas fa-credit-card me-1"></i>完善报名</a>';
+                html += '<a href="javascript:void(0)" onclick="cancelSearchAttendance(' + (item.attendee_id) + ')" class="btn btn-sm" style="background:#e53e3e;color:#fff;font-size:0.82rem;padding:6px 12px;border-radius:6px;">';
+                html += '<i class="fas fa-times me-1"></i>取消</a>';
+                html += '</td>';
+            }
+        } else {
+            html += '<td><a href="javascript:void(0)" onclick="joinMeeting(' + item.id + ')" class="btn btn-join btn-sm">';
+            html += '<i class="fas fa-sign-in-alt me-1"></i>点击参加</a></td>';
+        }
         html += '</tr>';
     }
     tbody.innerHTML = html;
+}
+function cancelSearchAttendance(attendanceId) {
+    Swal.fire({
+        title: '确认取消',
+        text: '取消后该会议状态将变为"已取消"',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: '确认取消',
+        cancelButtonText: '再想想',
+        confirmButtonColor: '#e53e3e',
+        cancelButtonColor: '#8c8c8c'
+    }).then(function (result) {
+        if (result.isConfirmed) {
+            attShowLoading(true);
+            var bodyData = 'atten_id=' + attendanceId;
+            fetch(contextPath + '/attendee/cancel', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                body: bodyData
+            })
+                .then(function (r) { return r.json(); })
+                .then(function (data) {
+                    attShowLoading(false);
+                    if (data.code === 200) {
+                        Swal.fire({ icon: 'success', title: '已取消', text: '参会记录已取消', confirmButtonColor: '#52c41a' });
+                        cancelPaymentRecord(attendanceId);
+                        loadAllApproved(); // 刷新列表
+                    } else {
+                        Swal.fire({ icon: 'error', title: '操作失败', text: data.msg, confirmButtonColor: '#e53e3e' });
+                    }
+                })
+                .catch(function () {
+                    attShowLoading(false);
+                    Swal.fire({ icon: 'error', title: '网络错误', text: '请求失败', confirmButtonColor: '#e53e3e' });
+                });
+        }
+    });
 }
 /**
  * 渲染分页
