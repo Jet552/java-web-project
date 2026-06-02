@@ -1,5 +1,185 @@
 /* ==================== 我的参会记录页面样式 ==================== */
 
+/* 筛选栏 */
+.filter-bar {
+    background: #fff;
+    border-radius: 16px;
+    padding: 24px;
+    margin-bottom: 24px;
+    border: 1px solid #e2e8f0;
+    box-shadow: 0 1px 2px 0 rgba(0,0,0,0.05);
+}
+
+.filter-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1.5fr auto;
+    gap: 16px;
+    align-items: end;
+}
+
+.filter-item {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+}
+
+.filter-item label {
+    display: block;
+    font-size: 12px;
+    font-weight: 600;
+    color: #64748b;
+    margin-bottom: 8px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.filter-select-wrap {
+    position: relative;
+}
+
+.filter-select-wrap select {
+    width: 100%;
+    padding: 10px 36px 10px 14px;
+    border: 1.5px solid #e2e8f0;
+    border-radius: 10px;
+    font-size: 14px;
+    color: #1e293b;
+    background: #fff;
+    appearance: none;
+    cursor: pointer;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.filter-select-wrap select:focus {
+    outline: none;
+    border-color: #5b9bd5;
+    box-shadow: 0 0 0 3px rgba(24,144,255,0.1);
+}
+
+.filter-select-arrow {
+    position: absolute;
+    right: 14px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #94a3b8;
+    font-size: 11px;
+    pointer-events: none;
+}
+
+.filter-input-wrap {
+    position: relative;
+}
+
+.filter-input-wrap input {
+    width: 100%;
+    padding: 10px 14px 10px 38px;
+    border: 1.5px solid #e2e8f0;
+    border-radius: 10px;
+    font-size: 14px;
+    color: #1e293b;
+    background: #fff;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.filter-input-wrap input:focus {
+    outline: none;
+    border-color: #5b9bd5;
+    box-shadow: 0 0 0 3px rgba(24,144,255,0.1);
+}
+
+.filter-input-icon {
+    position: absolute;
+    left: 14px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #94a3b8;
+    font-size: 13px;
+}
+
+.filter-date-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.filter-date-row input {
+    flex: 1;
+    padding: 10px 14px;
+    border: 1.5px solid #e2e8f0;
+    border-radius: 10px;
+    font-size: 14px;
+    color: #1e293b;
+    background: #fff;
+    transition: border-color 0.2s;
+}
+
+.filter-date-row input:focus {
+    outline: none;
+    border-color: #5b9bd5;
+    box-shadow: 0 0 0 3px rgba(24,144,255,0.1);
+}
+
+.filter-date-sep {
+    font-size: 13px;
+    color: #94a3b8;
+    font-weight: 500;
+}
+
+.btn-filter-apply {
+    background: linear-gradient(135deg, #1890ff 0%, #1476d6 100%);
+    color: #fff;
+    border: none;
+    padding: 10px 22px;
+    border-radius: 10px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    white-space: nowrap;
+}
+
+.btn-filter-apply:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(24,144,255,0.35);
+}
+
+.btn-filter-reset {
+    border: 1.5px solid #e2e8f0;
+    border-radius: 10px;
+    padding: 10px 18px;
+    background: #fff;
+    color: #64748b;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.2s;
+    white-space: nowrap;
+}
+
+.btn-filter-reset:hover {
+    background: #f1f5f9;
+    color: #1e293b;
+}
+
+.filter-actions {
+    display: flex;
+    gap: 8px;
+}
+
+@media (max-width: 992px) {
+    .filter-row {
+        grid-template-columns: 1fr 1fr;
+    }
+}
+
+@media (max-width: 768px) {
+    .filter-row {
+        grid-template-columns: 1fr;
+    }
+}
+
 .my-attendances-wrapper {
     max-width: 1600px;
     margin: 0 auto;
@@ -32,7 +212,7 @@
 /* 会议表格 */
 .table-attendance {
     table-layout: fixed;
-    width: 100%;
+    min-width: 100%;
     border-collapse: separate;
     border-spacing: 0;
 }
@@ -67,8 +247,6 @@
     font-size: 0.9rem;
     transition: background-color 0.15s ease;
     white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
 }
 
 .table-attendance tbody td:first-child {

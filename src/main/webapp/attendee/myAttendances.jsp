@@ -1,8 +1,51 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 
-<link rel="stylesheet" href="${pageContext.request.contextPath}/css/myAttendances.css">
+<link rel="stylesheet" href="${pageContext.request.contextPath}/css/myAttendances.css?v=2">
 
 <div class="my-attendances-wrapper">
+    <!-- 筛选栏 -->
+    <div class="filter-bar">
+        <div class="filter-row">
+            <div class="filter-item">
+                <label>参会状态</label>
+                <div class="filter-select-wrap">
+                    <select id="filterStatus" >
+                        <option value="all">全部状态</option>
+                        <option value="1">参加中</option>
+                        <option value="0">已取消</option>
+                    </select>
+                    <i class="fas fa-chevron-down filter-select-arrow"></i>
+                </div>
+            </div>
+            <div class="filter-item">
+                <label>会议名称</label>
+                <div class="filter-input-wrap">
+                    <i class="fas fa-search filter-input-icon"></i>
+                    <input type="text" id="filterName" placeholder="输入会议名称搜索" >
+                </div>
+            </div>
+            <div class="filter-item">
+                <label>会议时间范围</label>
+                <div class="filter-date-row">
+                    <input type="date" id="filterStartDate" >
+                    <span class="filter-date-sep">至</span>
+                    <input type="date" id="filterEndDate" >
+                </div>
+            </div>
+            <div class="filter-item">
+                <label>&nbsp;</label>
+                <div class="filter-actions">
+                    <button class="btn-filter-apply" onclick="attApplyFilter()">
+                        <i class="fas fa-filter"></i> 筛选
+                    </button>
+                    <button class="btn-filter-reset" onclick="attResetFilter()">
+                        <i class="fas fa-redo-alt"></i> 重置
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <div class="content-card">
         <div class="card-header d-flex justify-content-between align-items-center">
             <h5 class="mb-0">
@@ -46,7 +89,7 @@
 <script>
 (function() {
     var s = document.createElement('script');
-    s.src = contextPath + '/js/myAttendances.js';
+    s.src = contextPath + '/js/myAttendances.js?v=3';
     document.body.appendChild(s);
 })();
 </script>

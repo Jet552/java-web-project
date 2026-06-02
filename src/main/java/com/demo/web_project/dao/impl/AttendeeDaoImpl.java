@@ -28,7 +28,7 @@ public class AttendeeDaoImpl implements AttendeeDao {
         }
     }
     public List<Attendee> checkAttendees(int user_id){
-        String sql = "SELECT user_id,conference_id,arrival_time,departure_time,accommodation_type,requirements,status " +
+        String sql = "SELECT id,user_id,conference_id,arrival_time,departure_time,accommodation_type,requirements,status " +
                 "FROM attendees WHERE user_id = ?";
         List<Attendee> attendeeList=searchDB(sql,user_id);
         return attendeeList;
@@ -51,6 +51,17 @@ public class AttendeeDaoImpl implements AttendeeDao {
         }
         return 0;
     }
+    public boolean cancelAttendee(int attenID) {//指定的参会记录用于取消会议
+        String sql="UPDATE attendees " + "SET `status`=0 " + "WHERE id=?";
+        try (Connection conn = JDBCUtil.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, attenID);
+            return ps.executeUpdate()>0;//返回是否更新完成
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;//返回搜索结果
+    }
     public List<Attendee> searchDB(String sql,int keyword){
         List<Attendee> attendeeList = new ArrayList<>();
         try (Connection conn = JDBCUtil.getConnection();
@@ -59,6 +70,7 @@ public class AttendeeDaoImpl implements AttendeeDao {
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 Attendee attendee = new Attendee();
+                attendee.setId(rs.getInt("id"));
                 attendee.setUserid(rs.getInt("user_id"));
                 attendee.setConference_id(rs.getInt("conference_id"));
                 Timestamp timestamp1 = rs.getTimestamp("arrival_time");
@@ -133,4 +145,5 @@ public class AttendeeDaoImpl implements AttendeeDao {
 
         return conferenceList;
     }
+
 }

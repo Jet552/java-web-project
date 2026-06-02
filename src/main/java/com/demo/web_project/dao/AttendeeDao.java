@@ -8,4 +8,5 @@ public interface AttendeeDao {
     public int checkAttendeesStatus(int user_id,int conf_id);//查看是否已经参加某个会议
     //根据用户ID查找已参加的会议列表
     List<Conference> findByUserId(int user_id);
+    public boolean cancelAttendee(int attenID);
 }

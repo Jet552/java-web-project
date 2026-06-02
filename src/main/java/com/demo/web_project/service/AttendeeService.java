@@ -18,4 +18,7 @@ public class AttendeeService {
     }
 
     public List<Conference> findByUserId(int user_id){return attendeeDao.findByUserId(user_id);}
+    public boolean cancelAttendee(int attenID){
+        return attendeeDao.cancelAttendee(attenID);
+    }
 }

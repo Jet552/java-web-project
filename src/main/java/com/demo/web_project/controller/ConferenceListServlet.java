@@ -56,6 +56,7 @@ public class ConferenceListServlet extends HttpServlet {
                 dataj.put("end_date",conference.getEnd_date());
                 dataj.put("conf_status",conference.getStatus()); //会议的状态
                 dataj.put("atten_status",attendee.getStatus()); //参会记录的状态
+                dataj.put("atten_id",attendee.getId()); //参会记录的状态
                 dataj.put("created_date",conference.getCreated_date());
                 dataj.put("reason",conference.getReason());
                 dataj.put("amount",conference.getAmount());
