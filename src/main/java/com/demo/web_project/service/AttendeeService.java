@@ -7,7 +7,7 @@ import com.demo.web_project.vo.Conference;
 import java.util.List;
 public class AttendeeService {
     private AttendeeDao attendeeDao=new AttendeeDaoImpl();
-    public boolean createAttend(Attendee attendee){
+    public int createAttend(Attendee attendee){
         return attendeeDao.createAttend(attendee);
     }
     public List<Attendee> checkAttendees(int user_id){

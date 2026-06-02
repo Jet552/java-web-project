@@ -138,7 +138,7 @@ function doSubmitJoin() {
                 document.getElementById('btnJoin').disabled = true;
                 document.getElementById('btnPay').disabled = false;
                 // 报名成功后创建缴费记录
-                createPaymentRecord();
+                createPaymentRecord(data.data.attendee_id);
                 Swal.fire({
                     icon: 'success',
                     title: '报名成功',
@@ -176,9 +176,9 @@ function doSubmitJoin() {
 /**
  * 创建缴费记录
  */
-function createPaymentRecord() {
-    var paymentBodyData = 'conference_id=' + conferenceId
-                + '&amount=' + encodeURIComponent(document.getElementById('confAmount').textContent || '80');
+function createPaymentRecord(attendee_id) {
+    var paymentBodyData = 'attendee_id=' + attendee_id
+                + '&amount=' + encodeURIComponent(document.getElementById('confAmount').textContent );
     fetch(contextPath + '/payment/create', {
         method: 'POST',
         headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
