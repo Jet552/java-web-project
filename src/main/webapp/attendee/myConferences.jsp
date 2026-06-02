@@ -129,10 +129,8 @@
 </div>
 
 <script>
-    // 页面加载时获取我的会议列表
-    document.addEventListener('DOMContentLoaded', function() {
-        loadMyConferences();
-    });
+    // SPA中DOMContentLoaded已触发过，直接执行
+    loadMyConferences();
 
     // 加载我的会议列表
     function loadMyConferences() {

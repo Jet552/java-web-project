@@ -34,4 +34,9 @@ public interface AccommodationDao {
      * @return 住宿对象，无记录返回 null
      */
     Accommodation findByAttendeeId(int attendeeId);
+
+    /**
+     * 退房：仅将 status 改为 0
+     */
+    boolean checkoutRoom(int accommodationId);
 }

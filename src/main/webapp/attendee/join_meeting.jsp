@@ -85,12 +85,67 @@
         </div>
     </div>
 
+    <!-- 已报名时显示：只读信息卡片 -->
+    <div class="content-card" id="registeredInfoCard" style="display:none;">
+        <div class="card-header">
+            <h5 class="mb-0">
+                <i class="fas fa-check-circle text-success me-2"></i>报名信息
+                <span class="badge bg-success ms-2">已报名</span>
+            </h5>
+        </div>
+        <div class="card-body">
+            <div class="row g-3" id="registeredInfo">
+                <div class="col-md-6">
+                    <label class="info-label text-muted">预计到达</label>
+                    <p class="info-value fw-bold" id="regArrival">--</p>
+                </div>
+                <div class="col-md-6">
+                    <label class="info-label text-muted">预计离开</label>
+                    <p class="info-value fw-bold" id="regDeparture">--</p>
+                </div>
+                <div class="col-md-6">
+                    <label class="info-label text-muted">住宿要求</label>
+                    <p class="info-value" id="regAccommodation">--</p>
+                </div>
+                <div class="col-md-6">
+                    <label class="info-label text-muted">其他备注</label>
+                    <p class="info-value" id="regRequirements">--</p>
+                </div>
+            </div>
+            <hr>
+            <div class="row g-3">
+                <div class="col-md-4">
+                    <div class="border rounded p-3 text-center">
+                        <div class="text-muted small mb-1">签到状态</div>
+                        <div id="regCheckin" class="fw-bold">--</div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="border rounded p-3 text-center">
+                        <div class="text-muted small mb-1">入住房间</div>
+                        <div id="regRoom" class="fw-bold">--</div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="border rounded p-3 text-center">
+                        <div class="text-muted small mb-1">缴费状态</div>
+                        <div id="regPayment" class="fw-bold">--</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <div class="action-buttons">
         <button type="button" id="btnJoin" class="btn btn-join-action" onclick="submitJoin()">
             <i class="fas fa-sign-in-alt me-1"></i>确认参加
         </button>
         <button type="button" id="btnPay" class="btn btn-pay-action" onclick="goToPayment()" disabled>
             <i class="fas fa-credit-card me-1"></i>在线缴费
+        </button>
+        <button type="button" id="btnBack" class="btn btn-outline-secondary" style="display:none;"
+                onclick="window.location.href=contextPath+'/index2.jsp'">
+            <i class="fas fa-arrow-left me-1"></i>返回
         </button>
     </div>
 </div>

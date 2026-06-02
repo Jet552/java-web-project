@@ -99,4 +99,17 @@ public class AccommodationDaoImpl implements AccommodationDao {
         }
         return null;
     }
+
+    @Override
+    public boolean checkoutRoom(int accommodationId) {
+        String sql = "UPDATE accommodations SET status = 0 WHERE id = ?";
+        try (Connection conn = JDBCUtil.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, accommodationId);
+            return ps.executeUpdate() > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
 }

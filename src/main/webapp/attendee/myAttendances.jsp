@@ -43,10 +43,3 @@
     <div id="paginationContainer"></div>
 </div>
 
-<script>
-(function() {
-    var s = document.createElement('script');
-    s.src = contextPath + '/js/myAttendances.js';
-    document.body.appendChild(s);
-})();
-</script>

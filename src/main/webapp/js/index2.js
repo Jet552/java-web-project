@@ -208,7 +208,7 @@ function loadPage(pageName) {
             if (pageName === 'meetingSearch' && typeof loadAllApproved === 'function') {
                 loadAllApproved();
             }
-            if (pageName === 'myAttendee' && typeof loadMyAttendances === 'function') {
+            if ((pageName === 'myAttendee' || pageName === 'attendRecord') && typeof loadMyAttendances === 'function') {
                 loadMyAttendances();
             }
             showLoading(false);
@@ -233,6 +233,7 @@ function getPageUrl(pageName) {
         'conferencePayment': contextPath + '/attendee/conferencePayment.jsp',
         'myConferences': contextPath + '/attendee/myConferences.jsp',
         "myAttendee": contextPath + '/attendee/myAttendances.jsp',
+        "attendRecord": contextPath + '/attendee/myAttendances.jsp',
         'checkin': contextPath + '/checkin_manage.jsp',
         'room': contextPath + '/room_manage.jsp',
         'conferencePayment': contextPath + '/attendee/conferencePayment.jsp',

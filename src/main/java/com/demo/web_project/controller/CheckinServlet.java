@@ -49,6 +49,8 @@ public class CheckinServlet extends HttpServlet {
             handleDoCheckin(req, resp);
         } else if ("/assignRoom".equals(path)) {
             handleAssignRoom(req, resp);
+        } else if ("/checkout".equals(path)) {
+            handleCheckout(req, resp);
         } else {
             sendError(resp, 404, "接口不存在");
         }
@@ -179,6 +181,27 @@ public class CheckinServlet extends HttpServlet {
             result.put("msg", "success");
             result.put("data", list);
             out.print(mapper.writeValueAsString(result));
+        } catch (NumberFormatException e) {
+            sendError(resp, 400, "参数错误");
+            return;
+        }
+        out.flush(); out.close();
+    }
+
+    // ---- 退房相关 ----
+
+    private void handleCheckout(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+        resp.setContentType("application/json;charset=UTF-8");
+        PrintWriter out = resp.getWriter();
+
+        try {
+            int roomId = Integer.parseInt(req.getParameter("roomId"));
+            boolean ok = accommodationService.checkout(roomId);
+            if (ok) {
+                out.print(mapper.writeValueAsString(buildResult(200, "退房成功", null)));
+            } else {
+                out.print(mapper.writeValueAsString(buildResult(400, "退房失败", null)));
+            }
         } catch (NumberFormatException e) {
             sendError(resp, 400, "参数错误");
             return;
