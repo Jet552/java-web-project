@@ -11,10 +11,8 @@
  Target Server Version : 80023 (8.0.23)
  File Encoding         : 65001
 
- Date: 31/05/2026 22:41:33
+ Date: 03/06/2026 23:00:02
 */
-CREATE DATABASE IF NOT EXISTS web_db CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
-USE web_db;
 
 SET NAMES utf8mb4;
 SET FOREIGN_KEY_CHECKS = 0;
@@ -55,34 +53,56 @@ CREATE TABLE `attendees`  (
   `departure_time` datetime NOT NULL,
   `accommodation_type` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
   `requirements` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+  `join_source` enum('invite','search') CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT 'search',
   `status` tinyint NOT NULL DEFAULT 1,
   PRIMARY KEY (`id`) USING BTREE,
+  UNIQUE INDEX `idx_user_conference_active`(`user_id` ASC, `conference_id` ASC, ((case when (`status` = 1) then 1 else NULL end)) ASC) USING BTREE,
   INDEX `idx_user`(`user_id` ASC) USING BTREE,
   INDEX `idx_conference`(`conference_id` ASC) USING BTREE,
-  UNIQUE INDEX `idx_user_conference_active`(`user_id` ASC, `conference_id` ASC, ((case when (`status` = 1) then 1 else NULL end)) ASC) USING BTREE,
   CONSTRAINT `attendees_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT,
   CONSTRAINT `attendees_ibfk_2` FOREIGN KEY (`conference_id`) REFERENCES `conferences` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT,
   CONSTRAINT `attendees_chk_1` CHECK (`status` in (0,1))
-) ENGINE = InnoDB AUTO_INCREMENT = 25 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 46 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of attendees
 -- ----------------------------
-INSERT INTO `attendees` VALUES (1, 78, 1, '2026-06-09 14:30:00', '2026-06-12 20:00:00', '单人间', '需要清真餐', 1);
-INSERT INTO `attendees` VALUES (2, 32, 2, '2026-07-05 08:00:00', '2026-07-07 22:00:00', '双人间', '无特殊要求', 1);
-INSERT INTO `attendees` VALUES (3, 91, 3, '2026-08-15 07:15:00', '2026-08-17 18:00:00', '单人间', '需要无障碍设施', 1);
-INSERT INTO `attendees` VALUES (4, 14, 4, '2026-09-01 12:00:00', '2026-09-03 21:30:00', '不需住宿', '需要素食餐', 1);
-INSERT INTO `attendees` VALUES (5, 67, 5, '2026-10-22 09:00:00', '2026-10-24 16:00:00', '单人间', '无特殊要求', 1);
-INSERT INTO `attendees` VALUES (6, 5, 6, '2025-11-12 10:00:00', '2025-11-14 17:00:00', '双人间', '需要加床', 1);
-INSERT INTO `attendees` VALUES (7, 90, 7, '2026-03-05 13:00:00', '2026-03-06 19:00:00', '单人间', '无特殊要求', 1);
-INSERT INTO `attendees` VALUES (8, 22, 8, '2026-04-18 08:00:00', '2026-04-20 16:00:00', '不需住宿', '需要会议资料电子版', 1);
-INSERT INTO `attendees` VALUES (9, 45, 9, '2026-05-10 09:30:00', '2026-05-12 15:00:00', '单人间', '因航班取消无法参会', 0);
-INSERT INTO `attendees` VALUES (10, 100, 10, '2026-05-25 10:00:00', '2026-05-26 11:30:00', '双人间', '临时有紧急会议', 0);
-INSERT INTO `attendees` VALUES (11, 91, 1, '2026-06-08 20:06:00', '2026-06-12 20:06:00', '单人间', '无', 1);
-INSERT INTO `attendees` VALUES (18, 89, 1, '2026-06-09 21:18:00', '2026-06-13 21:18:00', '单人间', '无', 0);
-INSERT INTO `attendees` VALUES (22, 89, 1, '2026-05-07 22:01:00', '2026-05-31 22:01:00', '单人间', '无', 0);
-INSERT INTO `attendees` VALUES (23, 89, 1, '2026-05-10 22:10:00', '2026-05-31 22:10:00', '单人间', '无', 0);
-INSERT INTO `attendees` VALUES (24, 89, 1, '2026-05-15 22:11:00', '2026-05-31 22:11:00', '单人间', '无', 1);
+INSERT INTO `attendees` VALUES (1, 78, 1, '2026-06-09 14:30:00', '2026-06-12 20:00:00', '单人间', '需要清真餐', 'search', 1);
+INSERT INTO `attendees` VALUES (2, 32, 2, '2026-07-05 08:00:00', '2026-07-07 22:00:00', '双人间', '无特殊要求', 'search', 1);
+INSERT INTO `attendees` VALUES (3, 91, 3, '2026-08-15 07:15:00', '2026-08-17 18:00:00', '单人间', '需要无障碍设施', 'search', 1);
+INSERT INTO `attendees` VALUES (4, 14, 4, '2026-09-01 12:00:00', '2026-09-03 21:30:00', '不需住宿', '需要素食餐', 'search', 1);
+INSERT INTO `attendees` VALUES (5, 67, 5, '2026-10-22 09:00:00', '2026-10-24 16:00:00', '单人间', '无特殊要求', 'search', 1);
+INSERT INTO `attendees` VALUES (6, 5, 6, '2025-11-12 10:00:00', '2025-11-14 17:00:00', '双人间', '需要加床', 'search', 1);
+INSERT INTO `attendees` VALUES (7, 90, 7, '2026-03-05 13:00:00', '2026-03-06 19:00:00', '单人间', '无特殊要求', 'search', 1);
+INSERT INTO `attendees` VALUES (8, 22, 8, '2026-04-18 08:00:00', '2026-04-20 16:00:00', '不需住宿', '需要会议资料电子版', 'search', 1);
+INSERT INTO `attendees` VALUES (9, 45, 9, '2026-05-10 09:30:00', '2026-05-12 15:00:00', '单人间', '因航班取消无法参会', 'search', 0);
+INSERT INTO `attendees` VALUES (10, 100, 10, '2026-05-25 10:00:00', '2026-05-26 11:30:00', '双人间', '临时有紧急会议', 'search', 0);
+INSERT INTO `attendees` VALUES (11, 91, 1, '2026-06-08 20:06:00', '2026-06-12 20:06:00', '单人间', '无', 'search', 1);
+INSERT INTO `attendees` VALUES (18, 89, 1, '2026-06-09 21:18:00', '2026-06-13 21:18:00', '单人间', '无', 'search', 0);
+INSERT INTO `attendees` VALUES (22, 89, 1, '2026-05-07 22:01:00', '2026-05-31 22:01:00', '单人间', '无', 'search', 0);
+INSERT INTO `attendees` VALUES (23, 89, 1, '2026-05-10 22:10:00', '2026-05-31 22:10:00', '单人间', '无', 'search', 0);
+INSERT INTO `attendees` VALUES (24, 89, 1, '2026-05-15 22:11:00', '2026-05-31 22:11:00', '单人间', '无', 'search', 0);
+INSERT INTO `attendees` VALUES (25, 89, 4, '2026-06-07 20:20:00', '2026-06-27 20:20:00', '双人间', '无', 'search', 0);
+INSERT INTO `attendees` VALUES (26, 89, 21, '2026-06-01 20:22:00', '2026-06-27 20:20:00', '单人间', '', 'search', 0);
+INSERT INTO `attendees` VALUES (27, 89, 1, '2026-06-12 20:48:00', '2026-06-28 20:48:00', '单人间', '无', 'search', 0);
+INSERT INTO `attendees` VALUES (28, 89, 4, '2026-06-05 22:11:00', '2026-06-20 22:11:00', '双人间', '', 'search', 0);
+INSERT INTO `attendees` VALUES (29, 89, 1, '2026-06-02 11:22:00', '2026-06-28 11:22:00', '单人间', '无', 'search', 0);
+INSERT INTO `attendees` VALUES (30, 89, 38, '2026-06-02 11:30:00', '2026-06-21 11:30:00', '单人间', '无', 'search', 0);
+INSERT INTO `attendees` VALUES (31, 89, 1, '2026-06-04 11:54:00', '2026-06-14 11:54:00', '双人间', '无', 'search', 0);
+INSERT INTO `attendees` VALUES (32, 89, 1, '2026-06-01 11:56:00', '2026-06-05 11:57:00', '单人间', '无', 'search', 0);
+INSERT INTO `attendees` VALUES (33, 89, 1, '2026-06-03 11:58:00', '2026-06-26 11:58:00', '单人间', '无', 'search', 0);
+INSERT INTO `attendees` VALUES (34, 89, 1, '2026-06-05 11:59:00', '2026-06-28 11:59:00', '单人间', '无', 'search', 0);
+INSERT INTO `attendees` VALUES (35, 89, 1, '2026-06-05 12:20:00', '2026-06-26 12:20:00', '单人间', '无', 'search', 1);
+INSERT INTO `attendees` VALUES (36, 89, 4, '2026-06-07 15:41:00', '2026-06-13 15:41:00', '双人间', '无', 'search', 0);
+INSERT INTO `attendees` VALUES (37, 89, 4, '2026-06-07 15:48:00', '2026-06-12 15:48:00', '双人间', '无', 'search', 0);
+INSERT INTO `attendees` VALUES (38, 89, 4, '2026-06-13 16:19:00', '2026-06-21 16:19:00', '双人间', '无', 'search', 1);
+INSERT INTO `attendees` VALUES (39, 89, 21, '2026-06-02 17:38:00', '2026-06-05 16:39:00', '双人间', '无', 'search', 0);
+INSERT INTO `attendees` VALUES (40, 89, 22, '2026-06-07 16:50:00', '2026-06-28 16:50:00', '单人间', '无', 'search', 0);
+INSERT INTO `attendees` VALUES (41, 89, 21, '2026-06-02 17:38:00', '2026-06-05 16:39:00', '双人间', '无', 'search', 0);
+INSERT INTO `attendees` VALUES (42, 89, 21, '2026-06-02 17:38:00', '2026-06-05 16:39:00', '双人间', '无', 'search', 1);
+INSERT INTO `attendees` VALUES (43, 89, 22, '2026-06-07 16:50:00', '2026-06-28 16:50:00', '单人间', '无', 'search', 1);
+INSERT INTO `attendees` VALUES (44, 89, 23, '2026-06-07 16:55:00', '2026-06-21 16:55:00', '单人间', '无', 'search', 1);
+INSERT INTO `attendees` VALUES (45, 89, 24, '2026-06-04 20:58:00', '2026-06-18 20:58:00', '双人间', '无', 'search', 1);
 
 -- ----------------------------
 -- Table structure for checkins
@@ -211,7 +231,7 @@ CREATE TABLE `payments`  (
   PRIMARY KEY (`id`) USING BTREE,
   INDEX `idx_attendee`(`attendee_id` ASC) USING BTREE,
   CONSTRAINT `payments_ibfk_1` FOREIGN KEY (`attendee_id`) REFERENCES `attendees` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT
-) ENGINE = InnoDB AUTO_INCREMENT = 6 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 24 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of payments
@@ -221,6 +241,20 @@ INSERT INTO `payments` VALUES (2, 2, 260.00, 'paid', '2026-05-18 09:15:00');
 INSERT INTO `payments` VALUES (3, 3, 299.99, 'paid', '2026-05-22 11:20:00');
 INSERT INTO `payments` VALUES (4, 6, 245.00, 'paid', '2025-11-10 16:45:00');
 INSERT INTO `payments` VALUES (5, 7, 198.50, 'unpaid', '2026-05-28 16:30:42');
+INSERT INTO `payments` VALUES (6, 25, 30.00, 'unpaid', '2026-06-01 20:20:21');
+INSERT INTO `payments` VALUES (7, 26, 30.00, 'unpaid', '2026-06-01 20:20:49');
+INSERT INTO `payments` VALUES (8, 27, 30.00, 'unpaid', '2026-06-01 20:48:44');
+INSERT INTO `payments` VALUES (9, 28, 30.00, 'unpaid', '2026-06-01 22:11:30');
+INSERT INTO `payments` VALUES (10, 29, 30.00, 'unpaid', '2026-06-02 11:22:18');
+INSERT INTO `payments` VALUES (11, 30, 30.00, 'unpaid', '2026-06-02 11:30:49');
+INSERT INTO `payments` VALUES (12, 31, 30.00, 'unpaid', '2026-06-02 11:54:38');
+INSERT INTO `payments` VALUES (13, 32, 30.00, 'unpaid', '2026-06-02 11:57:09');
+INSERT INTO `payments` VALUES (16, 35, 30.00, 'paid', '2026-06-02 12:21:01');
+INSERT INTO `payments` VALUES (19, 38, 30.00, 'paid', '2026-06-02 16:38:28');
+INSERT INTO `payments` VALUES (20, 42, 30.00, 'paid', '2026-06-02 16:53:47');
+INSERT INTO `payments` VALUES (21, 43, 30.00, 'paid', '2026-06-02 16:55:02');
+INSERT INTO `payments` VALUES (22, 44, 30.00, 'paid', '2026-06-02 16:55:39');
+INSERT INTO `payments` VALUES (23, 45, 30.00, 'paid', '2026-06-03 20:58:58');
 
 -- ----------------------------
 -- Table structure for users

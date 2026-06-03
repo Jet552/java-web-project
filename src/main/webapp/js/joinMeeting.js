@@ -41,8 +41,9 @@ function loadConferenceInfo() {
                 document.getElementById('confStartDate').textContent = (conf.start_date || '').replace('T', ' ');
                 document.getElementById('confEndDate').textContent = (conf.end_date || '').replace('T', ' ');
                 document.getElementById('confVenue').textContent = conf.venue || '--';
-                document.getElementById('confDorms').textContent = conf.dorms || '--';
-                document.getElementById('confAmount').textContent = conf.amount || '--';
+                document.getElementById('confDorms').textContent = conf.dorms ;
+                document.getElementById('confAmount').textContent = joinSource=='invite'?0:conf.amount;
+                document.getElementById('confDescription').textContent = conf.description || '--';
             } else {
                 Swal.fire({ icon: 'error', title: '会议不存在', text: '该会议可能已被取消', confirmButtonColor: '#1890ff' });
             }
@@ -119,6 +120,7 @@ function submitJoin() {
 function doSubmitJoin() {
     showLoading(true);
     var bodyData = 'conferenceId=' + conferenceId
+        + '&source=' + encodeURIComponent(joinSource)
         + '&arrivalTime=' + encodeURIComponent(document.getElementById('arrivalTime').value)
         + '&departureTime=' + encodeURIComponent(document.getElementById('departureTime').value)
         + '&accommodationType=' + encodeURIComponent(document.getElementById('accommodationType').value)

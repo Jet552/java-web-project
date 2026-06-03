@@ -65,6 +65,7 @@ public class SearchServlet extends HttpServlet{
                 data.put("venue",conference.getVenue());
                 data.put("dorms",conference.getDorms());
                 data.put("amount",conference.getAmount());
+                data.put("description",conference.getDescription());
                 result.put("data",data);
                 result.put("code", 200);
                 result.put("msg", "查找成功");
@@ -92,6 +93,7 @@ public class SearchServlet extends HttpServlet{
                     item.put("dorms", conf.getDorms());
                     item.put("invite_codes",conf.getInvite_codes());
                     item.put("amount",conf.getAmount());
+                    item.put("description",conf.getDescription());
                     dataList.add(item);
                 }
                 result.put("data", dataList);  // 整个列表作为 data
@@ -129,6 +131,7 @@ public class SearchServlet extends HttpServlet{
                     item.put("dorms", conf.getDorms());
                     item.put("invite_codes",conf.getInvite_codes());
                     item.put("amount",conf.getAmount());
+                    item.put("description",conf.getDescription());
                     dataList.add(item);
                 }
                 result.put("data", dataList);  // 整个列表作为 data

@@ -45,6 +45,10 @@
                     <label class="info-label">报名费用</label>
                     <p class="info-value" id="confAmount">--</p>
                 </div>
+                <div class="col-md-6">
+                    <label class="info-label">详情</label>
+                    <p class="info-value" id="confDescription">--</p>
+                </div>
             </div>
         </div>
     </div>
@@ -99,6 +103,7 @@
 var contextPath = '<%= request.getContextPath() %>';
 var conferenceId = '<%= request.getParameter("id") %>';
 var inviteCodes = '<%= request.getParameter("invite_codes") %>';
+var joinSource = '<%= request.getParameter("source") != null ? request.getParameter("source") : "search" %>';
 var attendanceId = null;
 </script>
 <script src="${pageContext.request.contextPath}/js/joinMeeting.js"></script>
