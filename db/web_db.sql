@@ -11,7 +11,7 @@
  Target Server Version : 80023 (8.0.23)
  File Encoding         : 65001
 
- Date: 03/06/2026 23:00:02
+ Date: 04/06/2026 19:44:23
 */
 
 SET NAMES utf8mb4;
@@ -32,7 +32,7 @@ CREATE TABLE `accommodations`  (
   INDEX `idx_attendee`(`attendee_id` ASC) USING BTREE,
   CONSTRAINT `accommodations_ibfk_1` FOREIGN KEY (`attendee_id`) REFERENCES `attendees` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT,
   CONSTRAINT `accommodations_chk_1` CHECK (`status` in (0,1))
-) ENGINE = InnoDB AUTO_INCREMENT = 5 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 6 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of accommodations
@@ -40,6 +40,7 @@ CREATE TABLE `accommodations`  (
 INSERT INTO `accommodations` VALUES (2, 1, '908', '2026-06-09', '2026-06-12', 1);
 INSERT INTO `accommodations` VALUES (3, 2, '605B', '2026-07-05', '2026-07-07', 1);
 INSERT INTO `accommodations` VALUES (4, 8, '1012', '2026-03-05', '2026-03-06', 0);
+INSERT INTO `accommodations` VALUES (5, 61, '102', '2026-06-11', '2026-06-26', 0);
 
 -- ----------------------------
 -- Table structure for attendees
@@ -62,7 +63,7 @@ CREATE TABLE `attendees`  (
   CONSTRAINT `attendees_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT,
   CONSTRAINT `attendees_ibfk_2` FOREIGN KEY (`conference_id`) REFERENCES `conferences` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT,
   CONSTRAINT `attendees_chk_1` CHECK (`status` in (0,1))
-) ENGINE = InnoDB AUTO_INCREMENT = 46 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 62 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of attendees
@@ -71,7 +72,6 @@ INSERT INTO `attendees` VALUES (1, 78, 1, '2026-06-09 14:30:00', '2026-06-12 20:
 INSERT INTO `attendees` VALUES (2, 32, 2, '2026-07-05 08:00:00', '2026-07-07 22:00:00', '双人间', '无特殊要求', 'search', 1);
 INSERT INTO `attendees` VALUES (3, 91, 3, '2026-08-15 07:15:00', '2026-08-17 18:00:00', '单人间', '需要无障碍设施', 'search', 1);
 INSERT INTO `attendees` VALUES (4, 14, 4, '2026-09-01 12:00:00', '2026-09-03 21:30:00', '不需住宿', '需要素食餐', 'search', 1);
-INSERT INTO `attendees` VALUES (5, 67, 5, '2026-10-22 09:00:00', '2026-10-24 16:00:00', '单人间', '无特殊要求', 'search', 1);
 INSERT INTO `attendees` VALUES (6, 5, 6, '2025-11-12 10:00:00', '2025-11-14 17:00:00', '双人间', '需要加床', 'search', 1);
 INSERT INTO `attendees` VALUES (7, 90, 7, '2026-03-05 13:00:00', '2026-03-06 19:00:00', '单人间', '无特殊要求', 'search', 1);
 INSERT INTO `attendees` VALUES (8, 22, 8, '2026-04-18 08:00:00', '2026-04-20 16:00:00', '不需住宿', '需要会议资料电子版', 'search', 1);
@@ -103,6 +103,13 @@ INSERT INTO `attendees` VALUES (42, 89, 21, '2026-06-02 17:38:00', '2026-06-05 1
 INSERT INTO `attendees` VALUES (43, 89, 22, '2026-06-07 16:50:00', '2026-06-28 16:50:00', '单人间', '无', 'search', 1);
 INSERT INTO `attendees` VALUES (44, 89, 23, '2026-06-07 16:55:00', '2026-06-21 16:55:00', '单人间', '无', 'search', 1);
 INSERT INTO `attendees` VALUES (45, 89, 24, '2026-06-04 20:58:00', '2026-06-18 20:58:00', '双人间', '无', 'search', 1);
+INSERT INTO `attendees` VALUES (46, 89, 70, '2026-06-27 09:42:00', '2026-06-28 09:42:00', '单人间', '无', 'search', 0);
+INSERT INTO `attendees` VALUES (47, 89, 69, '2026-06-26 09:47:00', '2026-06-27 09:47:00', '双人间', '无', 'search', 0);
+INSERT INTO `attendees` VALUES (52, 89, 67, '2026-06-03 11:19:00', '2026-06-13 11:19:00', '双人间', '无', 'invite', 0);
+INSERT INTO `attendees` VALUES (58, 89, 63, '2026-06-09 12:49:00', '2026-06-13 12:49:00', '双人间', '无', 'invite', 0);
+INSERT INTO `attendees` VALUES (59, 89, 25, '2026-06-04 14:54:00', '2026-06-28 12:54:00', '双人间', '无', 'search', 1);
+INSERT INTO `attendees` VALUES (60, 89, 57, '2026-06-12 13:13:00', '2026-06-28 13:13:00', '单人间', '无', 'invite', 1);
+INSERT INTO `attendees` VALUES (61, 2, 82, '2026-06-14 19:12:00', '2026-06-20 19:12:00', '双人间', '无', 'search', 1);
 
 -- ----------------------------
 -- Table structure for checkins
@@ -118,7 +125,7 @@ CREATE TABLE `checkins`  (
   INDEX `checked_by`(`checked_by` ASC) USING BTREE,
   CONSTRAINT `checkins_ibfk_1` FOREIGN KEY (`attendee_id`) REFERENCES `attendees` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT,
   CONSTRAINT `checkins_ibfk_2` FOREIGN KEY (`checked_by`) REFERENCES `conferences` (`organizer_id`) ON DELETE RESTRICT ON UPDATE RESTRICT
-) ENGINE = InnoDB AUTO_INCREMENT = 7 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 8 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of checkins
@@ -126,6 +133,7 @@ CREATE TABLE `checkins`  (
 INSERT INTO `checkins` VALUES (4, 1, '2026-06-09 09:15:00', 24);
 INSERT INTO `checkins` VALUES (5, 2, '2026-07-05 08:30:00', 8);
 INSERT INTO `checkins` VALUES (6, 8, '2026-03-05 13:45:00', 2);
+INSERT INTO `checkins` VALUES (7, 61, '2026-06-04 19:14:49', 1);
 
 -- ----------------------------
 -- Table structure for conferences
@@ -152,7 +160,7 @@ CREATE TABLE `conferences`  (
   FULLTEXT INDEX `idx_title`(`title`) WITH PARSER `ngram`,
   CONSTRAINT `conferences_ibfk_1` FOREIGN KEY (`organizer_id`) REFERENCES `users` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT,
   CONSTRAINT `conferences_chk_1` CHECK (`amount` >= 0)
-) ENGINE = InnoDB AUTO_INCREMENT = 71 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 83 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of conferences
@@ -217,6 +225,17 @@ INSERT INTO `conferences` VALUES (67, 5, '工业软件自主创新研讨会', 'C
 INSERT INTO `conferences` VALUES (68, 39, '航天技术创新与发展论坛', '商业航天、卫星互联网与深空探测技术', '北京航天城', '北京唐拉雅秀酒店', 'B9C0D1E2F', '2025-08-12 09:00:00', '2025-08-13 17:00:00', 'approved', '2025-06-10 09:00:00', NULL, 30.00);
 INSERT INTO `conferences` VALUES (69, 8, '医学影像AI临床应用研讨会', 'CT/MRI智能辅助诊断、病理AI与放射组学', '上海交通大学医学院', '上海交大医学院学术交流中心', 'G3H4I5J6K', '2025-06-25 09:00:00', '2025-06-26 17:00:00', 'approved', '2025-05-08 14:00:00', NULL, 30.00);
 INSERT INTO `conferences` VALUES (70, 45, '乡村振兴与数字农业论坛', '智慧农业、农产品电商与乡村数字化治理', '西安杨凌国际会展中心', '杨凌国际会展中心酒店', 'L7M8N9O0P', '2025-09-18 09:00:00', '2025-09-18 17:00:00', 'approved', '2025-07-10 09:00:00', NULL, 30.00);
+INSERT INTO `conferences` VALUES (71, 1, '2026人工智能与大数据技术峰会', '探讨AI与大数据的融合应用及未来发展趋势', '北京国家会议中心', '北京北辰洲际酒店', 'AI2026B01', '2026-07-15 09:00:00', '2026-07-17 18:00:00', 'approved', '2026-06-01 10:30:00', '审核通过', 180.00);
+INSERT INTO `conferences` VALUES (72, 3, '云计算与边缘计算技术研讨会', '聚焦云原生架构与边缘计算最新实践', '上海世博中心', '上海浦东嘉里大酒店', 'CLD2026S2', '2026-08-05 08:30:00', '2026-08-07 17:00:00', 'approved', '2026-06-02 14:20:00', '审核通过', 150.00);
+INSERT INTO `conferences` VALUES (73, 7, '第十届软件工程与系统架构大会', '探讨微服务、DDD与系统架构演进', '深圳会展中心', '深圳福田香格里拉', 'SE2026S01', '2026-09-10 09:00:00', '2026-09-12 18:00:00', 'approved', '2026-06-03 09:15:00', '审核通过', 135.00);
+INSERT INTO `conferences` VALUES (74, 12, '网络安全与数据隐私保护论坛', '新形势下企业网络安全防护策略与实践', '杭州国际博览中心', '杭州钱江新城万豪', 'SEC2026H1', '2026-07-20 09:30:00', '2026-07-21 17:30:00', 'approved', '2026-06-04 11:00:00', '审核通过', 120.00);
+INSERT INTO `conferences` VALUES (75, 18, '区块链技术在金融领域的应用', '区块链赋能金融科技创新与实践案例分享', '成都天府国际会议中心', '成都世纪城洲际酒店', 'BC2026C01', '2026-10-08 08:30:00', '2026-10-10 17:00:00', 'approved', '2026-06-04 16:45:00', '审核通过', 165.00);
+INSERT INTO `conferences` VALUES (76, 25, '物联网与智能硬件开发者大会', 'IoT前沿技术与智能硬件开源生态建设', '广州琶洲会展中心', '广州香格里拉大酒店', 'IOT2026G2', '2026-08-18 09:00:00', '2026-08-20 18:00:00', 'approved', '2026-06-05 08:10:00', '审核通过', 145.00);
+INSERT INTO `conferences` VALUES (77, 33, '企业数字化转型实战峰会', '传统企业数字化转型路径与最佳实践', '南京国际博览中心', '南京金陵饭店', 'DT2026N01', '2026-07-25 09:00:00', '2026-07-26 17:30:00', 'approved', '2026-06-05 13:30:00', '审核通过', 110.00);
+INSERT INTO `conferences` VALUES (78, 42, '量子计算与未来科技研讨会', '量子计算前沿进展与产业化应用探索', '合肥滨湖国际会展中心', '合肥洲际酒店', 'QC2026H01', '2026-11-05 09:00:00', '2026-11-07 18:00:00', 'approved', '2026-06-06 10:00:00', '审核通过', 190.00);
+INSERT INTO `conferences` VALUES (79, 56, '金融科技与风险控制高峰论坛', '智能风控、反欺诈与合规科技新趋势', '重庆悦来国际会议中心', '重庆解放碑威斯汀', 'FT2026CQ1', '2026-09-15 08:30:00', '2026-09-17 17:00:00', 'approved', '2026-06-06 15:20:00', '审核通过', 175.00);
+INSERT INTO `conferences` VALUES (80, 78, '智慧医疗与健康大数据学术会议', 'AI辅助诊疗与医疗大数据应用研究', '武汉光谷科技会展中心', '武汉光谷凯悦酒店', 'MH2026W01', '2026-08-22 09:00:00', '2026-08-24 18:00:00', 'approved', '2026-06-07 09:50:00', '审核通过', 155.00);
+INSERT INTO `conferences` VALUES (82, 1, '123', '123', '213', '123', NULL, '2026-06-20 19:09:00', '2026-06-26 19:09:00', 'approved', '2026-06-04 19:09:22', '', 30.00);
 
 -- ----------------------------
 -- Table structure for payments
@@ -231,7 +250,7 @@ CREATE TABLE `payments`  (
   PRIMARY KEY (`id`) USING BTREE,
   INDEX `idx_attendee`(`attendee_id` ASC) USING BTREE,
   CONSTRAINT `payments_ibfk_1` FOREIGN KEY (`attendee_id`) REFERENCES `attendees` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT
-) ENGINE = InnoDB AUTO_INCREMENT = 24 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 35 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of payments
@@ -255,6 +274,9 @@ INSERT INTO `payments` VALUES (20, 42, 30.00, 'paid', '2026-06-02 16:53:47');
 INSERT INTO `payments` VALUES (21, 43, 30.00, 'paid', '2026-06-02 16:55:02');
 INSERT INTO `payments` VALUES (22, 44, 30.00, 'paid', '2026-06-02 16:55:39');
 INSERT INTO `payments` VALUES (23, 45, 30.00, 'paid', '2026-06-03 20:58:58');
+INSERT INTO `payments` VALUES (32, 59, 30.00, 'paid', '2026-06-04 13:22:09');
+INSERT INTO `payments` VALUES (33, 60, 0.00, 'paid', '2026-06-04 13:18:59');
+INSERT INTO `payments` VALUES (34, 61, 30.00, 'paid', '2026-06-04 19:12:58');
 
 -- ----------------------------
 -- Table structure for users

@@ -63,6 +63,7 @@ public class ConferenceListServlet extends HttpServlet {
                 dataj.put("created_date",conference.getCreated_date());
                 dataj.put("reason",conference.getReason());
                 dataj.put("amount",conference.getAmount());
+                dataj.put("join_source",attendee.getJoin_source());
                 dataj.put("pay_status",paymentService.findByAttendeeId(attendee.getId()).getStatus());//如果有的
                 conferenceDataList.add(dataj);
             }

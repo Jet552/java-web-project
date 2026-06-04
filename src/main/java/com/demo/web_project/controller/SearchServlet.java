@@ -53,7 +53,9 @@ public class SearchServlet extends HttpServlet{
             else{
                 Map<String, Object> result = new HashMap<>();
                 Map<String, Object> data = new HashMap<>();
-                int attendee_id=attendeeService.checkAttendeesStatus(user_id,conference.getId());//对应的记录是否已经参加,即是否存在
+                Attendee attendee=attendeeService.checkAttendeesStatus(user_id,conference.getId());
+                int attendee_id=attendee.getId();//对应的记录是否已经参加,即是否存在
+                String join_source=attendee.getJoin_source();
                 String paid_status=paymentService.findByAttendeeId(attendee_id).getStatus();
                 data.put("paid_status",paid_status);
                 data.put("id",conference.getId());
@@ -66,6 +68,7 @@ public class SearchServlet extends HttpServlet{
                 data.put("dorms",conference.getDorms());
                 data.put("amount",conference.getAmount());
                 data.put("description",conference.getDescription());
+                data.put("join_source",join_source);
                 result.put("data",data);
                 result.put("code", 200);
                 result.put("msg", "查找成功");
@@ -81,8 +84,10 @@ public class SearchServlet extends HttpServlet{
                 List<Map<String, Object>> dataList = new ArrayList<>();
                 for (Conference conf : conferenceList) {
                     Map<String, Object> item = new HashMap<>();//将检索的会议全部返回
-                    int attendee_id=attendeeService.checkAttendeesStatus(user_id,conf.getId());//对应的记录是否已经参加,即是否存在
+                    Attendee attendee=attendeeService.checkAttendeesStatus(user_id,conf.getId());
+                    int attendee_id=attendee.getId();//对应的记录是否已经参加,即是否存在
                     String paid_status=paymentService.findByAttendeeId(attendee_id).getStatus();
+                    String join_source=attendee.getJoin_source();
                     item.put("paid_status",paid_status);
                     item.put("attendee_id",attendee_id);
                     item.put("id",conf.getId());
@@ -94,6 +99,7 @@ public class SearchServlet extends HttpServlet{
                     item.put("invite_codes",conf.getInvite_codes());
                     item.put("amount",conf.getAmount());
                     item.put("description",conf.getDescription());
+                    item.put("join_source",join_source);
                     dataList.add(item);
                 }
                 result.put("data", dataList);  // 整个列表作为 data
@@ -119,7 +125,9 @@ public class SearchServlet extends HttpServlet{
                 List<Map<String, Object>> dataList = new ArrayList<>();
                 for (Conference conf : conferenceList) {
                     Map<String, Object> item = new HashMap<>();//将检索的会议全部返回
-                    int attendee_id=attendeeService.checkAttendeesStatus(user_id,conf.getId());//对应的记录是否已经参加,即是否存在
+                    Attendee attendee=attendeeService.checkAttendeesStatus(user_id,conf.getId());
+                    int attendee_id=attendee.getId();//对应的记录是否已经参加,即是否存在
+                    String join_source=attendee.getJoin_source();
                     String paid_status=paymentService.findByAttendeeId(attendee_id).getStatus();
                     item.put("paid_status",paid_status);
                     item.put("attendee_id",attendee_id);
@@ -132,6 +140,7 @@ public class SearchServlet extends HttpServlet{
                     item.put("invite_codes",conf.getInvite_codes());
                     item.put("amount",conf.getAmount());
                     item.put("description",conf.getDescription());
+                    item.put("join_source",join_source);
                     dataList.add(item);
                 }
                 result.put("data", dataList);  // 整个列表作为 data
