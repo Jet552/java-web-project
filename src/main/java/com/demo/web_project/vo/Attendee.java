@@ -9,6 +9,7 @@ public class Attendee {
     private String accommodation_type;
     private String requirements;
     private int status;
+    private String join_source;
     public Attendee(){
 
     }
@@ -83,5 +84,13 @@ public class Attendee {
 
     public void setStatus(int status) {
         this.status = status;
+    }
+
+    public String getJoin_source() {
+        return join_source;
+    }
+
+    public void setJoin_source(String join_source) {
+        this.join_source = join_source;
     }
 }
