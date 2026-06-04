@@ -1,6 +1,8 @@
 package com.demo.web_project.dao;
 
+import com.demo.web_project.vo.Attendee;
 import com.demo.web_project.vo.Conference;
+import com.demo.web_project.vo.Payment;
 import java.util.List;
 
 public interface ConferenceDao {
@@ -9,9 +11,19 @@ public interface ConferenceDao {
     public List<Conference> findDefault();
     public Conference findByConfID(int confID );
     List<Conference> findByOrganizerId(int organizerId);
-    int create(Conference conference); // 创建新会议
-    int update(Conference conference); // 更新会议信息
-    int delete(int id); // 删除会议
-    Conference findById(int id); // 根据ID查询会议详情
-    int updateInviteCode(int conferenceId, String inviteCode); // 更新会议邀请码
+    int create(Conference conference);
+    int update(Conference conference);
+    int delete(int id);
+    Conference findById(int id);
+    int updateInviteCode(int conferenceId, String inviteCode);
+    
+    List<Conference> findByStatus(String status);
+    List<Attendee> findAllAttendees();
+    List<Payment> findAllPayments();
+    List<Payment> findPaymentsByStatus(String status);
+    
+    List<Conference> findPendingConferences();
+    List<Conference> findAllConferences();
+    int approveConference(int id, String reason);
+    int rejectConference(int id, String reason);
 }

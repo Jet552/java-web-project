@@ -58,4 +58,12 @@ public class UserService {
     public boolean updateUserInfo(int id,String phone,String email) {return userDao.updateUserInfo(id,phone,email);}
 
     public boolean updateUserPassword(int id,String password) {return userDao.updateUserPassword(id,password);}
+
+    public List<User> findByRole(int role) {
+        return userDao.findByRole(role);
+    }
+
+    public List<User> findByStatus(int status) {
+        return userDao.findByStatus(status);
+    }
 }
