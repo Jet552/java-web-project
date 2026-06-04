@@ -1,0 +1,205 @@
+
+body {
+    background: #f5f6fa;
+    font-family: 'Microsoft YaHei', 'Segoe UI', system-ui, sans-serif;
+    font-size: 16px;
+}
+
+/* 欢迎区域 — 保留渐变风格 */
+.welcome-banner {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border-radius: 20px;
+    padding: 48px 40px;
+    margin-bottom: 32px;
+    color: #fff;
+    position: relative;
+    overflow: hidden;
+}
+.welcome-banner::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    right: -5%;
+    width: 350px;
+    height: 350px;
+    background: rgba(255,255,255,0.06);
+    border-radius: 50%;
+}
+.welcome-banner h2 {
+    font-weight: 700;
+    font-size: 28px;
+    margin-bottom: 12px;
+    position: relative;
+    z-index: 1;
+}
+.welcome-banner p {
+    opacity: 0.85;
+    margin: 0;
+    position: relative;
+    z-index: 1;
+    font-size: 16px;
+}
+
+/* 卡片 — 对齐缴费页面 */
+.content-card {
+    background: #fff;
+    border-radius: 15px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+    overflow: hidden;
+}
+.content-card .card-header {
+    padding: 20px 28px;
+    border-bottom: 1px solid #f0f0f0;
+    background: transparent;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.content-card .card-header h5 {
+    font-weight: 600;
+    font-size: 18px;
+    color: #2c3e50;
+    margin: 0;
+}
+.content-card .card-body {
+    padding: 0;
+}
+
+/* 表格 — 对齐缴费页面 table-custom 风格 */
+.table-dashboard {
+    width: 100%;
+    margin: 0;
+}
+.table-dashboard thead th {
+    background: #f8f9fa;
+    padding: 14px 28px;
+    font-size: 14px;
+    font-weight: 600;
+    color: #2c3e50;
+    border: none;
+    border-bottom: 1px solid #f0f0f0;
+}
+.table-dashboard tbody td {
+    padding: 14px 28px;
+    vertical-align: middle;
+    border: none;
+    border-bottom: 1px solid #f0f0f0;
+    font-size: 15px;
+    color: #2c3e50;
+}
+.table-dashboard tbody tr:last-child td {
+    border-bottom: none;
+}
+.table-dashboard tbody tr:hover {
+    background: #f8f9fa;
+}
+
+/*查看详情按钮*/
+.btn-view {
+    background: #e6f7ff;
+    color: #1890ff;
+    border: 1px solid #91d5ff;
+    padding: 7px 16px;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.25s;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    white-space: nowrap;
+}
+.btn-view:hover {
+    background: #bae7ff;
+    color: #096dd9;
+    border-color: #40a9ff;
+}
+
+/* 弹窗样式 */
+.swal-conference-card {
+    padding: 8px 0;
+}
+.swal-conference-card .conf-title {
+    font-size: 22px;
+    font-weight: 700;
+    color: #2c3e50;
+    text-align: center;
+    margin-bottom: 24px;
+    padding-bottom: 16px;
+    border-bottom: 2px solid #e8f0fe;
+}
+.swal-conference-card .conf-info {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 14px 0;
+    border-bottom: 1px solid #f0f0f0;
+    font-size: 15px;
+}
+.swal-conference-card .conf-info:last-of-type {
+    border-bottom: none;
+}
+.swal-conference-card .conf-info i {
+    width: 24px;
+    color: #667eea;
+    font-size: 18px;
+}
+.swal-conference-card .conf-info .label {
+    color: #8c98a4;
+    min-width: 60px;
+    font-weight: 500;
+}
+.swal-conference-card .conf-info .value {
+    color: #2c3e50;
+    font-weight: 500;
+}
+.swal-conference-card .conf-info .value.amount {
+    color: #c81e1e;
+    font-weight: 700;
+    font-size: 18px;
+}
+
+/* SweetAlert2 按钮 */
+.swal2-confirm.btn {
+    font-size: 15px !important;
+    padding: 10px 28px !important;
+}
+
+/* 加载 & 空状态 */
+.loading-placeholder {
+    padding: 48px;
+    text-align: center;
+    color: #8c98a4;
+    font-size: 15px;
+}
+.empty-state {
+    padding: 56px 28px;
+    text-align: center;
+    color: #8c98a4;
+}
+.empty-state i {
+    font-size: 48px;
+    color: #d1d5db;
+    margin-bottom: 16px;
+}
+.empty-state p {
+    margin: 0;
+    font-size: 16px;
+}
+
+/* 页面容器 — 两侧内缩 */
+.page-wrapper {
+    max-width: 1700px;
+    margin: 0 auto;
+}
+
+/* 底部 */
+.footer {
+    text-align: center;
+    padding: 28px 0 0;
+    color: #8c98a4;
+    font-size: 13px;
+}

@@ -90,7 +90,7 @@ function renderPayments(payments) {
                         <div class="empty-icon"><i class="fas fa-receipt"></i></div>
                         <h5>暂无缴费记录</h5>
                         <p>还没有任何缴费记录，快去参加感兴趣的会议吧！</p>
-                        <button class="btn-explore" onclick="parent.loadPage('meetingSearch')">
+                        <button class="btn-explore" onclick="parent.loadPage('conferenceHall')">
                             <i class="fas fa-compass"></i>去发现精彩会议
                         </button>
                     </div>
