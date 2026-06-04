@@ -30,7 +30,7 @@ public class CheckStatusServlet extends HttpServlet {
         // 调用 Service 验证
         PrintWriter out = response.getWriter();
         Map<String, Object> result = new HashMap<>();
-        if(attendeeService.checkAttendeesStatus(user_id,conference_id)==0){//不存在已参加的记录
+        if(attendeeService.checkAttendeesStatus(user_id,conference_id).getId()==0){//不存在已参加的记录
             result.put("code", 200);
             result.put("msg", "可以参加");;
             String jsonStr = mapper.writeValueAsString(result);

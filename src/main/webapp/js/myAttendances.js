@@ -3,7 +3,7 @@
  */
 var attCurrentPage = 1;
 var attPageSize = 20;
-var attAllData = [];  // 原始全部数据
+var currentData = [];  // 原始全部数据
 var attData = [];     // 筛选后的数据
 
 (function () {
@@ -26,20 +26,20 @@ function loadMyAttendances() {
             attShowLoading(false);
             if (data.code === 200 && data.data) {
                 // status=1 优先靠前，然后再按 created_date 降序
-                attAllData = data.data.sort(function(a, b) {
+                currentData = data.data.sort(function(a, b) {
                     if (a.atten_status == 1 && b.atten_status != 1) return -1;
                     if (a.atten_status != 1 && b.atten_status == 1) return 1;
                     return (b.created_date || '').localeCompare(a.created_date || '');
                 });
-                console.log('排序后前5条:', attAllData.slice(0, 5).map(function(i) { return i.title + ' status:' + i.atten_status; }));
+                console.log('排序后前5条:', currentData.slice(0, 5).map(function(i) { return i.title + ' status:' + i.atten_status; }));
             } else {
-                attAllData = [];
+                currentData = [];
             }
             attApplyFilter();
         })
         .catch(function () {
             attShowLoading(false);
-            attAllData = [];
+            currentData = [];
             attApplyFilter();
         });
 }
@@ -50,7 +50,7 @@ function attApplyFilter() {
     var startDate = document.getElementById('filterStartDate') ? document.getElementById('filterStartDate').value : '';
     var endDate = document.getElementById('filterEndDate') ? document.getElementById('filterEndDate').value : '';
 
-    attData = attAllData.filter(function(item) {
+    attData = currentData.filter(function(item) {
         // 状态筛选
         if (statusVal != 'all' && item.atten_status != statusVal) return false;
         // 名称三级匹配：先整体匹配，再逐字匹配
@@ -118,7 +118,8 @@ function attRenderPage() {
         var rowNum = start + i + 1;
         var statusText = item.atten_status == 1 ? '参加中' : '已取消';
         var statusClass = item.atten_status == 1 ? 'status-ongoing' : 'status-ended';
-        html += '<tr>';
+        var rowClass = (item.join_source == 'invite' && item.atten_status == 1) ? ' row-invite' : '';
+        html += '<tr class="' + rowClass + '">';
         html += '<td class="text-muted small">' + rowNum + '</td>';
         html += '<td><span class="meeting-name" title="' + attEsc(item.title) + '">' + attEsc(item.title) + '</span></td>';
         html += '<td>' + attEsc((item.start_date || '').replace('T', ' ')) + '</td>';
@@ -132,7 +133,7 @@ function attRenderPage() {
                 html += '<td><span class="text-success small fw-bold"><i class="fas fa-check-circle me-1"></i>已完成缴费</span></td>';
             } else {
                 html += '<td class="text-nowrap">';
-                html += '<a href="' + contextPath + '/attendee/join_meeting.jsp?id=' + item.id + '&title=' + item.title + '&invite_codes=' + item.invite_codes + '" class="btn btn-my-action btn-sm me-1">';
+                html += '<a href="javascript:void(0)" onclick="joinMeeting(' + item.id + ',\'' + (item.join_source || 'search') + '\')" class="btn btn-my-action btn-sm me-1">';
                 html += '<i class="fas fa-credit-card me-1"></i>完善报名</a>';
                 html += '<a href="javascript:void(0)" onclick="cancelAttendance(' + (item.atten_id) + ')" class="btn btn-sm" style="background:#e53e3e;color:#fff;font-size:0.82rem;padding:6px 12px;border-radius:6px;">';
                 html += '<i class="fas fa-times me-1"></i>取消</a>';

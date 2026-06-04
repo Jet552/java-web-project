@@ -97,14 +97,15 @@ function renderTablePage() {
             }
             else {
                 html += '<td class="text-nowrap">';
-                html += '<a href="' + contextPath + '/attendee/join_meeting.jsp?id=' + item.id + '&title=' + item.title + '&invite_codes=' + item.invite_codes + '" class="btn btn-join btn-sm me-1">';
+                console.log('完善报名 item:', item.id, 'join_source:', item.join_source);
+                html += '<a href="javascript:void(0)" onclick="joinMeeting(' + item.id + ',\'' + item.join_source + '\')" class="btn btn-join btn-sm me-1">';
                 html += '<i class="fas fa-credit-card me-1"></i>完善报名</a>';
                 html += '<a href="javascript:void(0)" onclick="cancelSearchAttendance(' + (item.attendee_id) + ')" class="btn btn-sm" style="background:#e53e3e;color:#fff;font-size:0.82rem;padding:6px 12px;border-radius:6px;">';
                 html += '<i class="fas fa-times me-1"></i>取消</a>';
                 html += '</td>';
             }
         } else {
-            html += '<td><a href="javascript:void(0)" onclick="joinMeeting(' + item.id +','+'search'+ ')" class="btn btn-join btn-sm">';
+            html += '<td><a href="javascript:void(0)" onclick="joinMeeting(' + item.id + ',\'search\')" class="btn btn-join btn-sm">';
             html += '<i class="fas fa-sign-in-alt me-1"></i>点击参加</a></td>';
         }
         html += '</tr>';

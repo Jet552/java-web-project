@@ -13,6 +13,9 @@ var attendanceStatus = null; // null=未参加, 1=已参加, 0=已取消
 })();
 
 function initJoinPage() {
+    console.log('=== initJoinPage ===');
+    console.log('conferenceId:', conferenceId);
+    console.log('joinSource:', joinSource);
     loadConferenceInfo();
     checkAttendanceStatus();
     restoreFormData();  // ← 加这行
@@ -124,7 +127,8 @@ function doSubmitJoin() {
         + '&arrivalTime=' + encodeURIComponent(document.getElementById('arrivalTime').value)
         + '&departureTime=' + encodeURIComponent(document.getElementById('departureTime').value)
         + '&accommodationType=' + encodeURIComponent(document.getElementById('accommodationType').value)
-        + '&requirements=' + encodeURIComponent(document.getElementById('requirements').value);
+        + '&requirements=' + encodeURIComponent(document.getElementById('requirements').value)
+        + '&join_source=' + joinSource;
     fetch(contextPath + '/attendee/join', {
         method: 'POST',
         headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
@@ -389,7 +393,7 @@ function clearFormData() {
  */
 function navigateBackToHall() {
     // 清除表单缓存
-    clearFormData();
+    // clearFormData();
     // 如果在 index2.jsp 框架内，调用 loadPage；否则跳转回 index2.jsp 并自动加载会议大厅
     if (typeof loadPage === 'function') {
         loadPage('meetingSearch');

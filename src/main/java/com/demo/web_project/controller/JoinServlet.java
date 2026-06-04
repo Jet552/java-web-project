@@ -38,7 +38,9 @@ public class JoinServlet extends HttpServlet {
             LocalDateTime departureTime = LocalDateTime.parse(request.getParameter("departureTime"), fmt);
             String accommodationType = request.getParameter("accommodationType");
             String requirements = request.getParameter("requirements");
+            String join_source=request.getParameter("join_source");
             Attendee attendee = new Attendee(user_id, conference_id, arrivalTime, departureTime, accommodationType, requirements);
+            attendee.setJoin_source(join_source);
             int id=attendeeService.createAttend(attendee);
             if (id!=0) {
                 Map<String,Object> data= new HashMap<>();
