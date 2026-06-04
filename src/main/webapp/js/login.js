@@ -230,7 +230,7 @@ function clearSavedAccount() {
 
 /**
  * 显示成功提示并跳转
- * @param {Object} data - 服务器响应数据
+ * @param {Object} data 服务器响应数据
  */
 function showSuccessAndRedirect(data) {
     Swal.fire({
@@ -246,11 +246,11 @@ function showSuccessAndRedirect(data) {
 
 /**
  * 根据角色跳转页面
- * @param {Object} data - 服务器响应数据
+ * @param {Object} data 服务器响应数据
  */
 function redirectByRole(data) {
-    if (data.data && data.data.role == 1) {
-        window.location.href = contextPath + '/index1.jsp';
+    if (data.data || data.data.role == 1) {
+        window.location.href = contextPath + '/admin_index.jsp';
     } else {
         window.location.href = contextPath + '/index2.jsp';
     }
@@ -258,7 +258,7 @@ function redirectByRole(data) {
 
 /**
  * 显示错误提示
- * @param {string} message - 错误消息
+ * @param {string} message 错误消息
  */
 function showError(message) {
     Swal.fire({
@@ -271,7 +271,7 @@ function showError(message) {
 
 /**
  * 高亮错误输入框
- * @param {string} inputId - 输入框ID
+ * @param {string} inputId 输入框ID
  */
 function highlightInput(inputId) {
     var input = document.getElementById(inputId);
@@ -284,20 +284,3 @@ function highlightInput(inputId) {
         input.classList.remove('is-invalid');
     }, 2000);
 }
-
-// /**
-//  * 显示忘记密码弹窗
-//  */
-// function showForgotPassword() {
-//     Swal.fire({
-//         icon: 'info',
-//         title: '找回密码',
-//         html: '<div style="text-align:left;">' +
-//             '<p>请联系系统管理员重置密码：</p>' +
-//             '<p class="mt-2 mb-0"><i class="bi bi-envelope"></i> <strong>admin@meeting.com</strong></p>' +
-//             '<p><i class="bi bi-telephone"></i> <strong>400-123-4567</strong></p>' +
-//             '</div>',
-//         confirmButtonText: '知道了',
-//         confirmButtonColor: '#667eea'
-//     });
-// }
