@@ -155,7 +155,10 @@ function attRenderPage() {
             html += '<td><span class="text-muted small">无法操作</span></td>';
         } else if (item.atten_status == 1) {
             if (item.pay_status == "paid") {
-                html += '<td><span class="text-success small fw-bold"><i class="fas fa-check-circle me-1"></i>已完成缴费</span></td>';
+                html += '<td class="text-nowrap">';
+                html += '<a href="javascript:void(0)" onclick="joinMeeting(' + item.id + ',\'' + (item.join_source || 'search') + '\',\'' + (item.invite_codes || '') + '\',\'' + (item.title || '').replace(/'/g, "\\'") + '\')" class="btn btn-sm" style="background:#ecfdf5;color:#047857;border:1px solid #a7f3d0;font-size:0.82rem;padding:6px 12px;border-radius:6px;">';
+                html += '<i class="fas fa-check-circle me-1"></i>已完成缴费</a>';
+                html += '</td>';
             } else {
                 html += '<td class="text-nowrap">';
                 html += '<a href="javascript:void(0)" onclick="joinMeeting(' + item.id + ',\'' + (item.join_source || 'search') + '\')" class="btn btn-my-action btn-sm me-1">';
