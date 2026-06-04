@@ -19,6 +19,7 @@ import jakarta.servlet.http.HttpSession;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -44,7 +45,7 @@ public class CheckStatusServlet extends HttpServlet {
         PrintWriter out = response.getWriter();
         Map<String, Object> result = new HashMap<>();
 
-        int attendeeId = attendeeService.checkAttendeesStatus(userId, conferenceId);
+        int attendeeId = attendeeService.checkAttendeesStatus(userId, conferenceId).getId();
         if (attendeeId == 0) {
             // 未报名
             result.put("code", 200);
@@ -84,3 +85,4 @@ public class CheckStatusServlet extends HttpServlet {
         out.close();
     }
 }
+
