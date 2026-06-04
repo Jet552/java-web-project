@@ -51,7 +51,7 @@ public class ConferenceDaoImpl implements ConferenceDao {
 
     }
     public List<Conference> findAll(String keyword){
-        String sql = "SELECT id,organizer_id, title, start_date,end_date,venue,dorms,invite_codes,amount FROM conferences" +
+        String sql = "SELECT id,organizer_id, title, description, start_date,end_date,venue,dorms,invite_codes,amount FROM conferences" +
                 " WHERE title LIKE ? and status='approved'";
         List<Conference> conferenceList=searchDB(sql,keyword);
         if(conferenceList.isEmpty()){
@@ -81,7 +81,7 @@ public class ConferenceDaoImpl implements ConferenceDao {
     }
     public List<Conference> findDefault(){
         List<Conference> conferenceList = new ArrayList<>();
-        String sql = "SELECT id,organizer_id, title, start_date,end_date,venue,dorms,invite_codes,amount FROM conferences" +
+        String sql = "SELECT id,organizer_id, title, description, start_date,end_date,venue,dorms,invite_codes,amount FROM conferences" +
                 " WHERE status='approved'";
         try (Connection conn = JDBCUtil.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
