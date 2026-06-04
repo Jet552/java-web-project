@@ -61,4 +61,8 @@ public interface UserDao
      * @return 是否更新成功
      */
     boolean updateUserPassword(int id,String password);
+
+    List<User> findByRole(int role);
+
+    List<User> findByStatus(int status);
 }
