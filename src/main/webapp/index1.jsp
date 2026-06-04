@@ -33,23 +33,23 @@
             <h4><i class="fas fa-calendar-alt"></i>会务管理系统</h4>
         </div>
         <nav class="sidebar-menu">
-            <a href="#" class="nav-link active">
+            <a href="${pageContext.request.contextPath}/index1.jsp" class="nav-link active">
                 <i class="fas fa-home"></i>
                 <span>系统概览</span>
             </a>
-            <a href="#" class="nav-link" onclick="showDeveloping('会议审核')">
+            <a href="${pageContext.request.contextPath}/admin_conferences.jsp" class="nav-link">
                 <i class="fas fa-clipboard-check"></i>
                 <span>会议审核</span>
             </a>
-            <a href="#" class="nav-link" onclick="showDeveloping('所有会议')">
+            <a href="${pageContext.request.contextPath}/admin_conferences.jsp?status=all" class="nav-link">
                 <i class="fas fa-list-alt"></i>
                 <span>所有会议</span>
             </a>
-            <a href="#" class="nav-link" onclick="showDeveloping('用户管理')">
+            <a href="${pageContext.request.contextPath}/admin_users.jsp" class="nav-link">
                 <i class="fas fa-users"></i>
                 <span>用户管理</span>
             </a>
-            <a href="#" class="nav-link" onclick="showDeveloping('系统统计')">
+            <a href="${pageContext.request.contextPath}/admin_stats.jsp" class="nav-link">
                 <i class="fas fa-chart-line"></i>
                 <span>系统统计</span>
             </a>
