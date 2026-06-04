@@ -10,7 +10,9 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import com.demo.web_project.vo.Conference;
+import com.demo.web_project.vo.User;
 import com.demo.web_project.service.ConferenceService;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -32,6 +34,9 @@ public class SearchServlet extends HttpServlet{
         mapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
         request.setCharacterEncoding("UTF-8");
         response.setContentType("application/json;charset=UTF-8");
+        HttpSession session = request.getSession();
+        User user = (User) session.getAttribute("user");
+        int user_id = (user != null) ? user.getId() : 0;
         String keyword = request.getParameter("keyword");
         String regex="[A-Za-z0-9]{9}";//用于匹配是否是邀请码
         PrintWriter out = response.getWriter();
