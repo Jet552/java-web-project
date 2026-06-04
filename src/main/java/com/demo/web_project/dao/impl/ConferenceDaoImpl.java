@@ -81,7 +81,7 @@ public class ConferenceDaoImpl implements ConferenceDao {
     }
     public List<Conference> findDefault(){
         List<Conference> conferenceList = new ArrayList<>();
-        String sql = "SELECT id,organizer_id, title, start_date,end_date,venue,dorms,invite_codes,amount FROM conferences" +
+        String sql = "SELECT id,organizer_id, title, start_date,end_date,venue,dorms,invite_codes,amount,description FROM conferences" +
                 " WHERE status='approved'";
         try (Connection conn = JDBCUtil.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {

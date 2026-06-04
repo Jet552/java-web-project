@@ -85,71 +85,6 @@
             </div>
         </div>
 
-        <!-- 中心 -下拉菜单 -->
-        <div class="nav-group">
-            <a href="#" class="nav-link nav-toggle" data-group="payment">
-                <i class="fas fa-credit-card"></i>
-                <span>中心</span>
-                <i class="fas fa-chevron-down toggle-icon"></i>
-            </a>
-            <div class="nav-submenu" data-parent="payment">
-                <a href="#" class="nav-sub-link" data-page="makePayment">
-                    <i class="fas fa-wallet"></i>
-                    <span>在线缴费</span>
-                </a>
-                <a href="#" class="nav-sub-link" data-page="conferencePayment">
-                    <i class="fas fa-history"></i>
-                    <span>缴费记录</span>
-                </a>
-                    <i class="fas fa-history"></i>
-                    <span>缴费记录</span>
-                </a>
-                <a href="#" class="nav-sub-link" data-page="conferencePayment">
-                    <i class="fas fa-history"></i>
-                    <span>缴费记录</span>
-                </a>
-                <a href="#" class="nav-sub-link" data-page="conferencePayment">
-                    <i class="fas fa-history"></i>
-                    <span>缴费记录</span>
-                </a>
-                <a href="#" class="nav-sub-link" data-page="conferencePayment">
-                    <i class="fas fa-history"></i>
-                    <span>缴费记录</span>
-                </a>
-                <a href="#" class="nav-sub-link" data-page="conferencePayment">
-                    <i class="fas fa-history"></i>
-                    <span>缴费记录</span>
-                </a>
-                <a href="#" class="nav-sub-link" data-page="conferencePayment">
-                    <i class="fas fa-history"></i>
-                    <span>缴费记录</span>
-                </a>
-                <a href="#" class="nav-sub-link" data-page="conferencePayment">
-                    <i class="fas fa-history"></i>
-                    <span>缴费记录</span>
-                </a>
-                <a href="#" class="nav-sub-link" data-page="conferencePayment">
-                    <i class="fas fa-history"></i>
-                    <span>缴费记录</span>
-                </a>
-                <a href="#" class="nav-sub-link" data-page="conferencePayment">
-                    <i class="fas fa-history"></i>
-                    <span>缴费记录</span>
-                </a>
-                <a href="#" class="nav-sub-link" data-page="conferencePayment">
-                    <i class="fas fa-history"></i>
-                    <span>缴费记录</span>
-                </a>
-                <a href="#" class="nav-sub-link" data-page="conferencePayment">
-                    <i class="fas fa-history"></i>
-                    <span>缴费记录</span>
-                </a>
-                <a href="#" class="nav-sub-link" data-page="conferencePayment">
-                    <i class="fas fa-history"></i>
-                    <span>缴费记录</span>
-                </a>
-            </div>
-        </div>
 
         <!-- 会务服务 -->
         <div class="nav-group">
@@ -166,29 +101,6 @@
                 <a href="#" class="nav-sub-link" data-page="room">
                     <i class="fas fa-hotel"></i>
                     <span>入住管理</span>
-                </a>
-            </div>
-        </div>
-
-        <!-- 查看统计 - 下拉菜单 -->
-        <div class="nav-group">
-            <a href="#" class="nav-link nav-toggle" data-group="view">
-                <i class="fas fa-chart-line"></i>
-                <span>查看统计</span>
-                <i class="fas fa-chevron-down toggle-icon"></i>
-            </a>
-            <div class="nav-submenu" data-parent="view">
-                <a href="#" class="nav-sub-link" data-page="attendRecord">
-                    <i class="fas fa-clipboard-list"></i>
-                    <span>参会记录</span>
-                </a>
-                <a href="#" class="nav-sub-link" data-page="paymentStatus">
-                    <i class="fas fa-chart-pie"></i>
-                    <span>缴费状态</span>
-                </a>
-                <a href="#" class="nav-sub-link" data-page="checkinStatus">
-                    <i class="fas fa-qrcode"></i>
-                    <span>签到情况</span>
                 </a>
             </div>
         </div>
