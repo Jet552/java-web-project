@@ -249,8 +249,8 @@ function showSuccessAndRedirect(data) {
  * @param {Object} data 服务器响应数据
  */
 function redirectByRole(data) {
-    if (data.data || data.data.role == 1) {
-        window.location.href = contextPath + '/admin_index.jsp';
+    if (data.data && data.data.role == 1) {
+        window.location.href = contextPath + '/index1.jsp';
     } else {
         window.location.href = contextPath + '/index2.jsp';
     }

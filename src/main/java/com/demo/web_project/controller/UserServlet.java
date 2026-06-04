@@ -73,6 +73,8 @@ public class UserServlet extends HttpServlet {
 
         User user = userService.login(username, password);
         PrintWriter out = response.getWriter();
+
+        Map<String, Object> result = new HashMap<>();
         // 登录成功
         if (user != null&&user.getStatus()!=0) {
             HttpSession session = request.getSession();  //获取 Session（不存在则自动创建）
@@ -84,7 +86,6 @@ public class UserServlet extends HttpServlet {
             data.put("id", user.getId());
             data.put("username", user.getUsername());
             data.put("role", user.getRole());
-            Map<String, Object> result = new HashMap<>();
             result.put("code", 200);
             result.put("msg", "登录成功");
             result.put("data", data);
@@ -92,17 +93,18 @@ public class UserServlet extends HttpServlet {
             String jsonStr = mapper.writeValueAsString(result);
             out.print(jsonStr);
         }
-        else {
+        else if(user==null) {
             // 登录失败
-            Map<String, Object> result = new HashMap<>();
             result.put("code", 400);
-            if(user.getStatus()==1)
-                result.put("msg", "用户名或密码错误");
-            else if(user.getStatus()==0)
-                result.put("msg", "对不起，账号已被禁用");
+            result.put("msg", "用户名或密码错误");
             result.put("data", null);
             String jsonStr = mapper.writeValueAsString(result);
             out.print(jsonStr);
+        }
+        else if(user.getStatus()==0) {
+            result.put("msg", "对不起，账号已被禁用");
+            result.put("code", 400);
+            result.put("data", null);
         }
         out.flush();
         out.close();
