@@ -43,7 +43,7 @@
                 <input type="checkbox" class="form-check-input" id="rememberMe">
                 <label class="form-check-label" for="rememberMe">记住密码</label>
             </div>
-            <a href="#" class="text-decoration-none small" onclick="showForgotPassword(); return false;">忘记密码？</a>
+            <a href="forgetPassword.jsp" class="text-decoration-none small">忘记密码？</a>
         </div>
 
         <button type="button" class="btn-login" id="loginBtn" onclick="handleLogin()">

@@ -211,6 +211,9 @@ function loadPage(pageName) {
             if (pageName === 'myAttendee' && typeof loadMyAttendances === 'function') {
                 loadMyAttendances();
             }
+            if (pageName === 'default' && typeof loadRecommendedConferences === 'function') {
+                loadRecommendedConferences();
+            }
             showLoading(false);
             window.scrollTo(0, 0);
         })

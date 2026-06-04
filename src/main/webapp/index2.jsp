@@ -265,6 +265,7 @@
 <script src="${pageContext.request.contextPath}/js/conferencePayment.js"></script>
 <script src="${pageContext.request.contextPath}/js/meetingSearch.js"></script>
 <script src="${pageContext.request.contextPath}/js/myAttendances.js"></script>
+<script src="${pageContext.request.contextPath}/js/default.js"></script>
 <script>
     //设置当前激活菜单(公共script)
     document.querySelectorAll('.sidebar-menu .nav-link').forEach(link => {

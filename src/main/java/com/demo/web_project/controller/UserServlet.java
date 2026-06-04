@@ -53,6 +53,9 @@ public class UserServlet extends HttpServlet {
             case "/changePassword":
                 updatePassword(request, response);
                 break;
+            case "/resetPassword":
+                resetPassword(request, response);
+                break;
             default:
                 response.sendError(404);
         }
@@ -274,6 +277,81 @@ public class UserServlet extends HttpServlet {
         out.flush();
         out.close();
     }
+    /**
+     * 验证身份并重置密码（不需要登录）
+     */
+    private void resetPassword(HttpServletRequest request, HttpServletResponse response)throws ServletException, IOException {
+        request.setCharacterEncoding("UTF-8");
+        response.setContentType("application/json;charset=UTF-8");
+
+        PrintWriter out = response.getWriter();
+        Map<String, Object> result = new HashMap<>();
+
+        String username = request.getParameter("username");
+        String contactMethod = request.getParameter("contactMethod");
+        String contactValue = request.getParameter("contactValue");
+        String action = request.getParameter("action");
+
+        User user = userService.findByUsername(username);
+        if (user == null) {
+            result.put("code", 400);
+            result.put("msg", "用户名不存在");
+            out.print(mapper.writeValueAsString(result));
+            out.flush();
+            out.close();
+            return;
+        }
+        boolean contactMatched = false;
+        if ("phone".equals(contactMethod)) {
+            String userPhone = user.getPhone();
+            if (userPhone != null && userPhone.equals(contactValue)) {
+                contactMatched = true;
+            }
+        } else if ("email".equals(contactMethod)) {
+            String userEmail = user.getEmail();
+            if (userEmail != null && userEmail.equals(contactValue)) {
+                contactMatched = true;
+            }
+        }
+        if (!contactMatched) {
+            result.put("code", 400);
+            result.put("msg", "联系方式不匹配，请检查您输入的信息");
+            out.print(mapper.writeValueAsString(result));
+            out.flush();
+            out.close();
+            return;
+        }
+        //如果是验证操作，到这里已通过，直接返回成功
+        if ("verify".equals(action)) {
+            result.put("code", 200);
+            result.put("msg", "身份验证通过");
+            out.print(mapper.writeValueAsString(result));
+            out.flush();
+            out.close();
+            return;
+        }
+        String password = request.getParameter("password");
+        if (password == null || password.trim().isEmpty()) {
+            result.put("code", 400);
+            result.put("msg", "密码输入不正确");
+            out.print(mapper.writeValueAsString(result));
+            out.flush();
+            out.close();
+            return;
+        }
+        boolean completed = userService.updateUserPassword(user.getId(), password);
+        if (completed) {
+            result.put("code", 200);
+            result.put("msg", "密码重置成功");
+        } else {
+            result.put("code", 500);
+            result.put("msg", "密码重置失败，请稍后重试");
+        }
+        out.print(mapper.writeValueAsString(result));
+        out.flush();
+        out.close();
+    }
+
     private void writeSuccessData(PrintWriter out,int code,String message,User user)throws IOException{
         Map<String, Object> data = new HashMap<>();
         data.put("phone", user.getPhone());

@@ -285,19 +285,19 @@ function highlightInput(inputId) {
     }, 2000);
 }
 
-/**
- * 显示忘记密码弹窗
- */
-function showForgotPassword() {
-    Swal.fire({
-        icon: 'info',
-        title: '找回密码',
-        html: '<div style="text-align:left;">' +
-            '<p>请联系系统管理员重置密码：</p>' +
-            '<p class="mt-2 mb-0"><i class="bi bi-envelope"></i> <strong>admin@meeting.com</strong></p>' +
-            '<p><i class="bi bi-telephone"></i> <strong>400-123-4567</strong></p>' +
-            '</div>',
-        confirmButtonText: '知道了',
-        confirmButtonColor: '#667eea'
-    });
-}
+// /**
+//  * 显示忘记密码弹窗
+//  */
+// function showForgotPassword() {
+//     Swal.fire({
+//         icon: 'info',
+//         title: '找回密码',
+//         html: '<div style="text-align:left;">' +
+//             '<p>请联系系统管理员重置密码：</p>' +
+//             '<p class="mt-2 mb-0"><i class="bi bi-envelope"></i> <strong>admin@meeting.com</strong></p>' +
+//             '<p><i class="bi bi-telephone"></i> <strong>400-123-4567</strong></p>' +
+//             '</div>',
+//         confirmButtonText: '知道了',
+//         confirmButtonColor: '#667eea'
+//     });
+// }
