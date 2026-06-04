@@ -227,15 +227,21 @@ function goToPayment() {
                     Swal.fire({ icon: 'error', title: '错误', text: '未找到待缴费记录', confirmButtonColor: '#f56565' });
                     return;
                 }
-
                 Swal.fire({
-                    title: '确认缴费',
-                    html: '<div class="text-center">' +
+                    title: joinSource === 'search' ? '确认缴费' : '确认报名',
+                    html: joinSource === 'search' ? (
+                        '<div class="text-center">' +
                         '<i class="fas fa-credit-card" style="font-size: 48px; color: #667eea;"></i>' +
                         '<p class="mt-3">确认支付 ¥' + parseFloat(amount).toFixed(2) + '</p>' +
-                        '</div>',
+                        '</div>'
+                    ) : (
+                        '<div class="text-center">' +
+                        '<i class="fas fa-check-circle" style="font-size: 48px; color: #667eea;"></i>' +
+                        '<p class="mt-3">由于为特邀身份，本次报名免费，是否确认报名？</p>' +
+                        '</div>'
+                    ),
                     showCancelButton: true,
-                    confirmButtonText: '确认支付',
+                    confirmButtonText: joinSource === 'search' ?'确认支付':'确认报名',
                     cancelButtonText: '取消',
                     confirmButtonColor: '#667eea'
                 }).then(function(result) {
@@ -259,8 +265,8 @@ function goToPayment() {
                                 if(data.code==200) {
                                     Swal.fire({
                                         icon: 'success',
-                                        title: '缴费成功',
-                                        text: '您已成功缴纳会议费用',
+                                        title: joinSource == 'search' ?'缴费成功':'报名成功',
+                                        text: joinSource == 'search' ?'您已成功缴纳会议费用！':'感谢您的参与！',
                                         confirmButtonColor: '#667eea'
                                     }).then(function() {
                                         navigateBackToHall();
