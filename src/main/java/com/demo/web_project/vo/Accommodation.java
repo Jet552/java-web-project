@@ -10,6 +10,10 @@ public class Accommodation {
     private LocalDate checkinDate;
     private LocalDate checkoutDate;
     private int status;           // 1=入住中, 0=已退房
+    private String username;       // 入住人姓名（联表查询用）
+
+    public String getUsername() { return username; }
+    public void setUsername(String username) { this.username = username; }
 
     public int getId() {
         return id;
