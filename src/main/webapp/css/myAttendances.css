@@ -261,6 +261,23 @@
     transition: background-color 0.15s ease, box-shadow 0.15s ease;
 }
 
+/* 特邀身份金色标记 */
+.table-attendance tbody tr.row-invite {
+    color: #c5960c;
+    font-weight: 500;
+}
+.table-attendance tbody tr.row-invite td {
+    color: #c5960c;
+}
+.table-attendance tbody tr.row-invite:hover {
+    background-color: #fef9e7;
+    box-shadow: inset 3px 0 0 #c5960c;
+}
+.table-attendance tbody tr.row-invite .meeting-name {
+    color: #9a7608;
+    font-weight: 600;
+}
+
 .table-attendance tbody tr:hover {
     background-color: #e8f4ff;
     box-shadow: inset 3px 0 0 #1890ff;

@@ -42,23 +42,38 @@ public class AttendeeDaoImpl implements AttendeeDao {
         List<Attendee> attendeeList=searchDB(sql,user_id);
         return attendeeList;
     }
-    public int checkAttendeesStatus(int user_id,int conf_id){
-        String sql = "SELECT id,user_id,conference_id,arrival_time,departure_time,accommodation_type,requirements " +
+    public Attendee checkAttendeesStatus(int user_id,int conf_id){
+        String sql = "SELECT id,user_id,conference_id,arrival_time,departure_time,accommodation_type,requirements,join_source " +
                 "FROM attendees WHERE user_id = ? and conference_id=? and status=1";
+        Attendee attendee=new Attendee();
         try (Connection conn = JDBCUtil.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setInt(1, user_id);
             ps.setInt(2,conf_id);
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {// 已报名
-                return rs.getInt("id");
+                attendee.setId(rs.getInt("id"));
+                attendee.setUserid(rs.getInt("user_id"));
+                attendee.setConference_id(rs.getInt("conference_id"));
+                Timestamp timestamp1 = rs.getTimestamp("arrival_time");
+                Timestamp timestamp2 = rs.getTimestamp("departure_time");
+                if (timestamp1 != null) {
+                    attendee.setArrival_time(timestamp1.toLocalDateTime());
+                }
+                if (timestamp2!=null){
+                    attendee.setDeparture_time(timestamp2.toLocalDateTime());
+                }
+                attendee.setAccommodation_type(rs.getString("accommodation_type"));
+                attendee.setRequirements(rs.getString("requirements"));
+                attendee.setJoin_source(rs.getString("join_source"));
+                return  attendee;
             } else {// 未报名
-                return 0;
+                return attendee;
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return 0;
+        return attendee;
     }
     public boolean cancelAttendee(int attenID) {//指定的参会记录用于取消会议
         String sql="UPDATE attendees " + "SET `status`=0 " + "WHERE id=?";

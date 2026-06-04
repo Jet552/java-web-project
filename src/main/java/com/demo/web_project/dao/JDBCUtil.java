@@ -16,7 +16,7 @@ public class JDBCUtil
     }
 
     public static Connection getConnection() throws SQLException {
-        return DriverManager.getConnection(DB_URL, "root", "334203");
+        return DriverManager.getConnection(DB_URL, "root", "123456");
     }
 }
 
