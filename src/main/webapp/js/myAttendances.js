@@ -105,7 +105,7 @@ function attRenderPage() {
     var tbody = document.getElementById('meetingTableBody');
     if (!tbody) return;
     if (attData.length === 0) {
-        tbody.innerHTML = '<tr><td colspan="9" class="text-center py-5 text-muted">'
+        tbody.innerHTML = '<tr><td colspan="10" class="text-center py-5 text-muted">'
             + '<i class="fas fa-inbox fa-2x d-block mb-2"></i>暂无参会记录</td></tr>';
         return;
     }
@@ -127,6 +127,10 @@ function attRenderPage() {
         html += '<td><i class="fas fa-map-marker-alt text-secondary me-1 small"></i>' + attEsc(item.venue) + '</td>';
         html += '<td>' + attEsc(item.dorms) + '</td>';
         html += '<td>' + attEsc(item.amount) + ' 元</td>';
+        var sourceHtml = item.join_source === 'invite'
+            ? '<span class="badge bg-warning text-dark">特邀</span>'
+            : '<span class="badge bg-light text-muted">普通</span>';
+        html += '<td>' + sourceHtml + '</td>';
         html += '<td><span class="status-badge ' + statusClass + '">' + statusText + '</span></td>';
         if (item.atten_status == 1) {
             if (item.pay_status == "paid") {

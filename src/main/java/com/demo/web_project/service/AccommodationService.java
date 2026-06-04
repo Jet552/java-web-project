@@ -41,4 +41,11 @@ public class AccommodationService {
     public List<Accommodation> getRoomList(int conferenceId) {
         return accommodationDao.getRoomList(conferenceId);
     }
+
+    /**
+     * 退房：仅将 status 改为 0
+     */
+    public boolean checkout(int accommodationId) {
+        return accommodationDao.checkoutRoom(accommodationId);
+    }
 }

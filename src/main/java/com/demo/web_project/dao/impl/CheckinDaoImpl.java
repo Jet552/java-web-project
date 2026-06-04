@@ -57,7 +57,8 @@ public class CheckinDaoImpl implements CheckinDao {
         // LEFT JOIN：所有参会者都列出来，没签到的 checkin_time 为 NULL
         String sql = """
             SELECT a.id AS attendee_id, u.username, u.phone,
-                   c.checkin_time, c.id AS checkin_id
+                   c.checkin_time, c.id AS checkin_id,
+                   a.join_source
             FROM attendees a
             JOIN users u ON a.user_id = u.id
             LEFT JOIN checkins c ON a.id = c.attendee_id
@@ -76,6 +77,7 @@ public class CheckinDaoImpl implements CheckinDao {
                 Timestamp ts = rs.getTimestamp("checkin_time");
                 row.put("checkinTime", ts != null ? ts.toLocalDateTime().toString() : null);
                 row.put("checkedIn", ts != null);
+                row.put("joinSource", rs.getString("join_source"));
                 list.add(row);
             }
         } catch (SQLException e) {

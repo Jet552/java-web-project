@@ -439,7 +439,7 @@ public class ConferenceDaoImpl implements ConferenceDao {
             while (rs.next()) {
                 Attendee a = new Attendee();
                 a.setId(rs.getInt("id"));
-                a.setUser_id(rs.getInt("user_id"));
+                a.setUserid(rs.getInt("user_id"));
                 a.setConference_id(rs.getInt("conference_id"));
                 a.setAccommodation_type(rs.getString("accommodation_type"));
                 Timestamp arrival = rs.getTimestamp("arrival_time");
