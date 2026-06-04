@@ -116,9 +116,28 @@ function attRenderPage() {
     for (var i = 0; i < pageData.length; i++) {
         var item = pageData[i];
         var rowNum = start + i + 1;
-        var statusText = item.atten_status == 1 ? '参加中' : '已取消';
-        var statusClass = item.atten_status == 1 ? 'status-ongoing' : 'status-ended';
         var rowClass = (item.join_source == 'invite' && item.atten_status == 1) ? ' row-invite' : '';
+        var now = new Date();
+        var startDate = new Date((item.start_date || '').replace('T', ' '));
+        var endDate = new Date((item.end_date || '').replace('T', ' '));
+        var isCanceled = item.atten_status != 1;
+        var isNotStarted = !isCanceled && startDate > now;
+        var isEnded = !isCanceled && endDate < now;
+
+        var statusText, statusClass;
+        if (isCanceled) {
+            statusText = '已取消';
+            statusClass = 'status-ended';
+        } else if (isNotStarted) {
+            statusText = '未开始';
+            statusClass = 'status-pending';
+        } else if (isEnded) {
+            statusText = '已结束';
+            statusClass = 'status-ended';
+        } else {
+            statusText = '参加中';
+            statusClass = 'status-ongoing';
+        }
         html += '<tr class="' + rowClass + '">';
         html += '<td class="text-muted small">' + rowNum + '</td>';
         html += '<td><span class="meeting-name" title="' + attEsc(item.title) + '">' + attEsc(item.title) + '</span></td>';
@@ -132,7 +151,9 @@ function attRenderPage() {
             : '<span class="badge bg-light text-muted">普通</span>';
         html += '<td>' + sourceHtml + '</td>';
         html += '<td><span class="status-badge ' + statusClass + '">' + statusText + '</span></td>';
-        if (item.atten_status == 1) {
+        if (isCanceled || isEnded) {
+            html += '<td><span class="text-muted small">无法操作</span></td>';
+        } else if (item.atten_status == 1) {
             if (item.pay_status == "paid") {
                 html += '<td><span class="text-success small fw-bold"><i class="fas fa-check-circle me-1"></i>已完成缴费</span></td>';
             } else {
