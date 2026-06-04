@@ -37,7 +37,7 @@
                 <span>${username}</span>
             </button>
             <ul class="dropdown-menu dropdown-menu-end">
-                <li><a class="dropdown-item" href="${pageContext.request.contextPath}/index.jsp"><i class="bi bi-house"></i> 返回首页</a></li>
+                <li><a class="dropdown-item" href="${pageContext.request.contextPath}/index2.jsp"><i class="bi bi-house"></i> 返回首页</a></li>
                 <li><hr class="dropdown-divider"></li>
                 <li><a class="dropdown-item text-danger" href="${pageContext.request.contextPath}/user/logout"><i class="bi bi-box-arrow-right"></i> 退出登录</a></li>
             </ul>
