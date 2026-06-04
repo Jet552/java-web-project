@@ -151,8 +151,13 @@ function attRenderPage() {
             : '<span class="badge bg-light text-muted">普通</span>';
         html += '<td>' + sourceHtml + '</td>';
         html += '<td><span class="status-badge ' + statusClass + '">' + statusText + '</span></td>';
-        if (isCanceled || isEnded) {
+        if (isCanceled) {
             html += '<td><span class="text-muted small">无法操作</span></td>';
+        } else if (isEnded) {
+            html += '<td class="text-nowrap">';
+            html += '<a href="javascript:void(0)" onclick="joinMeeting(' + item.id + ',\'' + (item.join_source || 'search') + '\',\'' + (item.invite_codes || '') + '\',\'' + (item.title || '').replace(/'/g, "\\'") + '\')" class="btn btn-sm" style="background:#f1f5f9;color:#64748b;border:1px solid #e2e8f0;font-size:0.82rem;padding:6px 12px;border-radius:6px;">';
+            html += '<i class="fas fa-eye me-1"></i>查看</a>';
+            html += '</td>';
         } else if (item.atten_status == 1) {
             if (item.pay_status == "paid") {
                 html += '<td class="text-nowrap">';
