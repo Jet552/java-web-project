@@ -11,8 +11,8 @@ import java.util.List;
 
 public class AttendeeDaoImpl implements AttendeeDao {
     public int createAttend(Attendee attendee){//根据输入信息插入一条新记录
-        String sql = "INSERT INTO attendees (user_id,conference_id,arrival_time,departure_time,accommodation_type,requirements)" +
-                " VALUES(?,?,?,?,?,?) ";
+        String sql = "INSERT INTO attendees (user_id,conference_id,arrival_time,departure_time,accommodation_type,requirements,join_source)" +
+                " VALUES(?,?,?,?,?,?,?) ";
         try (Connection conn = JDBCUtil.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql,Statement.RETURN_GENERATED_KEYS)) {
             ps.setInt(1, attendee.getUserid());
@@ -21,6 +21,7 @@ public class AttendeeDaoImpl implements AttendeeDao {
             ps.setTimestamp(4,java.sql.Timestamp.valueOf(attendee.getDeparture_time()));
             ps.setString(5,attendee.getAccommodation_type());
             ps.setString(6,attendee.getRequirements());
+            ps.setString(7,attendee.getJoin_source());
             if (ps.executeUpdate() > 0){
                 ResultSet rs = ps.getGeneratedKeys();
                 int generatedId=0;
@@ -36,7 +37,7 @@ public class AttendeeDaoImpl implements AttendeeDao {
         return 0;
     }
     public List<Attendee> checkAttendees(int user_id){
-        String sql = "SELECT id,user_id,conference_id,arrival_time,departure_time,accommodation_type,requirements,status " +
+        String sql = "SELECT id,user_id,conference_id,arrival_time,departure_time,accommodation_type,requirements,join_source,status " +
                 "FROM attendees WHERE user_id = ?";
         List<Attendee> attendeeList=searchDB(sql,user_id);
         return attendeeList;
@@ -86,6 +87,7 @@ public class AttendeeDaoImpl implements AttendeeDao {
                 attendee.setAccommodation_type(rs.getString("accommodation_type"));
                 attendee.setRequirements(rs.getString("requirements"));
                 attendee.setStatus(rs.getInt("status"));
+                attendee.setJoin_source(rs.getString("join_source"));
                 if (timestamp1 != null) {
                     attendee.setArrival_time(timestamp1.toLocalDateTime());
                 }

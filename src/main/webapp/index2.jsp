@@ -66,12 +66,16 @@
                 <i class="fas fa-chevron-down toggle-icon"></i>
             </a>
             <div class="nav-submenu" data-parent="meeting">
-                <a href="#" class="nav-sub-link" data-page="meetingSearch">
+                <a href="#" class="nav-sub-link" data-page="conferenceHall">
                     <i class="fas fa-th-large"></i>
                     <span>会议大厅</span>
                 </a>
+                <a href="#" class="nav-sub-link" data-page="myConferences">
+                    <i class="fas fa-calendar-check"></i>
+                    <span>我的会议</span>
+                </a>
                 <a href="#" class="nav-sub-link" data-page="myAttendee">
-                    <i class="fas fa-list"></i>
+                    <i class="fas fa-clipboard-list"></i>
                     <span>我的参会</span>
                 </a>
                 <a href="#" class="nav-sub-link" data-page="conferencePayment">
@@ -97,15 +101,6 @@
                     <i class="fas fa-history"></i>
                     <span>缴费记录</span>
                 </a>
-                <a href="#" class="nav-sub-link" data-page="conferencePayment">
-                    <i class="fas fa-history"></i>
-                    <span>缴费记录</span>
-                </a>
-                <a href="#" class="nav-sub-link" data-page="conferencePayment">
-                    <i class="fas fa-history"></i>
-                    <span>缴费记录</span>
-                </a>
-                <a href="#" class="nav-sub-link" data-page="conferencePayment">
                     <i class="fas fa-history"></i>
                     <span>缴费记录</span>
                 </a>

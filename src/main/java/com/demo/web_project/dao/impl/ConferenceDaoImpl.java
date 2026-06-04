@@ -14,7 +14,7 @@ import java.util.Set;
 
 public class ConferenceDaoImpl implements ConferenceDao {
     public Conference findByCodes(String invite_codes ){
-        String sql = "SELECT id,organizer_id,title, start_date,end_date,venue,dorms,invite_codes,amount " +
+        String sql = "SELECT id,organizer_id,description,title, start_date,end_date,venue,dorms,invite_codes,amount " +
                 "FROM conferences WHERE invite_codes = ? and status='approved'";
         return searchOneConf(sql,invite_codes);
     }
@@ -97,6 +97,7 @@ public class ConferenceDaoImpl implements ConferenceDao {
                 Timestamp timestamp1 = rs.getTimestamp("start_date");
                 Timestamp timestamp2 = rs.getTimestamp("end_date");
                 conference.setAmount(rs.getDouble("amount"));
+                conference.setDescription(rs.getString("description"));
                 if (timestamp1 != null) {
                     conference.setStart_date(timestamp1.toLocalDateTime());
                 }
@@ -126,6 +127,7 @@ public class ConferenceDaoImpl implements ConferenceDao {
                 Timestamp timestamp2 = rs.getTimestamp("end_date");
                 conference.setInvite_codes(rs.getString("invite_codes"));
                 conference.setAmount(rs.getDouble("amount"));
+                conference.setDescription(rs.getString("description"));
                 if (timestamp1 != null) {
                     conference.setStart_date(timestamp1.toLocalDateTime());
                 }
@@ -156,6 +158,7 @@ public class ConferenceDaoImpl implements ConferenceDao {
                 Timestamp timestamp1 = rs.getTimestamp("start_date");
                 Timestamp timestamp2 = rs.getTimestamp("end_date");
                 conference.setAmount(rs.getDouble("amount"));
+                conference.setDescription(rs.getString("description"));
                 if (timestamp1 != null) {
                     conference.setStart_date(timestamp1.toLocalDateTime());
                 }

@@ -27,22 +27,40 @@ function loadConferenceInfo() {
         return;
     }
     showLoading(true);
-    fetch(contextPath + '/conference/search', { //用邀请码查看，会议是否还存在
+
+    // 有邀请码→用邀请码搜索；无邀请码（直接加入）→用空关键词查全部再匹配
+    var keyword = (inviteCodes && inviteCodes !== 'null' && inviteCodes.length > 0)
+        ? inviteCodes : '';
+
+    fetch(contextPath + '/conference/search', {
         method: 'POST',
         headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-        body: 'keyword=' + inviteCodes
+        body: 'keyword=' + encodeURIComponent(keyword)
     })
         .then(function (r) { return r.json(); })
         .then(function (data) {
             showLoading(false);
+            var conf = null;
+            // 邀请码搜索返回单个对象，关键词搜索返回数组
             if (data.code === 200 && data.data) {
-                var conf = data.data;
+                conf = data.data;
+            } else if ((data.code === 200 || data.code === 400) && Array.isArray(data.data)) {
+                // 从数组中找匹配的会议
+                for (var i = 0; i < data.data.length; i++) {
+                    if (data.data[i].id == conferenceId) {
+                        conf = data.data[i];
+                        break;
+                    }
+                }
+            }
+            if (conf) {
                 document.getElementById('confTitle').textContent = conf.title || '--';
                 document.getElementById('confStartDate').textContent = (conf.start_date || '').replace('T', ' ');
                 document.getElementById('confEndDate').textContent = (conf.end_date || '').replace('T', ' ');
                 document.getElementById('confVenue').textContent = conf.venue || '--';
-                document.getElementById('confDorms').textContent = conf.dorms || '--';
-                document.getElementById('confAmount').textContent = conf.amount || '--';
+                document.getElementById('confDorms').textContent = conf.dorms ;
+                document.getElementById('confAmount').textContent = joinSource=='invite'?0:conf.amount;
+                document.getElementById('confDescription').textContent = conf.description || '--';
             } else {
                 Swal.fire({ icon: 'error', title: '会议不存在', text: '该会议可能已被取消', confirmButtonColor: '#1890ff' });
             }
@@ -65,21 +83,59 @@ function checkAttendanceStatus() {
     })
         .then(function (r) { return r.json(); })
         .then(function (data) {
-            console.log('checkStatus 返回:', JSON.stringify(data)); // ← 加这里
-            if (data.code === 300 ) {//查到了已参加的记录
+            if (data.code === 300) {// 已报名
                 attendanceStatus = 1;
-                setFormDisabled(true);
-                document.getElementById('btnJoin').disabled = true;
-                document.getElementById('btnPay').disabled = false;
+                showRegisteredInfo(data.data);
             }
-            else if (data.code === 200) {//没有查到记录
+            else if (data.code === 200) {// 未报名
                 attendanceStatus = 0;
-                setFormDisabled(false);
-                document.getElementById('btnJoin').disabled = false;
-                document.getElementById('btnPay').disabled = true;
+                showNewRegistration();
             }
         })
         .catch(function () {});
+}
+
+// 已报名模式：显示只读信息卡片，隐藏表单
+function showRegisteredInfo(detail) {
+    // 隐藏表单区
+    document.getElementById('joinForm').parentElement.parentElement.style.display = 'none';
+    // 显示已报名信息卡片
+    var card = document.getElementById('registeredInfoCard');
+    card.style.display = '';
+    // 填充数据
+    document.getElementById('regArrival').textContent = (detail.arrival_time || '').replace('T', ' ') || '--';
+    document.getElementById('regDeparture').textContent = (detail.departure_time || '').replace('T', ' ') || '--';
+    document.getElementById('regAccommodation').textContent = detail.accommodation_type || '--';
+    document.getElementById('regRequirements').textContent = detail.requirements || '--';
+    // 身份标签：特邀 vs 普通
+    if (detail.join_source === 'invite') {
+        var badge = document.getElementById('regBadge');
+        badge.textContent = '已报名（特邀）';
+        badge.className = 'badge bg-warning text-dark ms-2';
+    }
+    // 签到状态
+    var checkinHtml = detail.checkedIn
+        ? '<span class="text-success">✅ 已签到</span><br><small class="text-muted">' + (detail.checkinTime || '').replace('T', ' ') + '</small>'
+        : '<span class="text-secondary">❌ 未签到</span>';
+    document.getElementById('regCheckin').innerHTML = checkinHtml;
+    // 入住状态
+    document.getElementById('regRoom').innerHTML = detail.roomNumber
+        ? '<span class="text-info">🏨 ' + detail.roomNumber + '</span>'
+        : '<span class="text-muted">未分配</span>';
+    // 缴费状态（后续联调 M4 接口后完善，目前暂显示提示）
+    document.getElementById('regPayment').innerHTML = '<span class="text-muted">请到缴费页面查看</span>';
+    // 按钮切换
+    document.getElementById('btnJoin').style.display = 'none';
+    document.getElementById('btnPay').disabled = false;
+    document.getElementById('btnBack').style.display = '';
+}
+
+// 未报名模式：显示表单
+function showNewRegistration() {
+    document.getElementById('registeredInfoCard').style.display = 'none';
+    document.getElementById('btnJoin').style.display = '';
+    document.getElementById('btnPay').disabled = true;
+    document.getElementById('btnBack').style.display = 'none';
 }
 
 /**
@@ -119,6 +175,7 @@ function submitJoin() {
 function doSubmitJoin() {
     showLoading(true);
     var bodyData = 'conferenceId=' + conferenceId
+        + '&source=' + encodeURIComponent(joinSource)
         + '&arrivalTime=' + encodeURIComponent(document.getElementById('arrivalTime').value)
         + '&departureTime=' + encodeURIComponent(document.getElementById('departureTime').value)
         + '&accommodationType=' + encodeURIComponent(document.getElementById('accommodationType').value)
@@ -225,15 +282,21 @@ function goToPayment() {
                     Swal.fire({ icon: 'error', title: '错误', text: '未找到待缴费记录', confirmButtonColor: '#f56565' });
                     return;
                 }
-
                 Swal.fire({
-                    title: '确认缴费',
-                    html: '<div class="text-center">' +
+                    title: joinSource === 'search' ? '确认缴费' : '确认报名',
+                    html: joinSource === 'search' ? (
+                        '<div class="text-center">' +
                         '<i class="fas fa-credit-card" style="font-size: 48px; color: #667eea;"></i>' +
                         '<p class="mt-3">确认支付 ¥' + parseFloat(amount).toFixed(2) + '</p>' +
-                        '</div>',
+                        '</div>'
+                    ) : (
+                        '<div class="text-center">' +
+                        '<i class="fas fa-check-circle" style="font-size: 48px; color: #667eea;"></i>' +
+                        '<p class="mt-3">由于为特邀身份，本次报名免费，是否确认报名？</p>' +
+                        '</div>'
+                    ),
                     showCancelButton: true,
-                    confirmButtonText: '确认支付',
+                    confirmButtonText: joinSource === 'search' ?'确认支付':'确认报名',
                     cancelButtonText: '取消',
                     confirmButtonColor: '#667eea'
                 }).then(function(result) {
@@ -257,8 +320,8 @@ function goToPayment() {
                                 if(data.code==200) {
                                     Swal.fire({
                                         icon: 'success',
-                                        title: '缴费成功',
-                                        text: '您已成功缴纳会议费用',
+                                        title: joinSource == 'search' ?'缴费成功':'报名成功',
+                                        text: joinSource == 'search' ?'您已成功缴纳会议费用！':'感谢您的参与！',
                                         confirmButtonColor: '#667eea'
                                     }).then(function() {
                                         navigateBackToHall();

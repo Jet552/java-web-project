@@ -44,8 +44,14 @@ function renderSearchResult(data) {
     var paginationContainer = document.getElementById('paginationContainer');
     // code 200: 邀请码查到单个 / code 400: 关键字查到多个
     if (data.code === 200) {
-        currentData = [data.data]; // 单条包装为数组
-    } else if (data.code === 400) {//列表
+        currentData = [data.data];
+        // 清空表格，避免旧内容闪现
+        tbody.innerHTML = '';
+        paginationContainer.innerHTML = '';
+        joinMeeting(data.data.id,'invite');
+        return;
+    }
+    else if (data.code === 400) {//列表
         currentData = data.data || [];
     } else {
         // 未找到
@@ -98,7 +104,7 @@ function renderTablePage() {
                 html += '</td>';
             }
         } else {
-            html += '<td><a href="javascript:void(0)" onclick="joinMeeting(' + item.id + ')" class="btn btn-join btn-sm">';
+            html += '<td><a href="javascript:void(0)" onclick="joinMeeting(' + item.id +','+'search'+ ')" class="btn btn-join btn-sm">';
             html += '<i class="fas fa-sign-in-alt me-1"></i>点击参加</a></td>';
         }
         html += '</tr>';
@@ -227,7 +233,7 @@ function getMeetingById(id) {
 /**
  * 点击参加 - 获取该行会议数据并跳转
  */
-function joinMeeting(id) {
+function joinMeeting(id,source) {
     var meeting = getMeetingById(id);
     showLoading(true);
     // 用邀请码向后端校验会议是否仍有效
@@ -241,7 +247,7 @@ function joinMeeting(id) {
             showLoading(false);
             if (data.code === 200) {
                 // 会议仍存在，正常跳转
-                window.location.href = contextPath + '/attendee/join_meeting.jsp?id=' + id+'&title='+ meeting.title+'&invite_codes='+ meeting.invite_codes;
+                window.location.href = contextPath + '/attendee/join_meeting.jsp?id=' + id+'&title='+ meeting.title+'&invite_codes='+ meeting.invite_codes + (source ? '&source=' + source : '');
             } else {
                 // 会议已取消/不存在
                 Swal.fire({

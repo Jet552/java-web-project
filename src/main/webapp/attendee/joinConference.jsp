@@ -44,7 +44,7 @@
 
     // 加入会议
     function joinConference() {
-        const inviteCode = document.getElementById('inviteCodeInput').value.trim().toUpperCase();
+        const inviteCode = document.getElementById('inviteCodeInput').value.trim();
 
         // 校验空值
         if (!inviteCode) {
@@ -66,36 +66,28 @@
             return;
         }
 
-        // 发送请求
-        fetch(contextPath + '/attendee/join', {
+        // 第一步：用邀请码搜索会议，确认会议存在
+        fetch(contextPath + '/conference/search', {
             method: 'POST',
             headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-            body: 'inviteCode=' + inviteCode
+            body: 'keyword=' + encodeURIComponent(inviteCode)
         })
             .then(res => res.json())
             .then(data => {
-                if (data.code === 200) {
-                    Swal.fire({
-                        icon: 'success',
-                        title: '加入成功',
-                        text: '您已成功加入该会议',
-                        timer: 1500,
-                        showConfirmButton: false
-                    }).then(() => {
-                        // 跳转到我的会议页面
-                        loadPage('myConferences');
-                    });
+                if (data.code === 200 && data.data) {
+                    // 会议存在，跳转到参会登记页填写详细信息
+                    var conf = data.data;
+                    window.location.href = contextPath + '/attendee/join_meeting.jsp?id='
+                        + conf.id + '&invite_codes=' + encodeURIComponent(inviteCode) + '&source=invite';
                 } else {
-                    // 后端返回错误时显示提示
                     Swal.fire({
                         icon: 'error',
-                        title: '加入失败',
-                        text: data.msg || '邀请码不存在或已失效'
+                        title: '会议不存在',
+                        text: data.msg || '邀请码无效或会议已失效'
                     });
                 }
             })
             .catch(err => {
-                // 网络错误提示
                 console.error('请求失败:', err);
                 Swal.fire({
                     icon: 'error',
