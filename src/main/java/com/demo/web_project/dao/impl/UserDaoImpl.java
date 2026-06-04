@@ -202,4 +202,66 @@ public class UserDaoImpl implements UserDao {
             return false;
         }
     }
+
+    @Override
+    public List<User> findByRole(int role) {
+        List<User> userList = new ArrayList<>();
+        String sql = "SELECT id, username, role, phone, email, status, created_date FROM users WHERE role = ?";
+
+        try (Connection conn = JDBCUtil.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setInt(1, role);
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                User user = new User();
+                user.setId(rs.getInt("id"));
+                user.setUsername(rs.getString("username"));
+                user.setRole(rs.getInt("role"));
+                user.setPhone(rs.getString("phone"));
+                user.setEmail(rs.getString("email"));
+                user.setStatus(rs.getInt("status"));
+                Timestamp timestamp = rs.getTimestamp("created_date");
+                if (timestamp != null) {
+                    user.setCreatedAt(timestamp.toLocalDateTime());
+                }
+                userList.add(user);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return userList;
+    }
+
+    @Override
+    public List<User> findByStatus(int status) {
+        List<User> userList = new ArrayList<>();
+        String sql = "SELECT id, username, role, phone, email, status, created_date FROM users WHERE status = ?";
+
+        try (Connection conn = JDBCUtil.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setInt(1, status);
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                User user = new User();
+                user.setId(rs.getInt("id"));
+                user.setUsername(rs.getString("username"));
+                user.setRole(rs.getInt("role"));
+                user.setPhone(rs.getString("phone"));
+                user.setEmail(rs.getString("email"));
+                user.setStatus(rs.getInt("status"));
+                Timestamp timestamp = rs.getTimestamp("created_date");
+                if (timestamp != null) {
+                    user.setCreatedAt(timestamp.toLocalDateTime());
+                }
+                userList.add(user);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return userList;
+    }
 }

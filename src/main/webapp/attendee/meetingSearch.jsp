@@ -79,5 +79,5 @@
     var contextPath = '<%= request.getContextPath() %>';
 </script>
 <!-- 引入注册页面的 JS 文件 -->
-<%--<script src="${pageContext.request.contextPath}/js/meetingSearch.js"></script>--%>
+<script src="${pageContext.request.contextPath}/js/meetingSearch.js"></script>
 </body>
