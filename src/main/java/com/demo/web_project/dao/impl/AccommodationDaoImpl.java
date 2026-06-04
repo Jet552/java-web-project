@@ -52,6 +52,7 @@ public class AccommodationDaoImpl implements AccommodationDao {
                 Date checkout = rs.getDate("checkout_date");
                 if (checkout != null) ac.setCheckoutDate(checkout.toLocalDate());
                 ac.setStatus(rs.getInt("status"));
+                ac.setUsername(rs.getString("username"));
                 list.add(ac);
             }
         } catch (SQLException e) {

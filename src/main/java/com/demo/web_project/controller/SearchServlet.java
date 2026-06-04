@@ -2,7 +2,6 @@ package com.demo.web_project.controller;
 import com.demo.web_project.service.AttendeeService;
 import com.demo.web_project.service.PaymentService;
 import com.demo.web_project.vo.Attendee;
-import com.demo.web_project.vo.User;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
@@ -11,9 +10,10 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import com.demo.web_project.vo.Conference;
-import com.demo.web_project.service.ConferenceService;
 import jakarta.servlet.http.HttpSession;
+import com.demo.web_project.vo.Conference;
+import com.demo.web_project.vo.User;
+import com.demo.web_project.service.ConferenceService;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
@@ -36,7 +36,7 @@ public class SearchServlet extends HttpServlet{
         response.setContentType("application/json;charset=UTF-8");
         HttpSession session = request.getSession();
         User user = (User) session.getAttribute("user");
-        int user_id = user.getId();//获取用户ID
+        int user_id = (user != null) ? user.getId() : 0;
         String keyword = request.getParameter("keyword");
         String regex="[A-Za-z0-9]{9}";//用于匹配是否是邀请码
         PrintWriter out = response.getWriter();
