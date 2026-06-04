@@ -66,9 +66,8 @@
 
 <script>
     // 页面加载时获取会议列表
-    document.addEventListener('DOMContentLoaded', function() {
-        loadConferences('');
-    });
+    // SPA 片段中 DOMContentLoaded 已触发，直接执行
+    loadConferences('');
 
     // 搜索框回车事件
     document.getElementById('searchInput').addEventListener('keypress', function(e) {
@@ -110,15 +109,32 @@
                 emptyState.classList.add('d-none');
 
                 if ((data.code === 200 || data.code === 400) && data.data && data.data.length > 0) {
-                    // 有数据，渲染列表
+                    // 按结束日期排序：未过期的在前，已过期的在后
+                    var now = new Date();
+                    var upcoming = [], past = [];
+                    data.data.forEach(function(conf) {
+                        var endDate = new Date((conf.end_date || '').replace(' ', 'T'));
+                        if (endDate > now) { upcoming.push(conf); } else { past.push(conf); }
+                    });
+                    var sortedList = upcoming.concat(past);
+
                     listContainer.innerHTML = '';
-                    data.data.forEach(conference => {
+                    sortedList.forEach(conference => {
+                        var endDate = new Date((conference.end_date || '').replace(' ', 'T'));
+                        var isPast = endDate <= now;
+                        var cardClass = isPast ? 'content-card h-100 opacity-50' : 'content-card h-100';
+                        var badgeHtml = isPast ? '<span class=\"badge bg-secondary ms-2\">已结束</span>' : '';
+                        var btnHtml = isPast
+                            ? '<button class=\"btn btn-secondary flex-grow-1 btn-sm\" disabled>已结束</button>'
+                            : '<button class=\"btn btn-primary-custom flex-grow-1\" onclick=\"directJoin(' + conference.id + ', \'' + (conference.title || '').replace(/'/g, "\\'") + '\')\"><i class=\"fas fa-sign-in-alt\"></i> 直接加入</button>'
+                                  + '<button class=\"btn btn-outline-primary btn-sm\" onclick=\"showJoinConferenceModal()\" title=\"邀请码加入（特邀身份）\"><i class=\"fas fa-ticket-alt\"></i></button>';
+
                         const card = document.createElement('div');
                         card.className = 'col-md-6 col-lg-4';
                         card.innerHTML = `
-                    <div class="content-card h-100">
+                    <div class="\${cardClass}">
                         <div class="card-body p-4">
-                            <h5 class="card-title mb-3">\${conference.title}</h5>
+                            <h5 class="card-title mb-3">\${conference.title}\${badgeHtml}</h5>
                             <div class="mb-2 text-muted">
                                 <i class="fas fa-map-marker-alt me-2"></i>\${conference.venue}
                             </div>
@@ -129,9 +145,9 @@
                                 <i class="fas fa-calendar-alt me-2"></i>
                                 \${formatDateTime(conference.start_date)} - \${formatDateTime(conference.end_date)}
                             </div>
-                            <button class="btn btn-primary-custom w-100" onclick="showJoinConferenceModal()">
-                                <i class="fas fa-sign-in-alt"></i> 加入会议
-                            </button>
+                            <div class="d-flex gap-2">
+                                \${btnHtml}
+                            </div>
                         </div>
                     </div>
                 `;
@@ -154,15 +170,53 @@
             });
     }
 
-    // 显示加入会议模态框
+    // 直接加入会议（普通参会者，无需邀请码）
+    function directJoin(conferenceId, title) {
+        // 先检查是否已参加
+        fetch(contextPath + '/attendee/checkStatus', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+            body: 'conferenceId=' + conferenceId
+        })
+        .then(function(r) { return r.json(); })
+        .then(function(data) {
+            if (data.code === 300) {
+                // 已参加，友好提示
+                Swal.fire({
+                    icon: 'info',
+                    title: '已参加该会议',
+                    text: '您已经是该会议的参会者，无需重复加入',
+                    confirmButtonColor: '#1a56db'
+                });
+                return;
+            }
+            // 未参加，确认后加入
+            Swal.fire({
+                title: '确认加入',
+                html: '确定要加入 <strong>' + title + '</strong> 吗？<br><small class="text-muted">普通参会方式，加入后需要缴费</small>',
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonText: '确认加入',
+                cancelButtonText: '取消',
+                confirmButtonColor: '#1a56db'
+            }).then(function(result) {
+                if (result.isConfirmed) {
+                    window.location.href = contextPath + '/attendee/join_meeting.jsp?id='
+                        + conferenceId + '&source=search';
+                }
+            });
+        });
+    }
+
+    // 显示加入会议模态框（邀请码加入，特邀身份）
     function showJoinConferenceModal() {
         document.getElementById('inviteCodeInput').value = '';
         new bootstrap.Modal(document.getElementById('joinConferenceModal')).show();
     }
 
-    // 加入会议
+    // 加入会议：先用邀请码查会议，确认存在后跳转登记页
     function joinConference() {
-        const inviteCode = document.getElementById('inviteCodeInput').value.trim().toUpperCase();
+        const inviteCode = document.getElementById('inviteCodeInput').value.trim();
 
         if (!inviteCode || inviteCode.length !== 9) {
             Swal.fire({
@@ -173,32 +227,49 @@
             return;
         }
 
-        fetch(contextPath + '/attendee/join', {
+        // 第一步：搜索邀请码确认会议存在
+        fetch(contextPath + '/conference/search', {
             method: 'POST',
             headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-            body: 'inviteCode=' + inviteCode
+            body: 'keyword=' + encodeURIComponent(inviteCode)
         })
             .then(res => res.json())
             .then(data => {
-                if (data.code === 200) {
-                    Swal.fire({
-                        icon: 'success',
-                        title: '加入成功',
-                        text: '您已成功加入该会议',
-                        timer: 1500,
-                        showConfirmButton: false
-                    }).then(() => {
-                        bootstrap.Modal.getInstance(document.getElementById('joinConferenceModal')).hide();
-                        // 跳转到我的会议页面
-                        loadPage('myConferences');
+                if (data.code === 200 && data.data) {
+                    var confId = data.data.id;
+                    // 检查是否已参加
+                    fetch(contextPath + '/attendee/checkStatus', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                        body: 'conferenceId=' + confId
+                    })
+                    .then(function(r2) { return r2.json(); })
+                    .then(function(statusData) {
+                        if (statusData.code === 300) {
+                            Swal.fire({ icon: 'info', title: '已参加该会议', text: '您已经是该会议的参会者，无需重复加入' });
+                            return;
+                        }
+                        // 未参加，跳转登记页
+                        var modal = bootstrap.Modal.getInstance(document.getElementById('joinConferenceModal'));
+                        if (modal) modal.hide();
+                        window.location.href = contextPath + '/attendee/join_meeting.jsp?id='
+                            + confId + '&invite_codes=' + encodeURIComponent(inviteCode) + '&source=invite';
                     });
                 } else {
                     Swal.fire({
                         icon: 'error',
                         title: '加入失败',
-                        text: data.msg
+                        text: data.msg || '邀请码无效或会议已失效'
                     });
                 }
+            })
+            .catch(err => {
+                console.error('请求失败:', err);
+                Swal.fire({
+                    icon: 'error',
+                    title: '网络错误',
+                    text: '请求失败，请稍后重试'
+                });
             });
     }
 
