@@ -67,13 +67,14 @@
                         <th style="width: 160px;">地点</th>
                         <th style="width: 140px;">住宿地址</th>
                         <th style="width: 80px;">费用</th>
+                        <th style="width: 65px;">身份</th>
                         <th style="width: 70px;">状态</th>
                         <th style="width: 90px;">操作</th>
                     </tr>
                     </thead>
                     <tbody id="meetingTableBody">
                         <tr>
-                            <td colspan="9" class="text-center py-5 text-muted">
+                            <td colspan="10" class="text-center py-5 text-muted">
                                 <i class="fas fa-spinner fa-pulse fa-2x d-block mb-2"></i>
                                 加载中...
                             </td>

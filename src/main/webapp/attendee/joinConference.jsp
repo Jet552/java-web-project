@@ -78,7 +78,7 @@
                     // 会议存在，跳转到参会登记页填写详细信息
                     var conf = data.data;
                     window.location.href = contextPath + '/attendee/join_meeting.jsp?id='
-                        + conf.id + '&invite_codes=' + encodeURIComponent(inviteCode);
+                        + conf.id + '&invite_codes=' + encodeURIComponent(inviteCode) + '&source=invite';
                 } else {
                     Swal.fire({
                         icon: 'error',

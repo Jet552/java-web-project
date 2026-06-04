@@ -94,7 +94,7 @@
         <div class="card-header">
             <h5 class="mb-0">
                 <i class="fas fa-check-circle text-success me-2"></i>报名信息
-                <span class="badge bg-success ms-2">已报名</span>
+                <span class="badge bg-success ms-2" id="regBadge">已报名</span>
             </h5>
         </div>
         <div class="card-body">

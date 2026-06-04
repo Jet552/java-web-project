@@ -167,8 +167,12 @@
         }
         list.forEach(function(row) {
             var tr = document.createElement('tr');
+            var nameHtml = '<strong>' + (row.username || '-') + '</strong>';
+            if (row.joinSource === 'invite') {
+                nameHtml += ' <span class="m5-badge" style="background:#fef3c7;color:#92400e;font-size:10px;">特邀</span>';
+            }
             tr.innerHTML =
-                '<td><strong>' + (row.username || '-') + '</strong></td>' +
+                '<td>' + nameHtml + '</td>' +
                 '<td style="color:#6b7280;">' + (row.phone || '-') + '</td>' +
                 '<td>' + (row.checkinTime ? row.checkinTime.replace('T',' ').substring(0,16) : '<span style="color:#9ca3af;">-</span>') + '</td>' +
                 '<td>' + (row.checkedIn

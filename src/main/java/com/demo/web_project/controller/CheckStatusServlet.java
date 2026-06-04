@@ -64,6 +64,7 @@ public class CheckStatusServlet extends HttpServlet {
                     data.put("departure_time", a.getDeparture_time() != null ? a.getDeparture_time().toString() : null);
                     data.put("accommodation_type", a.getAccommodation_type());
                     data.put("requirements", a.getRequirements());
+                    data.put("join_source", a.getJoin_source());
                     break;
                 }
             }
