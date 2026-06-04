@@ -47,8 +47,8 @@
                 </div>
                 <ul class="nav flex-column">
                     <li class="nav-item">
-                        <a class="nav-link p-3" href="${pageContext.request.contextPath}/admin_index.jsp">
-                            <i class="bi bi-speedometer"></i> 仪表盘
+                        <a class="nav-link p-3" href="${pageContext.request.contextPath}/index1.jsp">
+                            <i class="bi bi-speedometer"></i> 系统概览
                         </a>
                     </li>
                     <li class="nav-item">
@@ -59,6 +59,11 @@
                     <li class="nav-item">
                         <a class="nav-link active p-3" href="${pageContext.request.contextPath}/admin_conferences.jsp">
                             <i class="bi bi-calendar"></i> 会议审核
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link p-3" href="${pageContext.request.contextPath}/admin_conferences.jsp?status=all">
+                            <i class="bi bi-list-alt"></i> 所有会议
                         </a>
                     </li>
                     <li class="nav-item">

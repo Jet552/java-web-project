@@ -8,9 +8,18 @@
     <title>管理员控制台 - 会务管理系统</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-
     <link href="${pageContext.request.contextPath}/css/index1.css" rel="stylesheet"/>
+    <style>
+        .sidebar { min-height: 100vh; background-color: #2c3e50; }
+        .sidebar a { color: #ecf0f1; transition: all 0.3s; }
+        .sidebar a:hover { background-color: #34495e; color: #fff; }
+        .sidebar .active { background-color: #3498db; }
+        .main-content { min-height: 100vh; }
+    </style>
 </head>
 <body>
     <%
@@ -19,7 +28,6 @@
             response.sendRedirect(request.getContextPath() + "/login.jsp");
             return;
         }
-        // 如果不是管理员，重定向到普通用户页面
         if (user.getRole() != 1) {
             response.sendRedirect(request.getContextPath() + "/index2.jsp");
             return;
@@ -27,169 +35,94 @@
         String username = user.getUsername();
     %>
 
-    <!-- 侧边栏 -->
-    <div class="sidebar" id="sidebar">
-        <div class="sidebar-brand">
-            <h4><i class="fas fa-calendar-alt"></i>会务管理系统</h4>
-        </div>
-        <nav class="sidebar-menu">
-            <a href="${pageContext.request.contextPath}/index1.jsp" class="nav-link active">
-                <i class="fas fa-home"></i>
-                <span>系统概览</span>
-            </a>
-            <a href="${pageContext.request.contextPath}/admin_conferences.jsp" class="nav-link">
-                <i class="fas fa-clipboard-check"></i>
-                <span>会议审核</span>
-            </a>
-            <a href="${pageContext.request.contextPath}/admin_conferences.jsp?status=all" class="nav-link">
-                <i class="fas fa-list-alt"></i>
-                <span>所有会议</span>
-            </a>
-            <a href="${pageContext.request.contextPath}/admin_users.jsp" class="nav-link">
-                <i class="fas fa-users"></i>
-                <span>用户管理</span>
-            </a>
-            <a href="${pageContext.request.contextPath}/admin_stats.jsp" class="nav-link">
-                <i class="fas fa-chart-line"></i>
-                <span>系统统计</span>
-            </a>
-        </nav>
-    </div>
-
-    <!-- 主内容区 -->
-    <div class="main-content">
-        <!-- 顶部导航栏 -->
-        <div class="top-navbar">
-            <div class="breadcrumb">
-                <i class="fas fa-tachometer-alt me-2 text-primary"></i>管理员控制台
-            </div>
-            <div class="user-dropdown dropdown">
-                <div class="dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
-                    <div class="user-avatar">
-                        <i class="fas fa-user"></i>
-                    </div>
-                    <span class="d-none d-md-inline"><strong><%= username %></strong></span>
-                    <i class="fas fa-chevron-down text-muted small"></i>
+    <div class="container-fluid p-0">
+        <div class="row">
+            <nav class="col-md-2 sidebar p-0">
+                <div class="p-4">
+                    <h4 class="text-white text-center mb-4"><i class="bi bi-calendar-alt"></i> 管理控制台</h4>
                 </div>
-                <ul class="dropdown-menu dropdown-menu-end">
-                    <li>
-                        <a class="dropdown-item" href="#" onclick="showDeveloping('个人中心')">
-                            <i class="fas fa-user-circle me-2"></i>个人中心
-                        </a>
+                <ul class="nav flex-column">
+                    <li class="nav-item">
+                        <a class="nav-link p-3 active" href="#" data-page="overview"><i class="bi bi-speedometer"></i> 系统概览</a>
                     </li>
-                    <li><hr class="dropdown-divider"></li>
-                    <li>
-                        <a class="dropdown-item text-danger" href="${pageContext.request.contextPath}/user/logout">
-                            <i class="fas fa-sign-out-alt me-2"></i>退出登录
-                        </a>
+                    <li class="nav-item">
+                        <a class="nav-link p-3" href="#" data-page="conferences"><i class="bi bi-calendar"></i> 会议审核</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link p-3" href="#" data-page="allconferences"><i class="bi bi-list-alt"></i> 所有会议</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link p-3" href="#" data-page="users"><i class="bi bi-users"></i> 用户管理</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link p-3" href="#" data-page="stats"><i class="bi bi-bar-chart"></i> 系统统计</a>
+                    </li>
+                    <li class="nav-item mt-auto">
+                        <a class="nav-link p-3 text-danger" href="${pageContext.request.contextPath}/user/logout"><i class="bi bi-box-arrow-right"></i> 退出登录</a>
                     </li>
                 </ul>
-            </div>
-        </div>
+            </nav>
 
-        <!-- 内容区域 -->
-        <div class="content-wrapper">
-            <!-- 欢迎区域 -->
-            <div class="welcome-section">
-                <h2><i class="fas fa-hand-sparkles me-2"></i>欢迎回来，管理员 <%= username %></h2>
-                <p>这里是会务管理系统管理员控制台，您可以审核会议、管理用户和查看系统统计信息。</p>
-            </div>
+            <main class="col-md-10 main-content bg-light p-6">
+                <div class="mb-4">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <h1 class="text-2xl font-bold text-gray-800">管理员控制台</h1>
+                        <div class="dropdown">
+                            <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                                <i class="bi bi-user-circle me-2"></i><%= username %>
+                            </button>
+                            <ul class="dropdown-menu dropdown-menu-end">
+                                <li><a class="dropdown-item" href="#" onclick="showDeveloping('个人中心')"><i class="bi bi-user-circle me-2"></i>个人中心</a></li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li><a class="dropdown-item text-danger" href="${pageContext.request.contextPath}/user/logout"><i class="bi bi-box-arrow-right me-2"></i>退出登录</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
 
-            <!-- 统计卡片 -->
-            <div class="row g-4 mb-4">
-                <div class="col-md-6 col-lg-3">
-                    <div class="stat-card primary">
-                        <div class="stat-icon">
-                            <i class="fas fa-calendar-check"></i>
-                        </div>
-                        <div class="stat-value">128</div>
-                        <div class="stat-label">总会议数</div>
+                <div id="content-wrapper">
+                    <div class="text-center py-10">
+                        <i class="bi bi-hourglass fa-4x text-muted"></i>
+                        <p class="mt-3 text-muted">加载中...</p>
                     </div>
                 </div>
-                <div class="col-md-6 col-lg-3">
-                    <div class="stat-card success">
-                        <div class="stat-icon">
-                            <i class="fas fa-users"></i>
-                        </div>
-                        <div class="stat-value">2,456</div>
-                        <div class="stat-label">总用户数</div>
-                    </div>
-                </div>
-                <div class="col-md-6 col-lg-3">
-                    <div class="stat-card warning">
-                        <div class="stat-icon">
-                            <i class="fas fa-user-check"></i>
-                        </div>
-                        <div class="stat-value">8,932</div>
-                        <div class="stat-label">总参会人次</div>
-                    </div>
-                </div>
-                <div class="col-md-6 col-lg-3">
-                    <div class="stat-card danger">
-                        <div class="stat-icon">
-                            <i class="fas fa-exclamation-circle"></i>
-                        </div>
-                        <div class="stat-value">12</div>
-                        <div class="stat-label">待审核会议</div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- 图表和列表区域 -->
-            <div class="row g-4">
-                <div class="col-lg-8">
-                    <div class="chart-card">
-                        <h5><i class="fas fa-chart-bar me-2 text-primary"></i>近期会议趋势</h5>
-                        <div class="text-center py-5 text-muted">
-                            <i class="fas fa-chart-area fa-4x mb-3 opacity-25"></i>
-                            <p>数据可视化图表区域<br><small>（功能开发中）</small></p>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-4">
-                    <div class="chart-card">
-                        <h5><i class="fas fa-bell me-2 text-warning"></i>系统通知</h5>
-                        <div class="list-group list-group-flush">
-                            <div class="list-group-item px-0 py-3">
-                                <div class="d-flex w-100 justify-content-between">
-                                    <h6 class="mb-1">新会议待审核</h6>
-                                    <small class="text-muted">10分钟前</small>
-                                </div>
-                                <p class="mb-1 text-muted small">"2024年人工智能峰会"等待审核</p>
-                            </div>
-                            <div class="list-group-item px-0 py-3">
-                                <div class="d-flex w-100 justify-content-between">
-                                    <h6 class="mb-1">用户注册</h6>
-                                    <small class="text-muted">1小时前</small>
-                                </div>
-                                <p class="mb-1 text-muted small">5位新用户注册系统</p>
-                            </div>
-                            <div class="list-group-item px-0 py-3">
-                                <div class="d-flex w-100 justify-content-between">
-                                    <h6 class="mb-1">系统维护通知</h6>
-                                    <small class="text-muted">昨天</small>
-                                </div>
-                                <p class="mb-1 text-muted small">系统将于本周日凌晨进行例行维护</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- 底部版权 -->
-        <div class="footer">
-            <p class="mb-0">
-                <i class="fas fa-copyright me-1"></i>2024 会务管理系统. All rights reserved.
-                <span class="mx-2">|</span>
-                <span class="text-muted">技术支持：开发团队</span>
-            </p>
+            </main>
         </div>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-        // 显示功能开发中提示
+        var contextPath = '<%= request.getContextPath() %>';
+        
+        $(document).ready(function() {
+            loadPage('overview');
+            
+            $('.nav-link').click(function(e) {
+                e.preventDefault();
+                var page = $(this).data('page');
+                $('.nav-link').removeClass('active');
+                $(this).addClass('active');
+                loadPage(page);
+            });
+        });
+        
+        function loadPage(page) {
+            var urls = {
+                'overview': 'fragments/overview.jsp',
+                'conferences': 'fragments/conferences.jsp',
+                'allconferences': 'fragments/conferences.jsp?status=all',
+                'users': 'fragments/users.jsp',
+                'stats': 'fragments/stats.jsp'
+            };
+            
+            $('#content-wrapper').html('<div class="text-center py-10"><i class="bi bi-spinner fa-spin fa-3x text-primary"></i><p class="mt-3">加载中...</p></div>');
+            
+            $.get(urls[page], function(data) {
+                $('#content-wrapper').html(data);
+            }).fail(function() {
+                $('#content-wrapper').html('<div class="alert alert-danger">加载失败，请刷新页面重试</div>');
+            });
+        }
+        
         function showDeveloping(featureName) {
             Swal.fire({
                 icon: 'info',
