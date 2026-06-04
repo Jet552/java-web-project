@@ -301,6 +301,12 @@
     border: 1px solid #b7eb8f;
 }
 
+.status-pending {
+    background: #e6f7ff;
+    color: #1890ff;
+    border: 1px solid #91d5ff;
+}
+
 .status-ended {
     background: #fafafa;
     color: #8c8c8c;

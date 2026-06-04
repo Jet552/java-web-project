@@ -2,6 +2,8 @@
  * 参会登记页面 - 交互逻辑
  */
 var attendanceStatus = null; // null=未参加, 1=已参加, 0=已取消
+var confStartDate = null;   // 会议开始时间
+var confEndDate = null;     // 会议结束时间
 
 (function () {
     'use strict';
@@ -57,6 +59,8 @@ function loadConferenceInfo() {
                 }
             }
             if (conf) {
+                confStartDate = conf.start_date || null;
+                confEndDate = conf.end_date || null;
                 document.getElementById('confTitle').textContent = conf.title || '--';
                 document.getElementById('confStartDate').textContent = (conf.start_date || '').replace('T', ' ');
                 document.getElementById('confEndDate').textContent = (conf.end_date || '').replace('T', ' ');
@@ -146,9 +150,40 @@ function showNewRegistration() {
  */
 function submitJoin() {
     if (!validateForm()) return;
-
     var arrivalTime = document.getElementById('arrivalTime').value;
     var departureTime = document.getElementById('departureTime').value;
+    // 到达时间不能早于会议开始前7天
+    if (confStartDate) {
+        var earliestArrival = new Date(confStartDate.replace('T', ' '));
+        earliestArrival.setDate(earliestArrival.getDate() - 7);
+        if (new Date(arrivalTime) < earliestArrival) {
+            var minDate = earliestArrival.toISOString().split('T')[0];
+            Swal.fire({
+                icon: 'warning',
+                title: '到达时间太早',
+                text: '预计到达时间不能早于会议开始前7天（最早：' + minDate + '）',
+                confirmButtonColor: '#1890ff'
+            });
+            return;
+        }
+    }
+
+    // 离开时间不能晚于会议结束后3天
+    if (confEndDate) {
+        var latestDeparture = new Date(confEndDate.replace('T', ' '));
+        latestDeparture.setDate(latestDeparture.getDate() + 3);
+        if (new Date(departureTime) > latestDeparture) {
+            var maxDate = latestDeparture.toISOString().split('T')[0];
+            Swal.fire({
+                icon: 'warning',
+                title: '离开时间太晚',
+                text: '预计离开时间不能晚于会议结束后3天（最晚：' + maxDate + '）',
+                confirmButtonColor: '#1890ff'
+            });
+            return;
+        }
+    }
+
     // 到达时间必须早于离开时间
     if (arrivalTime >= departureTime) {
         Swal.fire({

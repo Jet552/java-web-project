@@ -173,6 +173,41 @@ function subMenuClickHandler(e) {
 }
 
 /**
+ * 更新侧边栏菜单激活状态
+ */
+function updateSidebarActive(pageName) {
+    // 移除所有菜单项的 active 状态
+    document.querySelectorAll('.nav-direct, .nav-sub-link').forEach(function(l) {
+        l.classList.remove('active');
+    });
+    // 收起所有子菜单
+    document.querySelectorAll('.nav-submenu').forEach(function(m) {
+        m.classList.remove('show');
+    });
+    document.querySelectorAll('.nav-toggle').forEach(function(t) {
+        t.classList.remove('active');
+    });
+
+    // 激活匹配的菜单项
+    var target = document.querySelector('.nav-direct[data-page="' + pageName + '"], .nav-sub-link[data-page="' + pageName + '"]');
+    if (target) {
+        target.classList.add('active');
+        // 如果是子菜单项，展开父菜单
+        if (target.classList.contains('nav-sub-link')) {
+            var parentSub = target.closest('.nav-submenu');
+            if (parentSub) {
+                parentSub.classList.add('show');
+                var parentGroup = parentSub.getAttribute('data-parent');
+                var toggle = document.querySelector('.nav-toggle[data-group="' + parentGroup + '"]');
+                if (toggle) {
+                    toggle.classList.add('active');
+                }
+            }
+        }
+    }
+}
+
+/**
  * 异步加载页面
  */
 function loadPage(pageName) {
@@ -202,6 +237,7 @@ function loadPage(pageName) {
                 newScript.textContent = oldScript.textContent;
                 oldScript.parentNode.replaceChild(newScript, oldScript);
             });
+            updateSidebarActive(pageName);
             if (pageName === 'conferencePayment' && typeof loadPaymentData === 'function') {
                 loadPaymentData();
             }
@@ -210,6 +246,9 @@ function loadPage(pageName) {
             }
             if ((pageName === 'myAttendee' || pageName === 'attendRecord') && typeof loadMyAttendances === 'function') {
                 loadMyAttendances();
+            }
+            if (pageName === 'default' && typeof loadRecommendedConferences === 'function') {
+                loadRecommendedConferences();
             }
             showLoading(false);
             window.scrollTo(0, 0);
@@ -257,17 +296,4 @@ function showLoading(show) {
         overlay = div;
     }
     overlay.style.display = show ? 'flex' : 'none';
-}
-
-/**
- * 显示功能开发中提示
- */
-function showDeveloping(featureName) {
-    Swal.fire({
-        icon: 'info',
-        title: '功能开发中',
-        text: '"' + featureName + '" 功能正在开发中，敬请期待！',
-        confirmButtonText: '知道了',
-        confirmButtonColor: '#667eea'
-    });
 }

@@ -116,9 +116,28 @@ function attRenderPage() {
     for (var i = 0; i < pageData.length; i++) {
         var item = pageData[i];
         var rowNum = start + i + 1;
-        var statusText = item.atten_status == 1 ? '参加中' : '已取消';
-        var statusClass = item.atten_status == 1 ? 'status-ongoing' : 'status-ended';
         var rowClass = (item.join_source == 'invite' && item.atten_status == 1) ? ' row-invite' : '';
+        var now = new Date();
+        var startDate = new Date((item.start_date || '').replace('T', ' '));
+        var endDate = new Date((item.end_date || '').replace('T', ' '));
+        var isCanceled = item.atten_status != 1;
+        var isNotStarted = !isCanceled && startDate > now;
+        var isEnded = !isCanceled && endDate < now;
+
+        var statusText, statusClass;
+        if (isCanceled) {
+            statusText = '已取消';
+            statusClass = 'status-ended';
+        } else if (isNotStarted) {
+            statusText = '未开始';
+            statusClass = 'status-pending';
+        } else if (isEnded) {
+            statusText = '已结束';
+            statusClass = 'status-ended';
+        } else {
+            statusText = '参加中';
+            statusClass = 'status-ongoing';
+        }
         html += '<tr class="' + rowClass + '">';
         html += '<td class="text-muted small">' + rowNum + '</td>';
         html += '<td><span class="meeting-name" title="' + attEsc(item.title) + '">' + attEsc(item.title) + '</span></td>';
@@ -132,9 +151,19 @@ function attRenderPage() {
             : '<span class="badge bg-light text-muted">普通</span>';
         html += '<td>' + sourceHtml + '</td>';
         html += '<td><span class="status-badge ' + statusClass + '">' + statusText + '</span></td>';
-        if (item.atten_status == 1) {
+        if (isCanceled) {
+            html += '<td><span class="text-muted small">无法操作</span></td>';
+        } else if (isEnded) {
+            html += '<td class="text-nowrap">';
+            html += '<a href="javascript:void(0)" onclick="joinMeeting(' + item.id + ',\'' + (item.join_source || 'search') + '\',\'' + (item.invite_codes || '') + '\',\'' + (item.title || '').replace(/'/g, "\\'") + '\')" class="btn btn-sm" style="background:#f1f5f9;color:#64748b;border:1px solid #e2e8f0;font-size:0.82rem;padding:6px 12px;border-radius:6px;">';
+            html += '<i class="fas fa-eye me-1"></i>查看</a>';
+            html += '</td>';
+        } else if (item.atten_status == 1) {
             if (item.pay_status == "paid") {
-                html += '<td><span class="text-success small fw-bold"><i class="fas fa-check-circle me-1"></i>已完成缴费</span></td>';
+                html += '<td class="text-nowrap">';
+                html += '<a href="javascript:void(0)" onclick="joinMeeting(' + item.id + ',\'' + (item.join_source || 'search') + '\',\'' + (item.invite_codes || '') + '\',\'' + (item.title || '').replace(/'/g, "\\'") + '\')" class="btn btn-sm" style="background:#ecfdf5;color:#047857;border:1px solid #a7f3d0;font-size:0.82rem;padding:6px 12px;border-radius:6px;">';
+                html += '<i class="fas fa-check-circle me-1"></i>已完成缴费</a>';
+                html += '</td>';
             } else {
                 html += '<td class="text-nowrap">';
                 html += '<a href="javascript:void(0)" onclick="joinMeeting(' + item.id + ',\'' + (item.join_source || 'search') + '\')" class="btn btn-my-action btn-sm me-1">';
