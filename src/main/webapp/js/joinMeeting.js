@@ -66,7 +66,7 @@ function loadConferenceInfo() {
                 document.getElementById('confEndDate').textContent = (conf.end_date || '').replace('T', ' ');
                 document.getElementById('confVenue').textContent = conf.venue || '--';
                 document.getElementById('confDorms').textContent = conf.dorms ;
-                document.getElementById('confAmount').textContent = joinSource=='invite'?0:conf.amount;
+                document.getElementById('confAmount').textContent = joinSource=='invite' ? '0（特邀免费）' : (conf.amount || 0);
                 document.getElementById('confDescription').textContent = conf.description || '--';
             } else {
                 Swal.fire({ icon: 'error', title: '会议不存在', text: '该会议可能已被取消', confirmButtonColor: '#1890ff' });
@@ -309,6 +309,10 @@ function goToPayment() {
         .then(function(data) {
             if(data.code==200) {
                 var allData = data.data; //缴费记录列表
+                if (!allData || allData.length === 0) {
+                    Swal.fire({ icon: 'info', title: '暂无缴费记录', text: '请先完成缴费创建', confirmButtonColor: '#1890ff' });
+                    return;
+                }
                 var paymentList = allData.filter(function(item) {
                     return Number(item.conference_id) === Number(conferenceId) && item.status === "unpaid" && Number(item.attendee_status) === 1;
                 });

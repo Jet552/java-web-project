@@ -130,6 +130,7 @@ public class ConferenceServlet extends HttpServlet {
         String dorms = req.getParameter("dorms");
         String startDateStr = req.getParameter("start_date");
         String endDateStr = req.getParameter("end_date");
+        String amountStr = req.getParameter("amount");
 
         // 参数非空校验
         if (title == null || title.trim().isEmpty() ||
@@ -166,6 +167,7 @@ public class ConferenceServlet extends HttpServlet {
         conference.setDorms(dorms);
         conference.setStart_date(startDate);
         conference.setEnd_date(endDate);
+        conference.setAmount(amountStr != null && !amountStr.trim().isEmpty() ? Double.parseDouble(amountStr) : 0);
 
         return conference;
     }
