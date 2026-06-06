@@ -20,7 +20,7 @@ function initJoinPage() {
     console.log('joinSource:', joinSource);
     loadConferenceInfo();
     checkAttendanceStatus();
-    restoreFormData();  // ← 加这行
+    restoreFormData();
 }
 
 /**
