@@ -113,4 +113,28 @@ public class AccommodationDaoImpl implements AccommodationDao {
             return false;
         }
     }
+
+    @Override
+    public java.time.LocalDateTime getConferenceEndDate(int attendeeId) {
+        String sql = """
+            SELECT c.end_date
+            FROM conferences c
+            JOIN attendees a ON a.conference_id = c.id
+            WHERE a.id = ?
+            """;
+        try (Connection conn = JDBCUtil.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, attendeeId);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                Timestamp end = rs.getTimestamp("end_date");
+                if (end != null) {
+                    return end.toLocalDateTime();
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
 }

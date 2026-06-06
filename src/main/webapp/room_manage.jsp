@@ -174,6 +174,10 @@
         Swal.fire({
             title: '分配房间 - ' + username,
             html:
+                '<div class="alert alert-info py-2 mb-3 text-start small" style="font-size:12px;">' +
+                  '<i class="fas fa-info-circle me-1"></i>日期范围约束：<br>' +
+                  '入住和退房日期必须 ≥ 签到日期，≤ 会议结束后3天' +
+                '</div>' +
                 '<div style="margin-bottom:12px;"><label style="display:block;text-align:left;margin-bottom:4px;font-weight:500;">房间号</label><input id="swalRoomNumber" class="swal2-input" placeholder="如 908"></div>' +
                 '<div style="margin-bottom:12px;"><label style="display:block;text-align:left;margin-bottom:4px;font-weight:500;">入住日期</label><input id="swalCheckinDate" class="swal2-input" type="date"></div>' +
                 '<div style="margin-bottom:12px;"><label style="display:block;text-align:left;margin-bottom:4px;font-weight:500;">退房日期</label><input id="swalCheckoutDate" class="swal2-input" type="date"></div>',
