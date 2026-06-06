@@ -11,8 +11,7 @@ function handleRegister() {
     const confirmPassword = document.getElementById('confirmPassword').value;
     const email = document.getElementById('email').value;
     const phone = document.getElementById('phone').value;
-    const radioEmail=document.getElementById('radioEmail').value;
-    const radioPhone=document.getElementById('radioPhone').value;
+    var registerMethod = document.getElementById('registerMethod') ? document.getElementById('registerMethod').value : 'email';
     // 表单验证
     if (!username || !password || !confirmPassword || (!email && !phone )) {
         Swal.fire({
@@ -44,7 +43,7 @@ function handleRegister() {
         }
     // 邮箱格式验证
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (radioEmail.checked&&!emailRegex.test(email)) {
+    if (registerMethod === 'email' && email && !emailRegex.test(email)) {
         Swal.fire({
             icon: 'error',
             title: '错误',
@@ -55,7 +54,7 @@ function handleRegister() {
     }
     // 手机号格式验证（简单的11位数字验证）
     const phoneRegex = /^1[3-9]\d{9}$/;
-    if (radioPhone.checked&&!phoneRegex.test(phone)) {
+    if (registerMethod === 'phone' && phone && !phoneRegex.test(phone)) {
         Swal.fire({
             icon: 'error',
             title: '错误',
@@ -282,8 +281,6 @@ function toggleContactInput() {
     var selected = document.getElementById('registerMethod').value;
     var emailGroup = document.getElementById('emailGroup');
     var phoneGroup = document.getElementById('phoneGroup');
-    var selectedMethodText = document.getElementById('selectedMethodText');
-
     emailGroup.style.display = 'none';
     phoneGroup.style.display = 'none';
 
@@ -291,12 +288,10 @@ function toggleContactInput() {
         emailGroup.style.display = 'block';
         document.getElementById('email').required = true;
         document.getElementById('phone').required = false;
-        selectedMethodText.textContent = '邮箱地址';
     } else if (selected === 'phone') {
         phoneGroup.style.display = 'block';
         document.getElementById('phone').required = true;
         document.getElementById('email').required = false;
-        selectedMethodText.textContent = '手机号码';
     }
 }
 

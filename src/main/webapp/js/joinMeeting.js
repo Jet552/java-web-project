@@ -20,7 +20,7 @@ function initJoinPage() {
     console.log('joinSource:', joinSource);
     loadConferenceInfo();
     checkAttendanceStatus();
-    restoreFormData();  // ← 加这行
+    restoreFormData();
 }
 
 /**
@@ -490,7 +490,7 @@ function navigateBackToHall() {
     // clearFormData();
     // 如果在 index2.jsp 框架内，调用 loadPage；否则跳转回 index2.jsp 并自动加载会议大厅
     if (typeof loadPage === 'function') {
-        loadPage('meetingSearch');
+        loadPage('conferenceHall');
     } else {
         window.location.href = contextPath + '/index2.jsp?page=meetingSearch';
     }
