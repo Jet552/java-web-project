@@ -26,7 +26,7 @@
 <!-- 顶部导航栏 -->
 <nav class="navbar navbar-expand-lg navbar-dark bg-primary fixed-top shadow-sm">
     <div class="container-fluid px-4">
-        <a class="navbar-brand" href="${pageContext.request.contextPath}/index2.jsp">
+        <a class="navbar-brand" href="${isAdmin ? 'index1.jsp' : 'index2.jsp'}">
             <i class="bi bi-calendar-event"></i>
             会务管理系统
         </a>
@@ -37,7 +37,7 @@
                 <span>${username}</span>
             </button>
             <ul class="dropdown-menu dropdown-menu-end">
-                <li><a class="dropdown-item" href="${pageContext.request.contextPath}/index2.jsp"><i class="bi bi-house"></i> 返回首页</a></li>
+                <li><a class="dropdown-item" href="${isAdmin ? 'index1.jsp' : 'index2.jsp'}"><i class="bi bi-house"></i> 返回首页</a></li>
                 <li><hr class="dropdown-divider"></li>
                 <li><a class="dropdown-item text-danger" href="${pageContext.request.contextPath}/user/logout"><i class="bi bi-box-arrow-right"></i> 退出登录</a></li>
             </ul>
@@ -69,8 +69,16 @@
                 </div>
                 <div class="form-section">
                     <div class="info-row">
+                        <div class="info-label"><i class="bi bi-hash me-2"></i>用户ID</div>
+                        <div class="info-value" id="infoId">-</div>
+                    </div>
+                    <div class="info-row">
                         <div class="info-label"><i class="bi bi-person me-2"></i>用户名</div>
                         <div class="info-value" id="infoUsername">${username}</div>
+                    </div>
+                    <div class="info-row">
+                        <div class="info-label"><i class="bi bi-lock me-2"></i>密码</div>
+                        <div class="info-value" id="infoPassword">******</div>
                     </div>
                     <div class="info-row">
                         <div class="info-label"><i class="bi bi-envelope me-2"></i>电子邮箱</div>

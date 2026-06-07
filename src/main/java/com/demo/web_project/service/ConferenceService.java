@@ -1,9 +1,7 @@
 package com.demo.web_project.service;
 import com.demo.web_project.dao.ConferenceDao;
 import com.demo.web_project.dao.impl.ConferenceDaoImpl;
-import com.demo.web_project.vo.Attendee;
 import com.demo.web_project.vo.Conference;
-import com.demo.web_project.vo.Payment;
 
 import java.util.List;
 import java.util.Random;
@@ -74,18 +72,6 @@ public class ConferenceService {
 
     public List<Conference> findByStatus(String status) {
         return conferenceDao.findByStatus(status);
-    }
-
-    public List<Attendee> findAllAttendees() {
-        return conferenceDao.findAllAttendees();
-    }
-
-    public List<Payment> findAllPayments() {
-        return conferenceDao.findAllPayments();
-    }
-
-    public List<Payment> findPaymentsByStatus(String status) {
-        return conferenceDao.findPaymentsByStatus(status);
     }
 
     public List<Conference> findPendingConferences() {

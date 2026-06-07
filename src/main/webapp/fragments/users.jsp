@@ -59,6 +59,8 @@
             
             if (user.id === currentUserId) {
                 action = '<span class="text-muted text-sm">当前用户</span>';
+            } else if (user.role === 1) {
+                action = '<span class="text-muted text-sm">管理员</span>';
             } else if (user.status === 1) {
                 action = '<button class="btn btn-sm btn-warning" onclick="banUser(' + user.id + ')">封禁</button>';
             } else {

@@ -117,53 +117,6 @@
             </div>
         </div>
 
-        <div class="row g-4 mb-6">
-            <div class="col-md-3">
-                <div class="stat-card card bg-indigo text-white p-4 rounded-lg" onclick="showDetail('attendee')">
-                    <div class="d-flex justify-content-between">
-                        <div>
-                            <p class="text-sm opacity-80">总参会人数</p>
-                            <p id="totalAttendees" class="text-3xl font-bold">--</p>
-                        </div>
-                        <i class="bi bi-people text-4xl opacity-50"></i>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-3">
-                <div class="stat-card card bg-cyan text-white p-4 rounded-lg" onclick="showDetail('payment', 'paid')">
-                    <div class="d-flex justify-content-between">
-                        <div>
-                            <p class="text-sm opacity-80">已缴费人数</p>
-                            <p id="paidAttendees" class="text-3xl font-bold">--</p>
-                        </div>
-                        <i class="bi bi-credit-card text-4xl opacity-50"></i>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-3">
-                <div class="stat-card card bg-lime text-white p-4 rounded-lg" onclick="showDetail('payment', 'all')">
-                    <div class="d-flex justify-content-between">
-                        <div>
-                            <p class="text-sm opacity-80">缴费笔数</p>
-                            <p id="totalPayments" class="text-3xl font-bold">--</p>
-                        </div>
-                        <i class="bi bi-receipt text-4xl opacity-50"></i>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-3">
-                <div class="stat-card card bg-pink text-white p-4 rounded-lg" onclick="showDetail('payment', 'all')">
-                    <div class="d-flex justify-content-between">
-                        <div>
-                            <p class="text-sm opacity-80">缴费总额</p>
-                            <p id="totalAmount" class="text-3xl font-bold">--</p>
-                        </div>
-                        <i class="bi bi-wallet text-4xl opacity-50"></i>
-                    </div>
-                </div>
-            </div>
-        </div>
-
         <div class="row">
             <div class="col-md-6">
                 <h5 class="mb-3">会议状态统计</h5>
@@ -219,10 +172,6 @@
             $('#activeUsers').text(data.activeUsers || 0);
             $('#adminUsers').text(data.adminUsers || 0);
             $('#bannedUsers').text(data.bannedUsers || 0);
-            $('#totalAttendees').text(data.totalAttendees || 0);
-            $('#paidAttendees').text(data.paidAttendees || 0);
-            $('#totalPayments').text(data.totalPayments || 0);
-            $('#totalAmount').text('¥' + (data.totalAmount || 0).toFixed(2));
             
             var totalConf = data.totalConferences || 1;
             $('#pendingPercent').text(((data.pendingConferences || 0) / totalConf * 100).toFixed(1) + '%');
@@ -256,12 +205,6 @@
                     case 'admin': title = '管理员'; url = '/admin/users?role=1'; break;
                     case 'banned': title = '被封禁用户'; url = '/admin/users?status=0'; break;
                 }
-                break;
-            case 'attendee':
-                title = '参会人员'; url = '/admin/attendees'; break;
-            case 'payment':
-                title = subType === 'paid' ? '已缴费记录' : '全部缴费记录';
-                url = '/admin/payments' + (subType === 'paid' ? '?status=paid' : '');
                 break;
         }
         
@@ -302,20 +245,6 @@
                 var role = item.role === 1 ? '<span class="badge bg-danger">管理员</span>' : '<span class="badge bg-secondary">普通用户</span>';
                 var status = item.status === 1 ? '<span class="badge bg-success">正常</span>' : '<span class="badge bg-warning">封禁</span>';
                 html += '<tr><td>' + item.id + '</td><td>' + item.username + '</td><td>' + (item.email || '-') + '</td><td>' + role + '</td><td>' + status + '</td></tr>';
-            });
-            html += '</tbody></table>';
-        } else {
-            html = '<table class="table table-striped"><thead><tr><th>ID</th><th>用户/参会ID</th><th>金额/会议ID</th><th>状态</th></tr></thead><tbody>';
-            $.each(data, function(i, item) {
-                var status = '';
-                if (item.status === 1 || item.status === 'paid') {
-                    status = '<span class="badge bg-success">正常</span>';
-                } else {
-                    status = '<span class="badge bg-warning">待处理</span>';
-                }
-                var col2 = item.user_id ? item.user_id : (item.attendee_id || '-');
-                var col3 = item.amount ? '¥' + item.amount.toFixed(2) : (item.conference_id || '-');
-                html += '<tr><td>' + item.id + '</td><td>' + col2 + '</td><td>' + col3 + '</td><td>' + status + '</td></tr>';
             });
             html += '</tbody></table>';
         }

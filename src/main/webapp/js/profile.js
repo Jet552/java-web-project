@@ -127,6 +127,12 @@ function loadUserProfile() {
  * 显示用户信息
  */
 function displayUserInfo(userData) {
+    if (userData.id) {
+        document.getElementById('infoId').innerText = userData.id;
+    }
+    if (userData.username) {
+        document.getElementById('infoUsername').innerText = userData.username;
+    }
     if (userData.email) {
         document.getElementById('infoEmail').innerText = userData.email;
         document.getElementById('email').value = userData.email;
@@ -137,9 +143,6 @@ function displayUserInfo(userData) {
     }
     if (userData.createdDate) {
         document.getElementById('infoCreatedDate').innerText = formatDateTime(userData.createdDate);
-    }
-    if (userData.username) {
-        document.getElementById('infoUsername').innerText = userData.username;
     }
 }
 

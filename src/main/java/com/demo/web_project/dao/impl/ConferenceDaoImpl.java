@@ -1,10 +1,7 @@
 package com.demo.web_project.dao.impl;
 import com.demo.web_project.dao.ConferenceDao;
 import com.demo.web_project.dao.JDBCUtil;
-import com.demo.web_project.vo.Attendee;
 import com.demo.web_project.vo.Conference;
-import com.demo.web_project.vo.Payment;
-import com.demo.web_project.vo.User;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -53,7 +50,7 @@ public class ConferenceDaoImpl implements ConferenceDao {
     public List<Conference> findAll(String keyword){
         //三级搜索，第一次like用于匹配子串，第二级匹配非连续子串，第三次返回包含其中任意一个关键字即可
         String sql = "SELECT id,description,organizer_id, title, start_date,end_date,venue,dorms,invite_codes,amount FROM conferences" +
-                " WHERE title LIKE ? and status='approved'";//先子串匹配看有没有现成的
+                " WHERE title LIKE ? and status='approved' ORDER BY id";//先子串匹配看有没有现成的
         List<Conference> conferenceList=searchDB(sql,keyword);//先按模糊匹配，看有没有子串匹配
         if(conferenceList.isEmpty()){//模糊搜索返回为空,改成非连续匹配看是否有结果
             String[] chars = keyword.split("");   // 每个字符拆开，注意第一个元素可能是空字符串
@@ -83,7 +80,7 @@ public class ConferenceDaoImpl implements ConferenceDao {
     public List<Conference> findDefault(){
         List<Conference> conferenceList = new ArrayList<>();
         String sql = "SELECT id,description,organizer_id, title, start_date,end_date,venue,dorms,invite_codes,amount FROM conferences" +
-                " WHERE status='approved'";//先子串匹配看有没有现成的
+                " WHERE status='approved' ORDER BY id";//先子串匹配看有没有现成的
         try (Connection conn = JDBCUtil.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
             ResultSet rs = ps.executeQuery();
@@ -179,7 +176,7 @@ public class ConferenceDaoImpl implements ConferenceDao {
         List<Conference> list = new ArrayList<>();
         String sql = "SELECT id, organizer_id, title, description, venue, dorms, invite_codes, " +
                      "start_date, end_date, status, created_date, reason " +
-                     "FROM conferences WHERE organizer_id = ? ORDER BY start_date DESC";
+                     "FROM conferences WHERE organizer_id = ? ORDER BY id";
         try (Connection conn = JDBCUtil.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setInt(1, organizerId);
@@ -394,7 +391,7 @@ public class ConferenceDaoImpl implements ConferenceDao {
         List<Conference> list = new ArrayList<>();
         String sql = "SELECT id, organizer_id, title, description, venue, dorms, " +
                 "start_date, end_date, status, created_date, reason " +
-                "FROM conferences WHERE status = ? ORDER BY created_date DESC";
+                "FROM conferences WHERE status = ? ORDER BY id";
 
         try (Connection conn = JDBCUtil.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
@@ -427,92 +424,11 @@ public class ConferenceDaoImpl implements ConferenceDao {
     }
 
     @Override
-    public List<Attendee> findAllAttendees() {
-        List<Attendee> list = new ArrayList<>();
-        String sql = "SELECT id, user_id, conference_id, accommodation_type, arrival_time, status " +
-                "FROM attendees ORDER BY id DESC";
-
-        try (Connection conn = JDBCUtil.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql);
-             ResultSet rs = ps.executeQuery()) {
-
-            while (rs.next()) {
-                Attendee a = new Attendee();
-                a.setId(rs.getInt("id"));
-                a.setUserid(rs.getInt("user_id"));
-                a.setConference_id(rs.getInt("conference_id"));
-                a.setAccommodation_type(rs.getString("accommodation_type"));
-                Timestamp arrival = rs.getTimestamp("arrival_time");
-                if (arrival != null) a.setArrival_time(arrival.toLocalDateTime());
-                a.setStatus(rs.getInt("status"));
-                list.add(a);
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return list;
-    }
-
-    @Override
-    public List<Payment> findAllPayments() {
-        List<Payment> list = new ArrayList<>();
-        String sql = "SELECT id, attendee_id, amount, status, paid_at " +
-                "FROM payments ORDER BY id DESC";
-
-        try (Connection conn = JDBCUtil.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql);
-             ResultSet rs = ps.executeQuery()) {
-
-            while (rs.next()) {
-                Payment p = new Payment();
-                p.setId(rs.getInt("id"));
-                p.setAttendee_id(rs.getInt("attendee_id"));
-                p.setAmount(rs.getDouble("amount"));
-                p.setStatus(rs.getString("status"));
-                Timestamp paid = rs.getTimestamp("paid_at");
-                if (paid != null) p.setPaid_at(paid.toLocalDateTime());
-                list.add(p);
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return list;
-    }
-
-    @Override
-    public List<Payment> findPaymentsByStatus(String status) {
-        List<Payment> list = new ArrayList<>();
-        String sql = "SELECT id, attendee_id, amount, status, paid_at " +
-                "FROM payments WHERE status = ? ORDER BY id DESC";
-
-        try (Connection conn = JDBCUtil.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
-
-            ps.setString(1, status);
-            ResultSet rs = ps.executeQuery();
-
-            while (rs.next()) {
-                Payment p = new Payment();
-                p.setId(rs.getInt("id"));
-                p.setAttendee_id(rs.getInt("attendee_id"));
-                p.setAmount(rs.getDouble("amount"));
-                p.setStatus(rs.getString("status"));
-                Timestamp paid = rs.getTimestamp("paid_at");
-                if (paid != null) p.setPaid_at(paid.toLocalDateTime());
-                list.add(p);
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return list;
-    }
-
-    @Override
     public List<Conference> findPendingConferences() {
         List<Conference> list = new ArrayList<>();
         String sql = "SELECT id, organizer_id, title, description, venue, dorms, " +
                 "start_date, end_date, status, created_date, reason " +
-                "FROM conferences WHERE status = 'pending' ORDER BY created_date DESC";
+                "FROM conferences WHERE status = 'pending' ORDER BY id";
 
         try (Connection conn = JDBCUtil.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql);
@@ -547,7 +463,7 @@ public class ConferenceDaoImpl implements ConferenceDao {
         List<Conference> list = new ArrayList<>();
         String sql = "SELECT id, organizer_id, title, description, venue, dorms, " +
                 "start_date, end_date, status, created_date, reason " +
-                "FROM conferences ORDER BY created_date DESC";
+                "FROM conferences WHERE status != 'pending' AND status != 'invalid' ORDER BY id";
 
         try (Connection conn = JDBCUtil.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql);

@@ -6,7 +6,7 @@
 <div class="card">
     <div class="card-header">
         <div class="d-flex justify-content-between align-items-center">
-            <h5><i class="bi bi-calendar me-2 text-primary"></i>会议审核</h5>
+            <h5><i class="bi bi-calendar me-2 text-primary"></i>会议管理</h5>
             <ul class="nav nav-tabs card-header-tabs">
                 <li class="nav-item">
                     <button class="nav-link <%= defaultStatus.equals("pending") ? "active" : "" %>" onclick="loadConferences('pending')">待审核</button>

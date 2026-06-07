@@ -3,9 +3,7 @@ package com.demo.web_project.controller;
 import com.demo.web_project.service.ConferenceService;
 import com.demo.web_project.service.StatisticsService;
 import com.demo.web_project.service.UserService;
-import com.demo.web_project.vo.Attendee;
 import com.demo.web_project.vo.Conference;
-import com.demo.web_project.vo.Payment;
 import com.demo.web_project.vo.User;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
@@ -54,12 +52,6 @@ public class AdminController extends HttpServlet {
                 break;
             case "/stats":
                 getStatistics(request, response);
-                break;
-            case "/attendees":
-                getAllAttendees(request, response);
-                break;
-            case "/payments":
-                getAllPayments(request, response);
                 break;
             default:
                 response.sendError(HttpServletResponse.SC_NOT_FOUND);
@@ -114,6 +106,8 @@ public class AdminController extends HttpServlet {
             users = userService.findByRole(1);
         } else if (statusParam != null && statusParam.equals("0")) {
             users = userService.findByStatus(0);
+        } else if (statusParam != null && statusParam.equals("1")) {
+            users = userService.findByStatus(1);
         } else {
             users = userService.findAll();
         }
@@ -142,28 +136,6 @@ public class AdminController extends HttpServlet {
         List<Conference> conferences = conferenceService.findPendingConferences();
         response.setContentType("application/json;charset=UTF-8");
         String json = mapper.writeValueAsString(conferences);
-        response.getWriter().write(json);
-    }
-
-    private void getAllAttendees(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        List<Attendee> attendees = conferenceService.findAllAttendees();
-        response.setContentType("application/json;charset=UTF-8");
-        String json = mapper.writeValueAsString(attendees);
-        response.getWriter().write(json);
-    }
-
-    private void getAllPayments(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        String statusParam = request.getParameter("status");
-        
-        List<Payment> payments;
-        if (statusParam != null && statusParam.equals("paid")) {
-            payments = conferenceService.findPaymentsByStatus("paid");
-        } else {
-            payments = conferenceService.findAllPayments();
-        }
-        
-        response.setContentType("application/json;charset=UTF-8");
-        String json = mapper.writeValueAsString(payments);
         response.getWriter().write(json);
     }
 

@@ -26,6 +26,15 @@ public class UserService {
     }
     //更新用户状态（管理员禁用/启用用户）
     public boolean updateStatus(int id, int status) {
+        // 管理员用户不允许被封禁
+        if (status == 0) {
+            List<User> admins = userDao.findByRole(1);
+            for (User admin : admins) {
+                if (admin.getId() == id) {
+                    return false;
+                }
+            }
+        }
         return userDao.updateStatus(id, status);
     }
     //查询所有用户（管理员用）

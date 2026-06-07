@@ -49,7 +49,7 @@ public class StatisticsService {
      * 获取会议总数
      */
     public int getTotalConferences() {
-        String sql = "SELECT COUNT(*) FROM conferences";
+        String sql = "SELECT COUNT(*) FROM conferences WHERE status != 'invalid'";
         return executeCountQuery(sql);
     }
 

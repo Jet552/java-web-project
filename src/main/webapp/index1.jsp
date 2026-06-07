@@ -43,19 +43,13 @@
                 </div>
                 <ul class="nav flex-column">
                     <li class="nav-item">
-                        <a class="nav-link p-3 active" href="#" data-page="overview"><i class="bi bi-speedometer"></i> 系统概览</a>
+                        <a class="nav-link p-3 active" href="#" data-page="stats"><i class="bi bi-bar-chart"></i> 系统统计</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link p-3" href="#" data-page="conferences"><i class="bi bi-calendar"></i> 会议审核</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link p-3" href="#" data-page="allconferences"><i class="bi bi-list-alt"></i> 所有会议</a>
+                        <a class="nav-link p-3" href="#" data-page="conferences"><i class="bi bi-calendar"></i> 会议管理</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link p-3" href="#" data-page="users"><i class="bi bi-users"></i> 用户管理</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link p-3" href="#" data-page="stats"><i class="bi bi-bar-chart"></i> 系统统计</a>
                     </li>
                     <li class="nav-item mt-auto">
                         <a class="nav-link p-3 text-danger" href="${pageContext.request.contextPath}/user/logout"><i class="bi bi-box-arrow-right"></i> 退出登录</a>
@@ -72,7 +66,7 @@
                                 <i class="bi bi-user-circle me-2"></i><%= username %>
                             </button>
                             <ul class="dropdown-menu dropdown-menu-end">
-                                <li><a class="dropdown-item" href="#" onclick="showDeveloping('个人中心')"><i class="bi bi-user-circle me-2"></i>个人中心</a></li>
+                                <li><a class="dropdown-item" href="${pageContext.request.contextPath}/profile.jsp"><i class="bi bi-user-circle me-2"></i>个人中心</a></li>
                                 <li><hr class="dropdown-divider"></li>
                                 <li><a class="dropdown-item text-danger" href="${pageContext.request.contextPath}/user/logout"><i class="bi bi-box-arrow-right me-2"></i>退出登录</a></li>
                             </ul>
@@ -94,7 +88,7 @@
         var contextPath = '<%= request.getContextPath() %>';
         
         $(document).ready(function() {
-            loadPage('overview');
+            loadPage('stats');
             
             $('.nav-link').click(function(e) {
                 e.preventDefault();
@@ -107,9 +101,7 @@
         
         function loadPage(page) {
             var urls = {
-                'overview': 'fragments/overview.jsp',
                 'conferences': 'fragments/conferences.jsp',
-                'allconferences': 'fragments/conferences.jsp?status=all',
                 'users': 'fragments/users.jsp',
                 'stats': 'fragments/stats.jsp'
             };

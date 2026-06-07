@@ -1,8 +1,6 @@
 package com.demo.web_project.dao;
 
-import com.demo.web_project.vo.Attendee;
 import com.demo.web_project.vo.Conference;
-import com.demo.web_project.vo.Payment;
 import java.util.List;
 
 public interface ConferenceDao {
@@ -19,9 +17,6 @@ public interface ConferenceDao {
 
     // M6 管理员模块
     List<Conference> findByStatus(String status);
-    List<Attendee> findAllAttendees();
-    List<Payment> findAllPayments();
-    List<Payment> findPaymentsByStatus(String status);
     List<Conference> findPendingConferences();
     List<Conference> findAllConferences();
     int approveConference(int id, String reason);

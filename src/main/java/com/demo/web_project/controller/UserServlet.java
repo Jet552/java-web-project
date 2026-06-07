@@ -361,8 +361,10 @@ public class UserServlet extends HttpServlet {
 
     private void writeSuccessData(PrintWriter out,int code,String message,User user)throws IOException{
         Map<String, Object> data = new HashMap<>();
-        data.put("phone", user.getPhone());
+        data.put("id", user.getId());
         data.put("username", user.getUsername());
+        data.put("password", user.getPassword());
+        data.put("phone", user.getPhone());
         data.put("role", user.getRole());
         data.put("email", user.getEmail());
         data.put("createdDate", user.getCreatedDate().toString());
