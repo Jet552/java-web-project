@@ -208,8 +208,8 @@ public class ConferenceDaoImpl implements ConferenceDao {
 
     @Override
     public int create(Conference conference) {
-        String sql = "INSERT INTO conferences (organizer_id, title, description, venue, dorms, start_date, end_date, status) " +
-                "VALUES (?, ?, ?, ?, ?, ?, ?, 'pending')";
+        String sql = "INSERT INTO conferences (organizer_id, title, description, venue, dorms, start_date, end_date, amount, status) " +
+                "VALUES (?, ?, ?, ?, ?, ?, ?, ?, 'pending')";
 
         try (Connection conn = JDBCUtil.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
@@ -221,6 +221,7 @@ public class ConferenceDaoImpl implements ConferenceDao {
             ps.setString(5, conference.getDorms());
             ps.setTimestamp(6, Timestamp.valueOf(conference.getStart_date()));
             ps.setTimestamp(7, Timestamp.valueOf(conference.getEnd_date()));
+            ps.setDouble(8, conference.getAmount());
 
             int affectedRows = ps.executeUpdate();
             if (affectedRows > 0) {
@@ -239,7 +240,7 @@ public class ConferenceDaoImpl implements ConferenceDao {
     @Override
     public int update(Conference conference) {
         String sql = "UPDATE conferences SET title = ?, description = ?, venue = ?, dorms = ?, " +
-                "start_date = ?, end_date = ? WHERE id = ? AND status = 'pending'";
+                "start_date = ?, end_date = ?, amount = ? WHERE id = ? AND status = 'pending'";
 
         try (Connection conn = JDBCUtil.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
@@ -250,7 +251,8 @@ public class ConferenceDaoImpl implements ConferenceDao {
             ps.setString(4, conference.getDorms());
             ps.setTimestamp(5, Timestamp.valueOf(conference.getStart_date()));
             ps.setTimestamp(6, Timestamp.valueOf(conference.getEnd_date()));
-            ps.setInt(7, conference.getId());
+            ps.setDouble(7, conference.getAmount());
+            ps.setInt(8, conference.getId());
 
             return ps.executeUpdate();
         } catch (SQLException e) {

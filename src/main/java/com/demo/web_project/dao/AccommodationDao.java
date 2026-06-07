@@ -39,4 +39,11 @@ public interface AccommodationDao {
      * 退房：仅将 status 改为 0
      */
     boolean checkoutRoom(int accommodationId);
+
+    /**
+     * 根据参会记录ID获取对应会议的结束日期
+     * @param attendeeId 参会记录ID（attendees.id）
+     * @return 会议的 end_date，查询失败返回 null
+     */
+    java.time.LocalDateTime getConferenceEndDate(int attendeeId);
 }

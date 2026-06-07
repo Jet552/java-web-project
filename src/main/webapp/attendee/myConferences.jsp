@@ -85,6 +85,11 @@
                             <label class="form-label required">结束时间</label>
                             <input type="datetime-local" class="form-control" id="end_date" required>
                         </div>
+                        <div class="col-md-6">
+                            <label class="form-label">缴费金额 (元)</label>
+                            <input type="number" class="form-control" id="amount"
+                                   placeholder="每人缴费金额，0表示免费" min="0" step="0.01" value="0">
+                        </div>
                     </div>
                 </form>
             </div>
@@ -251,6 +256,7 @@
                 document.getElementById('dorms').value = conference.dorms;
                 document.getElementById('start_date').value = formatDateTimeLocal(conference.start_date);
                 document.getElementById('end_date').value = formatDateTimeLocal(conference.end_date);
+                document.getElementById('amount').value = conference.amount || 0;
 
                 new bootstrap.Modal(document.getElementById('conferenceModal')).show();
             });
@@ -265,6 +271,7 @@
         const dorms = document.getElementById('dorms').value.trim();
         const startDate = document.getElementById('start_date').value;
         const endDate = document.getElementById('end_date').value;
+        const amount = parseFloat(document.getElementById('amount').value) || 0;
 
         // 简单校验
         if (!title || !venue || !dorms || !startDate || !endDate) {
@@ -293,6 +300,7 @@
         formData.append('dorms', dorms);
         formData.append('start_date', startDate);
         formData.append('end_date', endDate);
+        formData.append('amount', amount);
 
         const url = conferenceId
             ? contextPath + '/conference/update'
