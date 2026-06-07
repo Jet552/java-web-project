@@ -1,0 +1,430 @@
+/* ==================== 我的参会记录页面样式 ==================== */
+
+/* 筛选栏 */
+.filter-bar {
+    background: #fff;
+    border-radius: 16px;
+    padding: 24px;
+    margin-bottom: 24px;
+    border: 1px solid #e2e8f0;
+    box-shadow: 0 1px 2px 0 rgba(0,0,0,0.05);
+}
+
+.filter-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1.5fr auto;
+    gap: 16px;
+    align-items: end;
+}
+
+.filter-item {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+}
+
+.filter-item label {
+    display: block;
+    font-size: 12px;
+    font-weight: 600;
+    color: #64748b;
+    margin-bottom: 8px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.filter-select-wrap {
+    position: relative;
+}
+
+.filter-select-wrap select {
+    width: 100%;
+    padding: 10px 36px 10px 14px;
+    border: 1.5px solid #e2e8f0;
+    border-radius: 10px;
+    font-size: 14px;
+    color: #1e293b;
+    background: #fff;
+    appearance: none;
+    cursor: pointer;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.filter-select-wrap select:focus {
+    outline: none;
+    border-color: #5b9bd5;
+    box-shadow: 0 0 0 3px rgba(24,144,255,0.1);
+}
+
+.filter-select-arrow {
+    position: absolute;
+    right: 14px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #94a3b8;
+    font-size: 11px;
+    pointer-events: none;
+}
+
+.filter-input-wrap {
+    position: relative;
+}
+
+.filter-input-wrap input {
+    width: 100%;
+    padding: 10px 14px 10px 38px;
+    border: 1.5px solid #e2e8f0;
+    border-radius: 10px;
+    font-size: 14px;
+    color: #1e293b;
+    background: #fff;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.filter-input-wrap input:focus {
+    outline: none;
+    border-color: #5b9bd5;
+    box-shadow: 0 0 0 3px rgba(24,144,255,0.1);
+}
+
+.filter-input-icon {
+    position: absolute;
+    left: 14px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #94a3b8;
+    font-size: 13px;
+}
+
+.filter-date-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.filter-date-row input {
+    flex: 1;
+    padding: 10px 14px;
+    border: 1.5px solid #e2e8f0;
+    border-radius: 10px;
+    font-size: 14px;
+    color: #1e293b;
+    background: #fff;
+    transition: border-color 0.2s;
+}
+
+.filter-date-row input:focus {
+    outline: none;
+    border-color: #5b9bd5;
+    box-shadow: 0 0 0 3px rgba(24,144,255,0.1);
+}
+
+.filter-date-sep {
+    font-size: 13px;
+    color: #94a3b8;
+    font-weight: 500;
+}
+
+.btn-filter-apply {
+    background: linear-gradient(135deg, #1890ff 0%, #1476d6 100%);
+    color: #fff;
+    border: none;
+    padding: 10px 22px;
+    border-radius: 10px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    white-space: nowrap;
+}
+
+.btn-filter-apply:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(24,144,255,0.35);
+}
+
+.btn-filter-reset {
+    border: 1.5px solid #e2e8f0;
+    border-radius: 10px;
+    padding: 10px 18px;
+    background: #fff;
+    color: #64748b;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.2s;
+    white-space: nowrap;
+}
+
+.btn-filter-reset:hover {
+    background: #f1f5f9;
+    color: #1e293b;
+}
+
+.filter-actions {
+    display: flex;
+    gap: 8px;
+}
+
+@media (max-width: 992px) {
+    .filter-row {
+        grid-template-columns: 1fr 1fr;
+    }
+}
+
+@media (max-width: 768px) {
+    .filter-row {
+        grid-template-columns: 1fr;
+    }
+}
+
+.my-attendances-wrapper {
+    max-width: 1600px;
+    margin: 0 auto;
+    padding: 24px 20px 30px 20px;
+}
+
+/* 通用卡片 */
+.content-card {
+    background: #fff;
+    border-radius: 15px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+    overflow: hidden;
+}
+
+.content-card .card-header {
+    background: transparent;
+    border-bottom: 1px solid #f0f0f0;
+    padding: 20px 25px;
+}
+
+.content-card .card-header h5 {
+    font-weight: 600;
+    color: #2c3e50;
+}
+
+.content-card .card-body {
+    padding: 0;
+}
+
+/* 会议表格 */
+.table-attendance {
+    table-layout: fixed;
+    min-width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+}
+
+.table-attendance thead th {
+    background: #f7f8fa;
+    border-bottom: 2px solid #e8ecef;
+    color: #4a5568;
+    font-weight: 600;
+    font-size: 0.85rem;
+    letter-spacing: 0.3px;
+    padding: 14px 16px;
+    white-space: nowrap;
+    position: sticky;
+    top: 0;
+    z-index: 1;
+}
+
+.table-attendance thead th:first-child {
+    padding-left: 20px;
+}
+
+.table-attendance thead th:last-child {
+    padding-right: 20px;
+}
+
+.table-attendance tbody td {
+    padding: 14px 16px;
+    vertical-align: middle;
+    border-bottom: 1px solid #f0f2f5;
+    color: #4a5568;
+    font-size: 0.9rem;
+    transition: background-color 0.15s ease;
+    white-space: nowrap;
+}
+
+.table-attendance tbody td:first-child {
+    padding-left: 20px;
+}
+
+.table-attendance tbody td:last-child {
+    padding-right: 20px;
+}
+
+.table-attendance tbody tr {
+    transition: background-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+/* 特邀身份金色标记 */
+.table-attendance tbody tr.row-invite {
+    color: #c5960c;
+    font-weight: 500;
+}
+.table-attendance tbody tr.row-invite td {
+    color: #c5960c;
+}
+.table-attendance tbody tr.row-invite:hover {
+    background-color: #fef9e7;
+    box-shadow: inset 3px 0 0 #c5960c;
+}
+.table-attendance tbody tr.row-invite .meeting-name {
+    color: #9a7608;
+    font-weight: 600;
+}
+
+.table-attendance tbody tr:hover {
+    background-color: #e8f4ff;
+    box-shadow: inset 3px 0 0 #1890ff;
+}
+
+/* 状态徽章 */
+.status-badge {
+    display: inline-block;
+    padding: 5px 14px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 500;
+    letter-spacing: 0.3px;
+    line-height: 1.4;
+    white-space: nowrap;
+}
+
+.status-ongoing {
+    background: #f6ffed;
+    color: #52c41a;
+    border: 1px solid #b7eb8f;
+}
+
+.status-pending {
+    background: #e6f7ff;
+    color: #1890ff;
+    border: 1px solid #91d5ff;
+}
+
+.status-ended {
+    background: #fafafa;
+    color: #8c8c8c;
+    border: 1px solid #d9d9d9;
+}
+
+/* 操作按钮 */
+.btn-my-action {
+    background: linear-gradient(135deg, #1890ff 0%, #40a9ff 100%);
+    border: none;
+    color: #fff;
+    font-weight: 500;
+    font-size: 0.82rem;
+    padding: 6px 16px;
+    border-radius: 6px;
+    letter-spacing: 0.3px;
+    transition: all 0.25s ease;
+    white-space: nowrap;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+}
+
+.btn-my-action:hover {
+    background: linear-gradient(135deg, #1476d6 0%, #3096e6 100%);
+    color: #fff;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(24, 144, 255, 0.35);
+}
+
+.btn-my-action:active {
+    transform: translateY(0);
+    box-shadow: none;
+}
+
+/* 分页 */
+.pagination-wrapper {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 24px;
+}
+
+.pagination {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    gap: 6px;
+}
+
+.pagination .page-item {
+    display: inline-flex;
+}
+
+.pagination .page-link {
+    display: flex;
+    align-items: center;
+    color: #4a5568;
+    border: 1px solid #e0e4e8;
+    padding: 8px 16px;
+    font-size: 0.88rem;
+    border-radius: 6px;
+    transition: all 0.2s ease;
+    background: #fff;
+    text-decoration: none;
+    white-space: nowrap;
+}
+
+.pagination .page-link:hover {
+    color: #1890ff;
+    background-color: #e8f4ff;
+    border-color: #91d5ff;
+}
+
+.pagination .page-item.active .page-link {
+    background: #e8f4ff;
+    border-color: #91d5ff;
+    color: #1890ff;
+    font-weight: 500;
+    cursor: default;
+}
+
+.pagination .page-item.disabled .page-link {
+    color: #c0c4cc;
+    background: #fafafa;
+    border-color: #e8ecef;
+    pointer-events: none;
+}
+
+/* 加载动画 */
+.loading-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+}
+
+/* 响应式 */
+@media (max-width: 992px) {
+    .my-attendances-wrapper {
+        padding: 16px 12px 20px 12px;
+    }
+
+    .table-attendance thead th,
+    .table-attendance tbody td {
+        padding: 10px 12px;
+        font-size: 0.82rem;
+    }
+
+    .pagination-wrapper {
+        justify-content: center;
+    }
+}

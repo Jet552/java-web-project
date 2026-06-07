@@ -1,0 +1,186 @@
+/* 参会登记页面样式 */
+
+.join-meeting-wrapper {
+    max-width: 2000px;
+    margin: 0 auto;
+    padding: 24px 20px 30px 20px;
+}
+
+/* 通用卡片 */
+.content-card {
+    background: #fff;
+    border-radius: 15px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+    overflow: hidden;
+}
+
+.content-card .card-header {
+    background: transparent;
+    border-bottom: 1px solid #f0f0f0;
+    padding: 20px 25px;
+}
+
+.content-card .card-header h5 {
+    font-weight: 600;
+    color: #2c3e50;
+}
+
+.content-card .card-body {
+    padding: 20px 25px;
+}
+
+/* 会议信息卡片 */
+.info-label {
+    display: block;
+    font-size: 0.8rem;
+    color: #8c98a4;
+    margin-bottom: 4px;
+    font-weight: 500;
+}
+
+.info-value {
+    color: #2c3e50;
+    font-weight: 500;
+    font-size: 0.95rem;
+    margin-bottom: 0;
+    padding-bottom: 6px;
+    border-bottom: 1px dashed #e8ecef;
+}
+
+/* 表单样式 */
+.form-label {
+    font-size: 0.88rem;
+    color: #4a5568;
+    font-weight: 500;
+    margin-bottom: 6px;
+}
+
+.form-label.required::after {
+    content: ' *';
+    color: #e53e3e;
+}
+
+.form-input {
+    border: 1px solid #e0e4e8;
+    border-radius: 8px;
+    padding: 10px 14px;
+    font-size: 0.93rem;
+    color: #2c3e50;
+    transition: all 0.2s ease;
+}
+
+.form-input:focus {
+    border-color: #1890ff;
+    box-shadow: 0 0 0 3px rgba(24, 144, 255, 0.1);
+}
+
+.form-input.is-invalid {
+    border-color: #e53e3e;
+}
+
+.form-input.is-invalid:focus {
+    box-shadow: 0 0 0 3px rgba(229, 62, 62, 0.1);
+}
+
+/* 操作按钮区域 */
+.action-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    margin-top: 30px;
+}
+
+.btn-join-action {
+    background: linear-gradient(135deg, #1890ff 0%, #40a9ff 100%);
+    border: none;
+    color: #fff;
+    font-weight: 500;
+    font-size: 1rem;
+    padding: 12px 40px;
+    border-radius: 8px;
+    letter-spacing: 0.5px;
+    transition: all 0.25s ease;
+    white-space: nowrap;
+}
+
+.btn-join-action:hover:not(:disabled) {
+    background: linear-gradient(135deg, #1476d6 0%, #3096e6 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(24, 144, 255, 0.35);
+    color: #fff;
+}
+
+.btn-join-action:active:not(:disabled) {
+    transform: translateY(0);
+    box-shadow: none;
+}
+
+.btn-join-action:disabled {
+    background: #d9d9d9;
+    cursor: not-allowed;
+    color: #8c8c8c;
+}
+
+.btn-pay-action {
+    background: linear-gradient(135deg, #52c41a 0%, #73d13d 100%);
+    border: none;
+    color: #fff;
+    font-weight: 500;
+    font-size: 1rem;
+    padding: 12px 40px;
+    border-radius: 8px;
+    letter-spacing: 0.5px;
+    transition: all 0.25s ease;
+    white-space: nowrap;
+}
+
+.btn-pay-action:hover:not(:disabled) {
+    background: linear-gradient(135deg, #389e0d 0%, #52c41a 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(82, 196, 26, 0.35);
+    color: #fff;
+}
+
+.btn-pay-action:active:not(:disabled) {
+    transform: translateY(0);
+    box-shadow: none;
+}
+
+.btn-pay-action:disabled {
+    background: #d9d9d9;
+    cursor: not-allowed;
+    color: #8c8c8c;
+}
+
+/* 加载动画 */
+.loading-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+}
+
+/* 响应式 */
+@media (max-width: 768px) {
+    .join-meeting-wrapper {
+        padding: 16px 12px 20px 12px;
+    }
+
+    .action-buttons {
+        flex-direction: column;
+        align-items: center;
+        gap: 12px;
+    }
+
+    .btn-join-action,
+    .btn-pay-action {
+        width: 100%;
+        text-align: center;
+    }
+}

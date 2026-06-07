@@ -1,0 +1,493 @@
+/**
+ * 参会登记页面 - 交互逻辑
+ */
+var attendanceStatus = null; // null=未参加, 1=已参加, 0=已取消
+var confStartDate = null;   // 会议开始时间
+var confEndDate = null;     // 会议结束时间
+
+(function () {
+    'use strict';
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initJoinPage);
+    } else {
+        initJoinPage();
+    }
+})();
+
+function initJoinPage() {
+    console.log('=== initJoinPage ===');
+    console.log('conferenceId:', conferenceId);
+    console.log('joinSource:', joinSource);
+    loadConferenceInfo();
+    checkAttendanceStatus();
+    restoreFormData();
+}
+
+/**
+ * 加载会议信息
+ */
+function loadConferenceInfo() {
+    if (!conferenceId) {
+        Swal.fire({ icon: 'error', title: '参数错误', text: '缺少会议ID', confirmButtonColor: '#1890ff' });
+        return;
+    }
+    showLoading(true);
+
+    // 有邀请码→用邀请码搜索；无邀请码（直接加入）→用空关键词查全部再匹配
+    var keyword = (inviteCodes && inviteCodes !== 'null' && inviteCodes.length > 0)
+        ? inviteCodes : '';
+
+    fetch(contextPath + '/conference/search', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: 'keyword=' + encodeURIComponent(keyword)
+    })
+        .then(function (r) { return r.json(); })
+        .then(function (data) {
+            showLoading(false);
+            var conf = null;
+            // 邀请码搜索返回单个对象，关键词搜索返回数组
+            if (data.code === 200 && data.data) {
+                conf = data.data;
+            } else if ((data.code === 200 || data.code === 400) && Array.isArray(data.data)) {
+                // 从数组中找匹配的会议
+                for (var i = 0; i < data.data.length; i++) {
+                    if (data.data[i].id == conferenceId) {
+                        conf = data.data[i];
+                        break;
+                    }
+                }
+            }
+            if (conf) {
+                confStartDate = conf.start_date || null;
+                confEndDate = conf.end_date || null;
+                document.getElementById('confTitle').textContent = conf.title || '--';
+                document.getElementById('confStartDate').textContent = (conf.start_date || '').replace('T', ' ');
+                document.getElementById('confEndDate').textContent = (conf.end_date || '').replace('T', ' ');
+                document.getElementById('confVenue').textContent = conf.venue || '--';
+                document.getElementById('confDorms').textContent = conf.dorms ;
+                document.getElementById('confAmount').textContent = joinSource=='invite'?0:conf.amount;
+                document.getElementById('confDescription').textContent = conf.description || '--';
+            } else {
+                Swal.fire({ icon: 'error', title: '会议不存在', text: '该会议可能已被取消', confirmButtonColor: '#1890ff' });
+            }
+        })
+        .catch(function () {
+            showLoading(false);
+        });
+}
+
+/**
+ * 检查是否已经参加过
+ */
+function checkAttendanceStatus() {
+    if (!conferenceId) return;
+    var bodyData = 'conferenceId=' + conferenceId
+    fetch(contextPath + '/attendee/checkStatus', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: bodyData
+    })
+        .then(function (r) { return r.json(); })
+        .then(function (data) {
+            if (data.code === 300) {// 已报名
+                attendanceStatus = 1;
+                showRegisteredInfo(data.data);
+            }
+            else if (data.code === 200) {// 未报名
+                attendanceStatus = 0;
+                showNewRegistration();
+            }
+        })
+        .catch(function () {});
+}
+
+// 已报名模式：显示只读信息卡片，隐藏表单
+function showRegisteredInfo(detail) {
+    // 隐藏表单区
+    document.getElementById('joinForm').parentElement.parentElement.style.display = 'none';
+    // 显示已报名信息卡片
+    var card = document.getElementById('registeredInfoCard');
+    card.style.display = '';
+    // 填充数据
+    document.getElementById('regArrival').textContent = (detail.arrival_time || '').replace('T', ' ') || '--';
+    document.getElementById('regDeparture').textContent = (detail.departure_time || '').replace('T', ' ') || '--';
+    document.getElementById('regAccommodation').textContent = detail.accommodation_type || '--';
+    document.getElementById('regRequirements').textContent = detail.requirements || '--';
+    // 身份标签：特邀 vs 普通
+    if (detail.join_source === 'invite') {
+        var badge = document.getElementById('regBadge');
+        badge.textContent = '已报名（特邀）';
+        badge.className = 'badge bg-warning text-dark ms-2';
+    }
+    // 签到状态
+    var checkinHtml = detail.checkedIn
+        ? '<span class="text-success">✅ 已签到</span><br><small class="text-muted">' + (detail.checkinTime || '').replace('T', ' ') + '</small>'
+        : '<span class="text-secondary">❌ 未签到</span>';
+    document.getElementById('regCheckin').innerHTML = checkinHtml;
+    // 入住状态
+    document.getElementById('regRoom').innerHTML = detail.roomNumber
+        ? '<span class="text-info">🏨 ' + detail.roomNumber + '</span>'
+        : '<span class="text-muted">未分配</span>';
+    // 缴费状态（后续联调 M4 接口后完善，目前暂显示提示）
+    document.getElementById('regPayment').innerHTML = '<span class="text-muted">请到缴费页面查看</span>';
+    // 按钮切换
+    document.getElementById('btnJoin').style.display = 'none';
+    document.getElementById('btnPay').disabled = false;
+    document.getElementById('btnBack').style.display = '';
+}
+
+// 未报名模式：显示表单
+function showNewRegistration() {
+    document.getElementById('registeredInfoCard').style.display = 'none';
+    document.getElementById('btnJoin').style.display = '';
+    document.getElementById('btnPay').disabled = true;
+    document.getElementById('btnBack').style.display = 'none';
+}
+
+/**
+ * 提交参会申请
+ */
+function submitJoin() {
+    if (!validateForm()) return;
+    var arrivalTime = document.getElementById('arrivalTime').value;
+    var departureTime = document.getElementById('departureTime').value;
+    // 到达时间不能早于会议开始前7天
+    if (confStartDate) {
+        var earliestArrival = new Date(confStartDate.replace('T', ' '));
+        earliestArrival.setDate(earliestArrival.getDate() - 7);
+        if (new Date(arrivalTime) < earliestArrival) {
+            var minDate = earliestArrival.toISOString().split('T')[0];
+            Swal.fire({
+                icon: 'warning',
+                title: '到达时间太早',
+                text: '预计到达时间不能早于会议开始前7天（最早：' + minDate + '）',
+                confirmButtonColor: '#1890ff'
+            });
+            return;
+        }
+    }
+
+    // 离开时间不能晚于会议结束后3天
+    if (confEndDate) {
+        var latestDeparture = new Date(confEndDate.replace('T', ' '));
+        latestDeparture.setDate(latestDeparture.getDate() + 3);
+        if (new Date(departureTime) > latestDeparture) {
+            var maxDate = latestDeparture.toISOString().split('T')[0];
+            Swal.fire({
+                icon: 'warning',
+                title: '离开时间太晚',
+                text: '预计离开时间不能晚于会议结束后3天（最晚：' + maxDate + '）',
+                confirmButtonColor: '#1890ff'
+            });
+            return;
+        }
+    }
+
+    // 到达时间必须早于离开时间
+    if (arrivalTime >= departureTime) {
+        Swal.fire({
+            icon: 'warning',
+            title: '时间错误',
+            text: '预计到达时间必须早于预计离开时间',
+            confirmButtonColor: '#1890ff'
+        });
+        return;
+    }
+    Swal.fire({
+        title: '确认参加',
+        text: '请确认您的参会信息无误',
+        icon: 'question',
+        showCancelButton: true,
+        confirmButtonText: '确认参加',
+        cancelButtonText: '再检查一下',
+        confirmButtonColor: '#1890ff',
+        cancelButtonColor: '#8c8c8c'
+    }).then(function (result) {
+        if (result.isConfirmed) {
+            doSubmitJoin();
+        }
+    });
+}
+
+function doSubmitJoin() {
+    showLoading(true);
+    var bodyData = 'conferenceId=' + conferenceId
+        + '&source=' + encodeURIComponent(joinSource)
+        + '&arrivalTime=' + encodeURIComponent(document.getElementById('arrivalTime').value)
+        + '&departureTime=' + encodeURIComponent(document.getElementById('departureTime').value)
+        + '&accommodationType=' + encodeURIComponent(document.getElementById('accommodationType').value)
+        + '&requirements=' + encodeURIComponent(document.getElementById('requirements').value)
+        + '&join_source=' + joinSource;
+    fetch(contextPath + '/attendee/join', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: bodyData
+    })
+        .then(function (r) { return r.json(); })
+        .then(function (data) {
+            showLoading(false);
+            if (data.code === 200) {//创建成功
+                attendanceStatus = 1;
+                // 表单禁用，参加按钮禁用，缴费按钮启用
+                setFormDisabled(true);
+                document.getElementById('btnJoin').disabled = true;
+                document.getElementById('btnPay').disabled = false;
+                // 报名成功后创建缴费记录
+                createPaymentRecord(data.data.attendee_id);
+                Swal.fire({
+                    icon: 'success',
+                    title: '报名成功',
+                    text: '您已成功报名该会议，现在可以进行在线缴费',
+                    confirmButtonText: '去缴费',
+                    showCancelButton: true,
+                    cancelButtonText: '稍后再说',
+                    confirmButtonColor: '#52c41a',
+                    cancelButtonColor: '#8c8c8c'
+                }).then(function (result) {
+                    if (result.isConfirmed) {
+                        goToPayment();
+                    } else {
+                        navigateBackToHall();
+                    }
+                });
+            } else {
+                Swal.fire({
+                    icon: 'error',
+                    title: '报名失败',
+                    text: data.msg ,
+                    confirmButtonColor: '#1890ff'
+                });
+            }
+        })
+        .catch(function () {
+            showLoading(false);
+            Swal.fire({
+                icon: 'error',
+                title: '网络错误',
+                text: '请求失败，请稍后重试',
+                confirmButtonColor: '#1890ff'
+            });
+        });
+}
+
+/**
+ * 创建缴费记录
+ */
+function createPaymentRecord(attendee_id) {
+    var paymentBodyData = 'attendee_id=' + attendee_id
+                + '&amount=' + encodeURIComponent(document.getElementById('confAmount').textContent );
+    fetch(contextPath + '/payment/create', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: paymentBodyData
+    }).then(function(r) { return r.json(); })
+    .then(function(data) {
+        if (data.code !== 200) {
+            console.error('创建缴费记录失败:', data.msg);
+        }
+    })
+    .catch(function () {
+        console.error('创建缴费记录请求失败');
+    });
+}
+
+/**
+ * 跳转缴费页面
+ */
+function goToPayment() {
+    if (!attendanceStatus) {
+        Swal.fire({ icon: 'warning', title: '请先报名', text: '请先完成参会登记后再进行缴费', confirmButtonColor: '#1890ff' });
+        return;
+    }
+    fetch(contextPath + '/payment/history', {
+        method: 'Get',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+    }) .then(function(response) {
+        return response.json();
+    })
+        .then(function(data) {
+            if(data.code==200) {
+                var allData = data.data; //缴费记录列表
+                var paymentList = allData.filter(function(item) {
+                    return Number(item.conference_id) === Number(conferenceId) && item.status === "unpaid" && Number(item.attendee_status) === 1;
+                });
+                var payment = paymentList.length > 0 ? paymentList[0] : null;
+                var amount = payment ? payment.amount : 0;
+                var paymentId = payment ? payment.id : null;
+                var attendeeId = payment ? payment.attendee_id : null;
+
+                if (!payment) {
+                    Swal.fire({ icon: 'error', title: '错误', text: '未找到待缴费记录', confirmButtonColor: '#f56565' });
+                    return;
+                }
+                Swal.fire({
+                    title: joinSource === 'search' ? '确认缴费' : '确认报名',
+                    html: joinSource === 'search' ? (
+                        '<div class="text-center">' +
+                        '<i class="fas fa-credit-card" style="font-size: 48px; color: #667eea;"></i>' +
+                        '<p class="mt-3">确认支付 ¥' + parseFloat(amount).toFixed(2) + '</p>' +
+                        '</div>'
+                    ) : (
+                        '<div class="text-center">' +
+                        '<i class="fas fa-check-circle" style="font-size: 48px; color: #667eea;"></i>' +
+                        '<p class="mt-3">由于为特邀身份，本次报名免费，是否确认报名？</p>' +
+                        '</div>'
+                    ),
+                    showCancelButton: true,
+                    confirmButtonText: joinSource === 'search' ?'确认支付':'确认报名',
+                    cancelButtonText: '取消',
+                    confirmButtonColor: '#667eea'
+                }).then(function(result) {
+                    if (result.isConfirmed) {
+                        if (!paymentId && paymentId !== 0) {
+                            Swal.fire({ icon: 'error', title: '错误', text: '缴费记录ID无效', confirmButtonColor: '#f56565' });
+                            return;
+                        }
+                        var url = contextPath + '/payment/pay';
+                        fetch(url, {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/x-www-form-urlencoded'
+                            },
+                            body: 'amount=' + encodeURIComponent(payment.amount) + '&attendee_id=' + encodeURIComponent(attendeeId)
+                        })
+                            .then(function(response) {
+                                return response.json();
+                            })
+                            .then(function(data) {
+                                if(data.code==200) {
+                                    Swal.fire({
+                                        icon: 'success',
+                                        title: joinSource == 'search' ?'缴费成功':'报名成功',
+                                        text: joinSource == 'search' ?'您已成功缴纳会议费用！':'感谢您的参与！',
+                                        confirmButtonColor: '#667eea'
+                                    }).then(function() {
+                                        navigateBackToHall();
+                                    });
+                                }
+                            })
+                            .catch(function(error) {
+                                Swal.fire({
+                                    icon: 'failure',
+                                    title: '缴费失败',
+                                    text: '网络出错',
+                                    confirmButtonColor: '#667eea'
+                                });
+                            });
+
+                    }
+                });
+            }
+        })
+        .catch(function(error) {
+            Swal.fire({
+                icon: 'failure',
+                title: '失败',
+                text: '网络出错',
+                confirmButtonColor: '#667eea'
+            });
+        });
+
+    // window.location.href = contextPath + '/attendee/payment.jsp?id=' + attendanceId;
+}
+/**
+ * 表单校验
+ */
+function validateForm() {
+    var arrival = document.getElementById('arrivalTime');
+    var departure = document.getElementById('departureTime');
+    var valid = true;
+
+    [arrival, departure].forEach(function (el) {
+        if (!el.value) {
+            el.classList.add('is-invalid');
+            valid = false;
+        } else {
+            el.classList.remove('is-invalid');
+        }
+    });
+    if (!valid) {
+        Swal.fire({
+            icon: 'warning',
+            title: '请完善信息',
+            text: '预计到达时间和预计离开时间为必填项',
+            confirmButtonColor: '#1890ff'
+        });
+    }
+    return valid;
+}
+
+/**
+ * 禁用/启用表单
+ */
+function setFormDisabled(disabled) {
+    var inputs = document.querySelectorAll('#joinForm .form-input');
+    inputs.forEach(function (el) {
+        el.disabled = disabled;
+    });
+}
+
+/**
+ * 加载动画
+ */
+function showLoading(show) {
+    var overlay = document.getElementById('loadingOverlay');
+    if (!overlay) {
+        var d = document.createElement('div');
+        d.id = 'loadingOverlay';
+        d.className = 'loading-overlay';
+        d.innerHTML = '<div class="spinner-border text-primary" style="width:3rem;height:3rem"></div>';
+        document.body.appendChild(d);
+        overlay = d;
+    }
+    overlay.style.display = show ? 'flex' : 'none';
+}
+/**
+ * 保存表单数据到 localStorage
+ */
+function saveFormData() {
+    var data = {
+        arrivalTime: document.getElementById('arrivalTime').value,
+        departureTime: document.getElementById('departureTime').value,
+        accommodationType: document.getElementById('accommodationType').value,
+        requirements: document.getElementById('requirements').value
+    };
+    localStorage.setItem('joinFormData_' + conferenceId, JSON.stringify(data));
+}
+
+/**
+ * 从 localStorage 恢复表单数据
+ */
+function restoreFormData() {
+    var saved = localStorage.getItem('joinFormData_' + conferenceId);
+    if (!saved) return;
+    try {
+        var data = JSON.parse(saved);
+        if (data.arrivalTime) document.getElementById('arrivalTime').value = data.arrivalTime;
+        if (data.departureTime) document.getElementById('departureTime').value = data.departureTime;
+        if (data.accommodationType) document.getElementById('accommodationType').value = data.accommodationType;
+        if (data.requirements) document.getElementById('requirements').value = data.requirements;
+    } catch (e) {}
+}
+
+/**
+ * 清除表单缓存
+ */
+function clearFormData() {
+    localStorage.removeItem('joinFormData_' + conferenceId);
+}
+
+/**
+ * 返回会议大厅（支持 index2 框架内加载和独立加载两种场景）
+ */
+function navigateBackToHall() {
+    // 清除表单缓存
+    // clearFormData();
+    // 如果在 index2.jsp 框架内，调用 loadPage；否则跳转回 index2.jsp 并自动加载会议大厅
+    if (typeof loadPage === 'function') {
+        loadPage('conferenceHall');
+    } else {
+        window.location.href = contextPath + '/index2.jsp?page=meetingSearch';
+    }
+}
