@@ -1,4 +1,39 @@
-
+(function() {
+    var originalFetch = window.fetch;
+    window.fetch = function(url, options) {
+        return originalFetch.apply(this, arguments).then(function(response) {
+            var cloned = response.clone();
+            return cloned.json().then(function(data) {
+                if (data.code === 401) {
+                    Swal.fire({
+                        icon: 'warning',
+                        title: '登录已过期',
+                        text: data.msg || '请重新登录',
+                        confirmButtonColor: '#1890ff'
+                    }).then(function() {
+                        window.location.href = contextPath + '/login.jsp';
+                    });
+                    throw new Error('UNAUTHORIZED');
+                }
+                if (data.code === 403) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: '账号已被禁用',
+                        text: data.msg || '您的账号已被管理员禁用',
+                        confirmButtonColor: '#f56565'
+                    }).then(function() {
+                        window.location.href = contextPath + '/login.jsp';
+                    });
+                    throw new Error('ACCOUNT_DISABLED');
+                }
+                return response;
+            }).catch(function(e) {
+                if (e.message === 'UNAUTHORIZED' || e.message === 'ACCOUNT_DISABLED') throw e;
+                return response;
+            });
+        });
+    };
+})();
 function showProfile() {
     // 构建请求参数
     var url = contextPath + '/user/profile';
@@ -114,16 +149,13 @@ function toggleClickHandler(e) {
 function initSubMenuClick() {
     // 1. 处理直接点击的菜单（无子菜单，如首页）
     const directLinks = document.querySelectorAll('.nav-direct');
-
     directLinks.forEach(function(link) {
         // 移除旧事件，避免重复绑定
         link.removeEventListener('click', directClickHandler);
         link.addEventListener('click', directClickHandler);
     });
-
     // 2. 处理子菜单项（有下拉的）
     const subLinks = document.querySelectorAll('.nav-sub-link');
-
     subLinks.forEach(function(link) {
         link.removeEventListener('click', subMenuClickHandler);
         link.addEventListener('click', subMenuClickHandler);
@@ -166,7 +198,6 @@ function subMenuClickHandler(e) {
 
     // 获取页面标识
     const page = this.getAttribute('data-page');
-
     if (page) {
         loadPage(page);
     }
@@ -212,9 +243,7 @@ function updateSidebarActive(pageName) {
  */
 function loadPage(pageName) {
     showLoading(true);
-
     let url = getPageUrl(pageName);
-
     fetch(url, {
         method: 'GET',
         headers: {

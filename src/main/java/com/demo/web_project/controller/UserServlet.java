@@ -20,7 +20,6 @@ import java.util.Map;
 public class UserServlet extends HttpServlet {
     private ObjectMapper mapper = new ObjectMapper();  //创建一次，重复使用
     private UserService userService=new UserService();
-
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -84,6 +83,7 @@ public class UserServlet extends HttpServlet {
             data.put("id", user.getId());
             data.put("username", user.getUsername());
             data.put("role", user.getRole());
+            data.put("status",user.getStatus());
             Map<String, Object> result = new HashMap<>();
             result.put("code", 200);
             result.put("msg", "登录成功");

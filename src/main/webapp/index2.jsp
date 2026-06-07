@@ -14,9 +14,6 @@
     <link href="${pageContext.request.contextPath}/css/index2.css" rel="stylesheet"/>
     <link href="${pageContext.request.contextPath}/css/conferencePayment.css" rel="stylesheet"/>
 </head>
-
-
-
 <body>
 <%-- 检查是否登录，未登录则重定向 --%>
 <c:if test="${empty sessionScope.user}">
