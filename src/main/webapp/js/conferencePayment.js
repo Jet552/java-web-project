@@ -127,7 +127,29 @@ function renderPayments(payments) {
         html += '<td><span class="payment-status ' + statusClass + '">' + statusText + '</span></td>';
         html += '<td>';
 
-        if (p.status === 'unpaid') {
+        // 判断会议是否已过期（当前时间 > 会议结束时间）
+        var isExpired = 0;
+        if (conferenceEndDate && conferenceEndDate !== '--'&&p.status==='unpaid') {
+            var confDate = new Date(conferenceEndDate);
+            if (!isNaN(confDate.getTime()) && new Date() > confDate) {
+                isExpired = 1;
+            }
+        }
+
+        if (conferenceStartDate && conferenceStartDate !== '--'&&p.status==='unpaid') {
+            var confDate = new Date(conferenceStartDate);
+            if (!isNaN(confDate.getTime()) && new Date() > confDate) {
+                isExpired = 2;
+            }
+        }
+
+        if (isExpired == 1) {
+            html += '<span class="payment-status" style="background:#f1f5f9;color:#94a3b8;font-size:12px;">' +
+                '<i class="fas fa-clock me-1"></i>会议已过期</span>';
+        }else if (isExpired == 2) {
+            html += '<span class="payment-status" style="background:#f1f5f9;color:#94a3b8;font-size:12px;">' +
+                '<i class="fas fa-clock me-1"></i>会议进行中</span>';
+        } else if (p.status === 'unpaid') {
             html += '<button class="btn-action btn-pay" onclick="payNow(' + p.attendee_id + ')">' +
                 '<i class="fas fa-credit-card"></i>立即缴费</button>';
         } else {

@@ -115,7 +115,7 @@
                     <span>${fn:substring(username, 0, 1)}</span>
                 </div>
                 <span class="d-none d-md-inline">${username}</span>
-                <i class="fas fa-chevron-down small"></i>
+<%--                <i class="fas fa-chevron-down small"></i>--%>
             </div>
             <ul class="dropdown-menu dropdown-menu-end">
                 <li>
