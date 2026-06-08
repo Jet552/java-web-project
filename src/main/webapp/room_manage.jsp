@@ -223,6 +223,7 @@
                     .then(function(r) { return r.json(); })
                     .then(function(data) {
                         if (data.code === 200) { Swal.fire({ icon: 'success', title: '退房成功', timer: 1200, showConfirmButton: false }); window.loadData(); }
+                        else if (data.code === 401) { location.href = ctx + '/login.jsp'; }
                         else { Swal.fire({ icon: 'error', title: '操作失败', text: data.msg }); }
                     });
             }
