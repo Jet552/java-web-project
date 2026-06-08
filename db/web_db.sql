@@ -11,7 +11,7 @@
  Target Server Version : 80023 (8.0.23)
  File Encoding         : 65001
 
- Date: 08/06/2026 16:24:45
+ Date: 08/06/2026 21:59:39
 */
 
 SET NAMES utf8mb4;
@@ -32,11 +32,12 @@ CREATE TABLE `accommodations`  (
   INDEX `idx_attendee`(`attendee_id` ASC) USING BTREE,
   CONSTRAINT `accommodations_ibfk_1` FOREIGN KEY (`attendee_id`) REFERENCES `attendees` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT,
   CONSTRAINT `accommodations_chk_1` CHECK (`status` in (0,1))
-) ENGINE = InnoDB AUTO_INCREMENT = 8 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 9 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of accommodations
 -- ----------------------------
+INSERT INTO `accommodations` VALUES (8, 115, '102', '2026-06-08', '2026-06-16', 0);
 
 -- ----------------------------
 -- Table structure for attendees
@@ -59,7 +60,7 @@ CREATE TABLE `attendees`  (
   CONSTRAINT `attendees_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT,
   CONSTRAINT `attendees_ibfk_2` FOREIGN KEY (`conference_id`) REFERENCES `conferences` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT,
   CONSTRAINT `attendees_chk_1` CHECK (`status` in (0,1))
-) ENGINE = InnoDB AUTO_INCREMENT = 116 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 119 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of attendees
@@ -103,6 +104,9 @@ INSERT INTO `attendees` VALUES (112, 10, 84, '2026-06-08 08:00:00', '2026-06-15 
 INSERT INTO `attendees` VALUES (113, 10, 84, '2026-06-08 08:00:00', '2026-06-15 15:10:00', '单人间', '无', 'invite', 0);
 INSERT INTO `attendees` VALUES (114, 10, 1, '2026-06-11 20:01:00', '2026-06-13 20:02:00', '单人间', '无', 'search', 1);
 INSERT INTO `attendees` VALUES (115, 10, 84, '2026-06-08 08:00:00', '2026-06-15 15:10:00', '单人间', '无', 'invite', 1);
+INSERT INTO `attendees` VALUES (116, 89, 1, '2026-06-11 20:01:00', '2026-06-13 20:02:00', '单人间', '无', 'search', 1);
+INSERT INTO `attendees` VALUES (117, 89, 84, '2026-06-08 08:00:00', '2026-06-15 15:10:00', '单人间', '无', 'invite', 1);
+INSERT INTO `attendees` VALUES (118, 89, 5, '2026-10-22 21:15:00', '2026-10-25 21:15:00', '', '', 'search', 0);
 
 -- ----------------------------
 -- Table structure for checkins
@@ -115,14 +119,15 @@ CREATE TABLE `checkins`  (
   `checked_by` int NOT NULL,
   PRIMARY KEY (`id`) USING BTREE,
   UNIQUE INDEX `idx_attendee`(`attendee_id` ASC) USING BTREE,
-  INDEX `checked_by`(`checked_by` ASC) USING BTREE,
+  INDEX `checkins_ibfk_2`(`checked_by` ASC) USING BTREE,
   CONSTRAINT `checkins_ibfk_1` FOREIGN KEY (`attendee_id`) REFERENCES `attendees` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT,
-  CONSTRAINT `checkins_ibfk_2` FOREIGN KEY (`checked_by`) REFERENCES `conferences` (`organizer_id`) ON DELETE RESTRICT ON UPDATE RESTRICT
-) ENGINE = InnoDB AUTO_INCREMENT = 11 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+  CONSTRAINT `checkins_ibfk_2` FOREIGN KEY (`checked_by`) REFERENCES `users` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT
+) ENGINE = InnoDB AUTO_INCREMENT = 12 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of checkins
 -- ----------------------------
+INSERT INTO `checkins` VALUES (11, 115, '2026-06-08 21:23:52', 1);
 
 -- ----------------------------
 -- Table structure for conferences
@@ -149,7 +154,7 @@ CREATE TABLE `conferences`  (
   FULLTEXT INDEX `idx_title`(`title`) WITH PARSER `ngram`,
   CONSTRAINT `conferences_ibfk_1` FOREIGN KEY (`organizer_id`) REFERENCES `users` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT,
   CONSTRAINT `conferences_chk_1` CHECK (`amount` >= 0)
-) ENGINE = InnoDB AUTO_INCREMENT = 87 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 93 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of conferences
@@ -224,11 +229,11 @@ INSERT INTO `conferences` VALUES (77, 33, '企业数字化转型实战峰会', '
 INSERT INTO `conferences` VALUES (78, 42, '量子计算与未来科技研讨会', '量子计算前沿进展与产业化应用探索', '合肥滨湖国际会展中心', '合肥洲际酒店', 'QC2026H01', '2026-11-05 09:00:00', '2026-11-07 18:00:00', 'approved', '2026-06-06 10:00:00', '审核通过', 190.00);
 INSERT INTO `conferences` VALUES (79, 56, '金融科技与风险控制高峰论坛', '智能风控、反欺诈与合规科技新趋势', '重庆悦来国际会议中心', '重庆解放碑威斯汀', 'FT2026CQ1', '2026-09-15 08:30:00', '2026-09-17 17:00:00', 'approved', '2026-06-06 15:20:00', '审核通过', 175.00);
 INSERT INTO `conferences` VALUES (80, 78, '智慧医疗与健康大数据学术会议', 'AI辅助诊疗与医疗大数据应用研究', '武汉光谷科技会展中心', '武汉光谷凯悦酒店', 'MH2026W01', '2026-08-22 09:00:00', '2026-08-24 18:00:00', 'approved', '2026-06-07 09:50:00', '审核通过', 155.00);
-INSERT INTO `conferences` VALUES (82, 1, '123', '123', '213', '123', NULL, '2026-06-20 19:09:00', '2026-06-26 19:09:00', 'approved', '2026-06-04 19:09:22', '', 30.00);
-INSERT INTO `conferences` VALUES (83, 129, '1', '1', '1', '1', NULL, '2026-09-06 20:06:00', '2026-09-13 20:06:00', 'rejected', '2026-06-06 20:06:58', '', 30.00);
 INSERT INTO `conferences` VALUES (84, 1, '全栈开发进阶训练营', '前端到后端全链路实战，React+Spring Boot项目驱动', '北京中关村软件园', '北京中关村皇冠假日酒店', 'FS2026B01', '2026-06-08 09:00:00', '2026-06-14 18:00:00', 'approved', '2026-05-20 10:00:00', '审核通过', 200.00);
 INSERT INTO `conferences` VALUES (85, 3, '云原生架构设计实战周', 'Kubernetes生产落地、服务治理与可观测性体系搭建', '上海浦东软件园', '上海浦东嘉里大酒店', 'CN2026S01', '2026-06-08 08:30:00', '2026-06-14 17:30:00', 'approved', '2026-05-22 14:00:00', '审核通过', 180.00);
 INSERT INTO `conferences` VALUES (86, 5, '数据科学暑期研修班', 'Python数据分析、机器学习建模与可视化实战', '杭州梦想小镇国际会议中心', '杭州西溪宾馆', 'DS2026H01', '2026-06-08 09:30:00', '2026-06-14 16:00:00', 'approved', '2026-05-25 09:00:00', '审核通过', 150.00);
+INSERT INTO `conferences` VALUES (87, 10, '1', '1', '1', '1', NULL, '2026-06-05 19:58:00', '2026-06-14 19:58:00', 'approved', '2026-06-08 19:58:55', '', 50.00);
+INSERT INTO `conferences` VALUES (89, 1, '1', '123', '123', '123', NULL, '2026-06-08 21:29:00', '2026-06-11 21:29:00', 'approved', '2026-06-08 21:29:50', '不行\n', 30.00);
 
 -- ----------------------------
 -- Table structure for payments
@@ -243,7 +248,7 @@ CREATE TABLE `payments`  (
   PRIMARY KEY (`id`) USING BTREE,
   INDEX `idx_attendee`(`attendee_id` ASC) USING BTREE,
   CONSTRAINT `payments_ibfk_1` FOREIGN KEY (`attendee_id`) REFERENCES `attendees` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT
-) ENGINE = InnoDB AUTO_INCREMENT = 72 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 75 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of payments
@@ -280,6 +285,8 @@ INSERT INTO `payments` VALUES (68, 105, 30.00, 'unpaid', '2025-07-22 10:30:00');
 INSERT INTO `payments` VALUES (69, 106, 30.00, 'unpaid', '2025-07-22 10:30:00');
 INSERT INTO `payments` VALUES (70, 114, 30.00, 'paid', '2026-06-08 16:10:39');
 INSERT INTO `payments` VALUES (71, 115, 0.00, 'paid', '2026-06-08 16:10:57');
+INSERT INTO `payments` VALUES (72, 116, 30.00, 'paid', '2026-06-08 21:14:07');
+INSERT INTO `payments` VALUES (73, 117, 0.00, 'paid', '2026-06-08 21:14:50');
 
 -- ----------------------------
 -- Table structure for users
@@ -301,14 +308,14 @@ CREATE TABLE `users`  (
   CONSTRAINT `chk_phone_email` CHECK ((`phone` is not null) or (`email` is not null)),
   CONSTRAINT `chk_role` CHECK (`role` in (0,1)),
   CONSTRAINT `chk_status` CHECK (`status` in (1,0))
-) ENGINE = InnoDB AUTO_INCREMENT = 130 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 132 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of users
 -- ----------------------------
 INSERT INTO `users` VALUES (1, 'zhangwei', 'zhangwei123', '13801011001', 'zhangwei@qq.com', '2024-03-15 08:20:30', 1, 0);
 INSERT INTO `users` VALUES (2, 'zhangjing', 'zhangjing123', '13901011002', 'zhangjing@163.com', '2024-06-22 14:35:12', 1, 0);
-INSERT INTO `users` VALUES (3, 'zhanglei', 'zhanglei123', '15001011003', 'zhanglei@126.com', '2024-09-10 10:05:45', 0, 0);
+INSERT INTO `users` VALUES (3, 'zhanglei', 'zhanglei123', '15001011003', 'zhanglei@126.com', '2024-09-10 10:05:45', 1, 0);
 INSERT INTO `users` VALUES (4, 'zhangfang', 'zhangfang123', '15101011004', 'zhangfang@gmail.com', '2024-11-05 18:40:20', 1, 0);
 INSERT INTO `users` VALUES (5, 'zhangqiang', 'zhangqiang123', '18601011005', 'zhangqiang@sina.com', '2025-01-18 07:10:55', 1, 0);
 INSERT INTO `users` VALUES (6, 'zhangna', 'zhangna123', '13501011006', 'zhangna@outlook.com', '2025-04-25 16:25:33', 0, 0);
@@ -394,7 +401,7 @@ INSERT INTO `users` VALUES (85, 'wuqiang', 'wuqiang123', '15101011085', 'wuqiang
 INSERT INTO `users` VALUES (86, 'wuna', 'wuna123', '18601011086', 'wuna@163.com', '2025-04-25 16:25:33', 1, 0);
 INSERT INTO `users` VALUES (87, 'wuming', 'wuming123', '13501011087', 'wuming@126.com', '2025-07-30 21:50:08', 1, 0);
 INSERT INTO `users` VALUES (88, 'wuhua', 'wuhua123', '15801011088', 'wuhua@gmail.com', '2025-10-12 11:15:27', 1, 0);
-INSERT INTO `users` VALUES (89, 'wujun', 'wujun123', '15901011089', 'wujun@sina.com', '2026-01-08 22:45:50', 0, 0);
+INSERT INTO `users` VALUES (89, 'wujun', 'wujun123', '15901011089', 'wujun@sina.com', '2026-01-08 22:45:50', 1, 0);
 INSERT INTO `users` VALUES (90, 'wuxia', 'wuxia123', '18801011090', 'wuxia@outlook.com', '2026-04-20 05:30:15', 1, 0);
 INSERT INTO `users` VALUES (91, 'zhouwei', 'zhouwei123', NULL, 'zhouwei@qq.com', '2024-03-15 08:20:30', 1, 0);
 INSERT INTO `users` VALUES (92, 'zhoujing', 'zhoujing123', NULL, 'zhoujing@163.com', '2024-06-22 14:35:12', 1, 0);
@@ -409,7 +416,6 @@ INSERT INTO `users` VALUES (100, 'zhouxia', 'zhouxia123', '18601011095', NULL, '
 INSERT INTO `users` VALUES (101, 'ops_director', 'Meetings$2025!', '13700137001', 'operations@conference-system.com', '2026-05-26 20:18:24', 1, 1);
 INSERT INTO `users` VALUES (102, 'finance_admin', 'Finance@2025', '13600136001', 'billing@conference-system.com', '2026-05-26 20:18:24', 1, 1);
 INSERT INTO `users` VALUES (103, 'disaster_recovery', 'DRP@ssw0rd!2025', '13500135001', 'drp@conference-system.com', '2026-05-26 20:18:24', 1, 1);
-INSERT INTO `users` VALUES (108, '123', '123123', '15257689387', '', '2026-05-29 21:13:10', 1, 0);
-INSERT INTO `users` VALUES (129, 'lh', 'lh123@@', '', '3350535202@qq.com', '2026-06-06 19:44:29', 1, 0);
+INSERT INTO `users` VALUES (131, 'lh', 'lh123@@', '15257689387', '', '2026-06-08 20:59:08', 1, 0);
 
 SET FOREIGN_KEY_CHECKS = 1;
