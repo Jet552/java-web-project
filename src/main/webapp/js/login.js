@@ -1,8 +1,3 @@
-/**
- * 会务管理系统 - 登录页面 JavaScript
- * 功能：表单验证、登录请求、记住密码、忘记密码
- */
-
 
 //页面加载完成后执行
 document.addEventListener('DOMContentLoaded', function() {

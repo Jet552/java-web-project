@@ -7,7 +7,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>用户工作台 - 会务管理系统</title>
+    <title>用户工作台-会务管理系统</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
@@ -115,7 +115,7 @@
                     <span>${fn:substring(username, 0, 1)}</span>
                 </div>
                 <span class="d-none d-md-inline">${username}</span>
-                <i class="fas fa-chevron-down small"></i>
+<%--                <i class="fas fa-chevron-down small"></i>--%>
             </div>
             <ul class="dropdown-menu dropdown-menu-end">
                 <li>

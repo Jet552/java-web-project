@@ -13,7 +13,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
 function loadPaymentData() {
     var url = contextPath + '/payment/history';
-
     fetch(url, {
         method: 'GET',
         headers: {
@@ -111,7 +110,7 @@ function renderPayments(payments) {
         var amountText = '¥' + (p.amount || 0).toFixed(2);
 
         // 使用后端返回的 paidAt 作为缴费时间
-        var paymentTime = p.paidAt ? formatDateTime(p.paidAt) : '--';
+        var paymentTime = p.paidAt&&p.status==='paid' ? formatDateTime(p.paidAt) : '--';
         // 会议名称
         var conferenceName = p.conferenceName || '会议ID:' + (p.conference_id || '--');
         // 会议时间
@@ -127,7 +126,19 @@ function renderPayments(payments) {
         html += '<td><span class="payment-status ' + statusClass + '">' + statusText + '</span></td>';
         html += '<td>';
 
-        if (p.status === 'unpaid') {
+        // 判断会议是否已过期（当前时间 > 会议结束时间）
+        var isExpired = 0;
+        if (conferenceEndDate && conferenceEndDate !== '--'&&p.status==='unpaid') {
+            var confDate = new Date(conferenceEndDate);
+            if (!isNaN(confDate.getTime()) && new Date() > confDate) {
+                isExpired = 1;
+            }
+        }
+
+        if (isExpired == 1) {
+            html += '<span class="btn-expired">' +
+                '<i class="fas fa-clock me-1"></i>会议已过期</span>';
+        } else if (p.status === 'unpaid') {
             html += '<button class="btn-action btn-pay" onclick="payNow(' + p.attendee_id + ')">' +
                 '<i class="fas fa-credit-card"></i>立即缴费</button>';
         } else {
@@ -140,10 +151,8 @@ function renderPayments(payments) {
     }
 
     tbody.innerHTML = html;
-
     // 更新分页
     document.getElementById('paginationInfo').innerText = '共 ' + filteredData.length + ' 条记录';
-
     // 修改后：添加一个 flex 容器包裹按钮
     var pageHtml = '<div class="pagination-wrapper">';
     for (var i = 1; i <= totalPages; i++) {

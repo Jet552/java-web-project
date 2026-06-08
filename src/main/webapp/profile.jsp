@@ -77,10 +77,6 @@
                         <div class="info-value" id="infoUsername">${username}</div>
                     </div>
                     <div class="info-row">
-                        <div class="info-label"><i class="bi bi-lock me-2"></i>密码</div>
-                        <div class="info-value" id="infoPassword">******</div>
-                    </div>
-                    <div class="info-row">
                         <div class="info-label"><i class="bi bi-envelope me-2"></i>电子邮箱</div>
                         <div class="info-value" id="infoEmail">-</div>
                     </div>
