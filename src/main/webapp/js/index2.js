@@ -223,7 +223,6 @@ function loadPage(pageName) {
         .then(function(html) {
             var container = document.getElementById('pageContent');
             container.innerHTML = html;
-            // 执行内联 <script> 标签（innerHTML 不会自动执行脚本）
             var scripts = container.querySelectorAll('script');
             scripts.forEach(function(oldScript) {
                 var newScript = document.createElement('script');

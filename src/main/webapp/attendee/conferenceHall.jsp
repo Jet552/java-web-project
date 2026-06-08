@@ -236,7 +236,22 @@
             .then(res => res.json())
             .then(data => {
                 if (data.code === 200 && data.data) {
-                    var confId = data.data.id;
+                    var conf = data.data;
+                    // 检查会议是否已结束
+                    var now = new Date();
+                    var endDate = new Date((conf.end_date || '').replace(' ', 'T'));
+                    if (endDate <= now) {
+                        var modal = bootstrap.Modal.getInstance(document.getElementById('joinConferenceModal'));
+                        if (modal) modal.hide();
+                        Swal.fire({
+                            icon: 'warning',
+                            title: '会议已结束',
+                            text: '该会议已于 ' + formatDateTime(conf.end_date) + ' 结束，无法报名参加',
+                            confirmButtonColor: '#1890ff'
+                        });
+                        return;
+                    }
+                    var confId = conf.id;
                     // 检查是否已参加
                     fetch(contextPath + '/attendee/checkStatus', {
                         method: 'POST',
