@@ -163,6 +163,8 @@
         });
     }
 </script>
+<!-- 全局拦截器必须最先加载 -->
+<script src="${pageContext.request.contextPath}/js/common.js?v=5"></script>
 <!-- 引入纯静态 JS 文件 -->
 <script src="${pageContext.request.contextPath}/js/index2.js"></script>
 <!-- 引入纯静态 JS 文件 -->

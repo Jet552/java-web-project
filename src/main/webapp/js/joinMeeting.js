@@ -66,7 +66,7 @@ function loadConferenceInfo() {
                 document.getElementById('confEndDate').textContent = (conf.end_date || '').replace('T', ' ');
                 document.getElementById('confVenue').textContent = conf.venue || '--';
                 document.getElementById('confDorms').textContent = conf.dorms ;
-                document.getElementById('confAmount').textContent = joinSource=='invite' ? '0（特邀免费）' : (conf.amount || 0);
+                document.getElementById('confAmount').textContent = joinSource=='invite' ? 0 : (conf.amount || 0);
                 document.getElementById('confDescription').textContent = conf.description || '--';
             } else {
                 Swal.fire({ icon: 'error', title: '会议不存在', text: '该会议可能已被取消', confirmButtonColor: '#1890ff' });
@@ -492,6 +492,6 @@ function navigateBackToHall() {
     if (typeof loadPage === 'function') {
         loadPage('conferenceHall');
     } else {
-        window.location.href = contextPath + '/index2.jsp?page=meetingSearch';
+        window.location.href = contextPath + '/index2.jsp?page=conferenceHall';
     }
 }

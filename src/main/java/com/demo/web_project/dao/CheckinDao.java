@@ -34,4 +34,11 @@ public interface CheckinDao {
      * @return {total, checkedIn, unchecked}
      */
     Map<String, Integer> getStatistics(int conferenceId);
+
+    /**
+     * 查询某参会者所属会议的组织者ID（用于权限校验）
+     * @param attendeeId 参会记录ID
+     * @return 组织者ID，不存在则返回 null
+     */
+    Integer getConferenceOrganizerId(int attendeeId);
 }

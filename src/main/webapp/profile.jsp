@@ -209,6 +209,6 @@
 </script>
 <!-- 引入纯静态 JS 文件 -->
 <script src="${pageContext.request.contextPath}/js/profile.js"></script>
-
+<script src="${pageContext.request.contextPath}/js/common.js"></script>
 </body>
 </html>

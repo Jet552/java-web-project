@@ -30,7 +30,7 @@
         text-align: center;
         box-shadow: 0 1px 3px rgba(0,0,0,0.06);
     }
-    .m5-stat-item .stat-icon { font-size: 28px; margin-bottom: 6px; }
+    .m5-stat-item .stat-icon { font-size: 28px; margin-bottom: 6px; line-height: 1; }
     .m5-stat-item .stat-num { font-size: 28px; font-weight: 700; line-height: 1.2; }
     .m5-stat-item .stat-label { font-size: 12px; color: #6b7280; margin-top: 4px; }
     .m5-stat-item:nth-child(1) { background: var(--m5-blue-light); }
@@ -73,22 +73,22 @@
 
     <div id="statsBar" class="m5-stat-grid" style="display:none;">
         <div class="m5-stat-item">
-            <div class="stat-icon">👥</div>
+            <div class="stat-icon"><i class="fas fa-users" style="color:#667eea;"></i></div>
             <div class="stat-num" id="statTotal">0</div>
             <div class="stat-label">参会总人数</div>
         </div>
         <div class="m5-stat-item">
-            <div class="stat-icon">✅</div>
+            <div class="stat-icon"><i class="fas fa-user-check" style="color:#057a55;"></i></div>
             <div class="stat-num text-success" id="statCheckedIn">0</div>
             <div class="stat-label">已签到</div>
         </div>
         <div class="m5-stat-item">
-            <div class="stat-icon">⏳</div>
+            <div class="stat-icon"><i class="fas fa-hourglass-half" style="color:#b45309;"></i></div>
             <div class="stat-num text-warning" id="statUnchecked">0</div>
             <div class="stat-label">未签到</div>
         </div>
         <div class="m5-stat-item">
-            <div class="stat-icon">📊</div>
+            <div class="stat-icon"><i class="fas fa-chart-line" style="color:#667eea;"></i></div>
             <div class="stat-num" id="statRate" style="color:#667eea;">0%</div>
             <div class="stat-label">签到率</div>
         </div>
@@ -98,7 +98,7 @@
         <div class="m5-card-header">
             <span><i class="fas fa-list me-2" style="color:#667eea;"></i>参会人员</span>
             <div style="display:flex;gap:8px;align-items:center;">
-                <input type="text" id="nameSearch" class="m5-input" style="width:170px;" placeholder="🔍 搜索姓名..." oninput="filterByName()">
+                <input type="text" id="nameSearch" class="m5-input" style="width:170px;" placeholder="搜索姓名..." oninput="filterByName()">
                 <span id="listCount" class="m5-badge" style="background:#f3f4f6;color:#6b7280;">0 人</span>
             </div>
         </div>
