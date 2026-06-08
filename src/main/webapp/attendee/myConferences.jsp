@@ -1,4 +1,5 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<script src="${pageContext.request.contextPath}/js/common.js?v=5"></script>
 <!-- 我的会议页面 -->
 <div class="content-wrapper">
     <!-- 操作栏 -->
