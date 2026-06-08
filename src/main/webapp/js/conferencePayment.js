@@ -135,19 +135,9 @@ function renderPayments(payments) {
             }
         }
 
-        if (conferenceStartDate && conferenceStartDate !== '--'&&p.status==='unpaid'&&isExpired != 1) {
-            var confDate = new Date(conferenceStartDate);
-            if (!isNaN(confDate.getTime()) && new Date() > confDate) {
-                isExpired = 2;
-            }
-        }
-
         if (isExpired == 1) {
             html += '<span class="btn-expired">' +
                 '<i class="fas fa-clock me-1"></i>会议已过期</span>';
-        }else if (isExpired == 2) {
-            html += '<span class="btn-ongoing">' +
-                '<i class="fas fa-clock me-1"></i>会议进行中</span>';
         } else if (p.status === 'unpaid') {
             html += '<button class="btn-action btn-pay" onclick="payNow(' + p.attendee_id + ')">' +
                 '<i class="fas fa-credit-card"></i>立即缴费</button>';
