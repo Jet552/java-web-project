@@ -15,16 +15,16 @@
     <link href="${pageContext.request.contextPath}/css/conferencePayment.css" rel="stylesheet"/>
 </head>
 <body>
-<%--&lt;%&ndash; 检查是否登录，未登录则重定向 &ndash;%&gt;--%>
-<%--<c:if test="${empty sessionScope.user}">--%>
-<%--    <c:redirect url="/login.jsp" />--%>
-<%--</c:if>--%>
-<%--&lt;%&ndash; 检查是否是管理员（role == 1），是则重定向到管理员页面 &ndash;%&gt;--%>
-<%--<c:if test="${sessionScope.user.role == 1}">--%>
-<%--    <c:redirect url="/index1.jsp" />--%>
-<%--</c:if>--%>
-<%--&lt;%&ndash; 获取用户名（后面的页面可以直接用） &ndash;%&gt;--%>
-<%--<c:set var="username" value="${sessionScope.user.username}" scope="page" />--%>
+<%-- 检查是否登录，未登录则重定向 --%>
+<c:if test="${empty sessionScope.user}">
+    <c:redirect url="/login.jsp" />
+</c:if>
+<%-- 检查是否是管理员（role == 1），是则重定向到管理员页面 --%>
+<c:if test="${sessionScope.user.role == 1}">
+    <c:redirect url="/index1.jsp" />
+</c:if>
+<%-- 获取用户名（后面的页面可以直接用） --%>
+<c:set var="username" value="${sessionScope.user.username}" scope="page" />
 
 <%--<%--%>
 <%--    User user = (User) session.getAttribute("user");--%>
