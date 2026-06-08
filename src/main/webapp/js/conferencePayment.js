@@ -110,7 +110,7 @@ function renderPayments(payments) {
         var amountText = '¥' + (p.amount || 0).toFixed(2);
 
         // 使用后端返回的 paidAt 作为缴费时间
-        var paymentTime = p.paidAt ? formatDateTime(p.paidAt) : '--';
+        var paymentTime = p.paidAt&&p.status==='paid' ? formatDateTime(p.paidAt) : '--';
         // 会议名称
         var conferenceName = p.conferenceName || '会议ID:' + (p.conference_id || '--');
         // 会议时间
