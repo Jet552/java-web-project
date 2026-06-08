@@ -10,25 +10,6 @@ import java.util.*;
 
 public class PaymentDaoImpl implements PaymentDao {
 
-//    @Override
-//    public Payment findById(int id) {
-//        String sql = "SELECT id, attendee_id, amount, status, paid_at FROM payments WHERE id = ?";
-//
-//        try (Connection conn = JDBCUtil.getConnection();
-//             PreparedStatement ps = conn.prepareStatement(sql)) {
-//
-//            ps.setInt(1, id);
-//            ResultSet rs = ps.executeQuery();
-//
-//            if (rs.next()) {
-//                return extractPayment(rs);
-//            }
-//        } catch (SQLException e) {
-//            e.printStackTrace();
-//        }
-//        return null;
-//    }
-
     @Override
     public Payment findByAttendeeId(int attendeeId) {
         Payment payment = new Payment();
@@ -158,27 +139,6 @@ public class PaymentDaoImpl implements PaymentDao {
         return null;
     }
 
-//    @Override
-//    public int countByConferenceId(int conferenceId) {
-//        String sql = "SELECT COUNT(*) FROM payments p " +
-//                "JOIN attendees a ON p.attendee_id = a.id " +
-//                "WHERE a.conference_id = ?";
-//
-//        try (Connection conn = JDBCUtil.getConnection();
-//             PreparedStatement ps = conn.prepareStatement(sql)) {
-//
-//            ps.setInt(1, conferenceId);
-//            ResultSet rs = ps.executeQuery();
-//
-//            if (rs.next()) {
-//                return rs.getInt(1);
-//            }
-//        } catch (SQLException e) {
-//            e.printStackTrace();
-//        }
-//        return 0;
-//    }
-
     @Override
     public boolean save(Payment payment) {
         String sql = "INSERT INTO payments (attendee_id, amount, status, paid_at) VALUES (?, ?, ?, ?)";
@@ -249,37 +209,6 @@ public class PaymentDaoImpl implements PaymentDao {
         }
         return false;
     }
-
-//    @Override
-//    public Map<String, Object> getStatistics(int userID) {
-//        Map<String, Object> stats = new HashMap<>();
-//
-//        String sql = "SELECT " +
-//                "COUNT(*) as total_count, " +
-//                "SUM(CASE WHEN status = 'paid' THEN 1 ELSE 0 END) as paid_count, " +
-//                "SUM(CASE WHEN status = 'unpaid' THEN 1 ELSE 0 END) as unpaid_count, " +
-//                "SUM(CASE WHEN status = 'paid' THEN amount ELSE 0 END) as total_amount " +
-//                "FROM payments p " +
-//                "JOIN attendees a ON p.attendee_id = a.id " +
-//                "WHERE a.user_id = ?";
-//
-//        try (Connection conn = JDBCUtil.getConnection();
-//             PreparedStatement ps = conn.prepareStatement(sql)) {
-//
-//            ps.setInt(1, userID);
-//            ResultSet rs = ps.executeQuery();
-//
-//            if (rs.next()) {
-//                stats.put("totalCount", rs.getInt("total_count"));
-//                stats.put("paidCount", rs.getInt("paid_count"));
-//                stats.put("unpaidCount", rs.getInt("unpaid_count"));
-//                stats.put("totalAmount", rs.getDouble("total_amount"));
-//            }
-//        } catch (SQLException e) {
-//            e.printStackTrace();
-//        }
-//        return stats;
-//    }
 
     /**
      * 从 ResultSet 提取 Payment 对象

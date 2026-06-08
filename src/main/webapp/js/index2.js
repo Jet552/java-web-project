@@ -71,14 +71,11 @@ function showProfile() {
         });
 }
 
-
-
 /**
  * 处理登录错误
  * @param {Error} error 错误对象
  */
 function handleError(error) {
-    console.error('请求失败:', error);
     showError('网络错误，请稍后重试');
 }
 
@@ -95,9 +92,7 @@ function showError() {
 }
 
 
-// ========== 下拉菜单初始化 ==========
 document.addEventListener('DOMContentLoaded', function() {
-    console.log('页面加载完成，初始化下拉菜单...');
     initDropdownMenu();
     initSubMenuClick();
 });
@@ -107,7 +102,6 @@ document.addEventListener('DOMContentLoaded', function() {
  */
 function initDropdownMenu() {
     const toggles = document.querySelectorAll('.nav-toggle');
-    console.log('找到 toggle 数量:', toggles.length);
 
     toggles.forEach(function(toggle, index) {
         // 移除可能存在的旧事件
@@ -123,23 +117,14 @@ function initDropdownMenu() {
 function toggleClickHandler(e) {
     e.preventDefault();
     e.stopPropagation();
-
     const groupName = this.getAttribute('data-group');
-    console.log('点击菜单 group:', groupName);
-
     // 找到对应的子菜单
     const submenu = document.querySelector('.nav-submenu[data-parent="' + groupName + '"]');
-    console.log('找到子菜单:', submenu);
-
     if (submenu) {
         // 切换 show 类
         submenu.classList.toggle('show');
         // 切换当前菜单的 active 类（用于旋转箭头）
         this.classList.toggle('active');
-
-        console.log('子菜单 show 类状态:', submenu.classList.contains('show'));
-    } else {
-        console.log('未找到子菜单，data-parent="' + groupName + '"');
     }
 }
 
@@ -168,16 +153,13 @@ function initSubMenuClick() {
 function directClickHandler(e) {
     e.preventDefault();
     e.stopPropagation();
-
-    // 移除所有菜单的 active 状态
+    //移除所有菜单的 active 状态
     document.querySelectorAll('.nav-direct, .nav-sub-link').forEach(function(l) {
         l.classList.remove('active');
     });
     this.classList.add('active');
-
     // 获取页面标识
     const page = this.getAttribute('data-page');
-
     if (page) {
         loadPage(page);
     }
@@ -189,13 +171,11 @@ function directClickHandler(e) {
 function subMenuClickHandler(e) {
     e.preventDefault();
     e.stopPropagation();
-
-    // 移除所有菜单的 active 状态
+    //移除所有菜单的 active 状态
     document.querySelectorAll('.nav-direct, .nav-sub-link').forEach(function(l) {
         l.classList.remove('active');
     });
     this.classList.add('active');
-
     // 获取页面标识
     const page = this.getAttribute('data-page');
     if (page) {
@@ -207,19 +187,18 @@ function subMenuClickHandler(e) {
  * 更新侧边栏菜单激活状态
  */
 function updateSidebarActive(pageName) {
-    // 移除所有菜单项的 active 状态
+    //移除所有菜单项的 active 状态
     document.querySelectorAll('.nav-direct, .nav-sub-link').forEach(function(l) {
         l.classList.remove('active');
     });
-    // 收起所有子菜单
+    //收起所有子菜单
     document.querySelectorAll('.nav-submenu').forEach(function(m) {
         m.classList.remove('show');
     });
     document.querySelectorAll('.nav-toggle').forEach(function(t) {
         t.classList.remove('active');
     });
-
-    // 激活匹配的菜单项
+    //激活匹配的菜单项
     var target = document.querySelector('.nav-direct[data-page="' + pageName + '"], .nav-sub-link[data-page="' + pageName + '"]');
     if (target) {
         target.classList.add('active');

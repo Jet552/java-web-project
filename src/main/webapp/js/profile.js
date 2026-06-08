@@ -1,5 +1,4 @@
-// var contextPath = '${pageContext.request.contextPath}';
-// var isAdmin = ${isAdmin};
+
 
 // 页面加载时获取个人信息
 document.addEventListener('DOMContentLoaded', function() {

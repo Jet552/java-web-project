@@ -13,7 +13,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
 function loadPaymentData() {
     var url = contextPath + '/payment/history';
-
     fetch(url, {
         method: 'GET',
         headers: {
@@ -136,7 +135,7 @@ function renderPayments(payments) {
             }
         }
 
-        if (conferenceStartDate && conferenceStartDate !== '--'&&p.status==='unpaid') {
+        if (conferenceStartDate && conferenceStartDate !== '--'&&p.status==='unpaid'&&isExpired != 1) {
             var confDate = new Date(conferenceStartDate);
             if (!isNaN(confDate.getTime()) && new Date() > confDate) {
                 isExpired = 2;
@@ -144,10 +143,10 @@ function renderPayments(payments) {
         }
 
         if (isExpired == 1) {
-            html += '<span class="payment-status" style="background:#f1f5f9;color:#94a3b8;font-size:12px;">' +
+            html += '<span class="btn-expired">' +
                 '<i class="fas fa-clock me-1"></i>会议已过期</span>';
         }else if (isExpired == 2) {
-            html += '<span class="payment-status" style="background:#f1f5f9;color:#94a3b8;font-size:12px;">' +
+            html += '<span class="btn-ongoing">' +
                 '<i class="fas fa-clock me-1"></i>会议进行中</span>';
         } else if (p.status === 'unpaid') {
             html += '<button class="btn-action btn-pay" onclick="payNow(' + p.attendee_id + ')">' +
@@ -162,10 +161,8 @@ function renderPayments(payments) {
     }
 
     tbody.innerHTML = html;
-
     // 更新分页
     document.getElementById('paginationInfo').innerText = '共 ' + filteredData.length + ' 条记录';
-
     // 修改后：添加一个 flex 容器包裹按钮
     var pageHtml = '<div class="pagination-wrapper">';
     for (var i = 1; i <= totalPages; i++) {
