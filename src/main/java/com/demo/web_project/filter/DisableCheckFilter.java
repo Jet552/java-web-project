@@ -26,13 +26,13 @@ public class DisableCheckFilter implements Filter {
         HttpServletResponse response = (HttpServletResponse) res;
         String path = request.getRequestURI();
 
-        // 白名单放行
+        // 白名单放行：登录相关 + 静态资源
         if (path.endsWith("/user/login") || path.endsWith("/user/register")
                 || path.endsWith("/user/logout") || path.endsWith("/user/resetPassword")
                 || path.endsWith("/login.jsp") || path.endsWith("/register.jsp")
                 || path.endsWith("/resetPassword.jsp")
                 || path.contains("/css/") || path.contains("/js/")
-                || path.contains(".ico") || path.contains(".png") || path.contains(".jpg")) {
+                || path.endsWith(".ico") || path.endsWith(".png") || path.endsWith(".jpg")) {
             chain.doFilter(req, res);
             return;
         }

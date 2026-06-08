@@ -361,7 +361,7 @@ public class UserServlet extends HttpServlet {
         Map<String, Object> data = new HashMap<>();
         data.put("id", user.getId());
         data.put("username", user.getUsername());
-        data.put("password", user.getPassword());
+        // 安全：不在 API 响应中返回密码
         data.put("phone", user.getPhone());
         data.put("role", user.getRole());
         data.put("email", user.getEmail());

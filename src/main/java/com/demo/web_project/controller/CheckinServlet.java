@@ -81,6 +81,10 @@ public class CheckinServlet extends HttpServlet {
         } catch (NumberFormatException e) {
             sendError(resp, 400, "参数错误");
             return;
+        } catch (Exception e) {
+            getServletContext().log("CheckinServlet.doCheckin 异常", e);
+            sendError(resp, 500, "服务器内部错误");
+            return;
         }
         out.flush(); out.close();
     }
@@ -107,6 +111,10 @@ public class CheckinServlet extends HttpServlet {
         } catch (NumberFormatException e) {
             sendError(resp, 400, "参数错误");
             return;
+        } catch (Exception e) {
+            getServletContext().log("CheckinServlet error", e);
+            sendError(resp, 500, "服务器内部错误");
+            return;
         }
         out.flush(); out.close();
     }
@@ -125,6 +133,10 @@ public class CheckinServlet extends HttpServlet {
             out.print(mapper.writeValueAsString(result));
         } catch (NumberFormatException e) {
             sendError(resp, 400, "参数错误");
+            return;
+        } catch (Exception e) {
+            getServletContext().log("CheckinServlet error", e);
+            sendError(resp, 500, "服务器内部错误");
             return;
         }
         out.flush(); out.close();
@@ -165,6 +177,10 @@ public class CheckinServlet extends HttpServlet {
         } catch (java.time.format.DateTimeParseException e) {
             sendError(resp, 400, "日期格式错误，正确格式为 yyyy-MM-dd");
             return;
+        } catch (Exception e) {
+            getServletContext().log("CheckinServlet error", e);
+            sendError(resp, 500, "服务器内部错误");
+            return;
         }
         out.flush(); out.close();
     }
@@ -183,6 +199,10 @@ public class CheckinServlet extends HttpServlet {
             out.print(mapper.writeValueAsString(result));
         } catch (NumberFormatException e) {
             sendError(resp, 400, "参数错误");
+            return;
+        } catch (Exception e) {
+            getServletContext().log("CheckinServlet error", e);
+            sendError(resp, 500, "服务器内部错误");
             return;
         }
         out.flush(); out.close();
@@ -204,6 +224,10 @@ public class CheckinServlet extends HttpServlet {
             }
         } catch (NumberFormatException e) {
             sendError(resp, 400, "参数错误");
+            return;
+        } catch (Exception e) {
+            getServletContext().log("CheckinServlet error", e);
+            sendError(resp, 500, "服务器内部错误");
             return;
         }
         out.flush(); out.close();

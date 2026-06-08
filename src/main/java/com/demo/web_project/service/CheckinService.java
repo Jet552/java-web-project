@@ -11,9 +11,18 @@ public class CheckinService {
     private CheckinDao checkinDao = new CheckinDaoImpl();
 
     /**
-     * 执行签到，验证重复签到
+     * 执行签到，验证重复签到 + 组织者权限
      */
     public String doCheckin(int attendeeId, int checkedBy) {
+        // 权限校验：只有该会议的组织者才能执行签到
+        Integer organizerId = checkinDao.getConferenceOrganizerId(attendeeId);
+        if (organizerId == null) {
+            return "参会记录不存在";
+        }
+        if (organizerId != checkedBy) {
+            return "您不是该会议的组织者，无权操作签到";
+        }
+
         // 检查是否已签到
         Checkin existing = checkinDao.findByAttendeeId(attendeeId);
         if (existing != null) {

@@ -113,4 +113,25 @@ public class CheckinDaoImpl implements CheckinDao {
         }
         return stats;
     }
+
+    @Override
+    public Integer getConferenceOrganizerId(int attendeeId) {
+        String sql = """
+            SELECT c.organizer_id
+            FROM attendees a
+            JOIN conferences c ON a.conference_id = c.id
+            WHERE a.id = ?
+            """;
+        try (Connection conn = JDBCUtil.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, attendeeId);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                return rs.getInt("organizer_id");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
 }
