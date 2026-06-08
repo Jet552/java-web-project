@@ -161,6 +161,15 @@
                 }
             }, 100);
         });
+    } else {
+        // 无 page 参数时自动加载首页
+        document.addEventListener('DOMContentLoaded', function() {
+            setTimeout(function() {
+                if (typeof loadPage === 'function') {
+                    loadPage('default');
+                }
+            }, 100);
+        });
     }
 </script>
 <!-- 全局拦截器必须最先加载 -->
