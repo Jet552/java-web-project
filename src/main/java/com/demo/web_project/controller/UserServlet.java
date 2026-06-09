@@ -122,8 +122,14 @@ public class UserServlet extends HttpServlet {
         // 接收参数
         String username = request.getParameter("username");
         String password = request.getParameter("password");
-        String phone=request.getParameter("phone");
-        String email=request.getParameter("email");
+        String email = request.getParameter("email");
+        if (email != null && email.trim().isEmpty()) {
+            email = null;
+        }
+        String phone = request.getParameter("phone");
+        if (phone != null && phone.trim().isEmpty()) {
+            phone = null;
+        }
         // 调用 Service 验证
         PrintWriter out = response.getWriter();
         //不存在该用户，可以创建
@@ -136,7 +142,7 @@ public class UserServlet extends HttpServlet {
             out.print(jsonStr);
         }
         //否则报错，用户已存在
-        else if(userService.findByPhone(phone)!=null||userService.findByEmail(email)!=null){
+        else if((phone != null&&userService.findByPhone(phone)!=null)||(email != null&&userService.findByEmail(email)!=null)){
             Map<String, Object> result = new HashMap<>();
             result.put("code", 500);
             result.put("msg", "注册用的手机或邮箱已存在");
