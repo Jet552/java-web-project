@@ -247,7 +247,7 @@ function redirectByRole(data) {
     if (data.data && data.data.role == 1) {
         window.location.href = contextPath + '/index1.jsp';
     } else {
-        window.location.href = contextPath + '/index2.jsp';
+        window.location.href = contextPath + '/index2.jsp?page=default';
     }
 }
 
