@@ -288,10 +288,12 @@ function toggleContactInput() {
         emailGroup.style.display = 'block';
         document.getElementById('email').required = true;
         document.getElementById('phone').required = false;
+        document.getElementById('phone').value = '';
     } else if (selected === 'phone') {
         phoneGroup.style.display = 'block';
         document.getElementById('phone').required = true;
         document.getElementById('email').required = false;
+        document.getElementById('email').value = '';
     }
 }
 
