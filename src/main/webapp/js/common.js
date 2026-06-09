@@ -12,7 +12,6 @@
             var cloned = response.clone();
             return cloned.json().then(function(data) {
                 if (data.code === 401) {
-                    // 先关掉 loading 遮罩，否则 Swal 被挡住点不到
                     var overlay = document.getElementById('loadingOverlay');
                     if (overlay) overlay.style.display = 'none';
                     Swal.fire({

@@ -152,25 +152,34 @@
                     listContainer.innerHTML = '';
 
                     data.data.forEach(conference => {
-                        // 状态徽章
+                        // 状态徽章：已过期优先显示"已结束"
+                        var now = new Date();
+                        var endDate = new Date((conference.end_date || '').replace(' ', 'T'));
+                        var isEnded = endDate <= now;
                         let statusBadge = '';
-                        switch(conference.status) {
-                            case 'pending':
-                                statusBadge = '<span class="status-badge bg-warning text-dark">待审核</span>';
-                                break;
-                            case 'approved':
-                                statusBadge = '<span class="status-badge bg-success">已通过</span>';
-                                break;
-                            case 'rejected':
-                                statusBadge = '<span class="status-badge bg-danger">已拒绝</span>';
-                                break;
-                            default:
-                                statusBadge = '<span class="status-badge bg-secondary">未知</span>';
+                        if (isEnded) {
+                            statusBadge = '<span class="status-badge bg-secondary">已结束</span>';
+                        } else {
+                            switch(conference.status) {
+                                case 'pending':
+                                    statusBadge = '<span class="status-badge bg-warning text-dark">待审核</span>';
+                                    break;
+                                case 'approved':
+                                    statusBadge = '<span class="status-badge bg-success">已通过</span>';
+                                    break;
+                                case 'rejected':
+                                    statusBadge = '<span class="status-badge bg-danger">已拒绝</span>';
+                                    break;
+                                default:
+                                    statusBadge = '<span class="status-badge bg-secondary">未知</span>';
+                            }
                         }
 
                         // 操作按钮
                         let actions = '';
-                        if (conference.status === 'pending') {
+                        if (isEnded) {
+                            actions = '<span class="text-muted small">已结束，无法操作</span>';
+                        } else if (conference.status === 'pending') {
                             actions = `
                                 <button class="btn btn-sm btn-primary me-1" onclick="editConference(\${conference.id})">
                                     <i class="fas fa-edit"></i> 编辑
