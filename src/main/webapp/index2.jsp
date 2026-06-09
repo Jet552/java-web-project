@@ -137,6 +137,11 @@
     <div id="pageContent">
 
     </div>
+
+    <!-- 底部版权 -->
+    <div class="footer">
+        <i class="far fa-copyright me-1"></i> 2026 会务管理系统 &mdash; All Rights Reserved
+    </div>
 </div>
 
 <!-- 加载动画遮罩 -->
@@ -158,6 +163,15 @@
             setTimeout(function() {
                 if (typeof loadPage === 'function') {
                     loadPage(pageParam);
+                }
+            }, 100);
+        });
+    } else {
+        // 无 page 参数时自动加载首页
+        document.addEventListener('DOMContentLoaded', function() {
+            setTimeout(function() {
+                if (typeof loadPage === 'function') {
+                    loadPage('default');
                 }
             }, 100);
         });

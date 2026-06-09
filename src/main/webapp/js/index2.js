@@ -185,7 +185,7 @@ function updateSidebarActive(pageName) {
  * 异步加载页面
  */
 function loadPage(pageName) {
-    showLoading(true);
+    // showLoading(true);
     let url = getPageUrl(pageName);
     fetch(url, {
         method: 'GET',

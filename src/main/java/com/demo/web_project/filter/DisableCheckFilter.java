@@ -30,7 +30,7 @@ public class DisableCheckFilter implements Filter {
         if (path.endsWith("/user/login") || path.endsWith("/user/register")
                 || path.endsWith("/user/logout") || path.endsWith("/user/resetPassword")
                 || path.endsWith("/login.jsp") || path.endsWith("/register.jsp")
-                || path.endsWith("/forgetPassword.jsp")
+                ||path.endsWith("/forgetPassword.jsp")
                 || path.contains("/css/") || path.contains("/js/")
                 || path.endsWith(".ico") || path.endsWith(".png") || path.endsWith(".jpg")) {
             chain.doFilter(req, res);
