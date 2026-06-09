@@ -137,6 +137,11 @@
     <div id="pageContent">
 
     </div>
+
+    <!-- 底部版权 -->
+    <div class="footer">
+        <i class="far fa-copyright me-1"></i> 2026 会务管理系统 &mdash; All Rights Reserved
+    </div>
 </div>
 
 <!-- 加载动画遮罩 -->
